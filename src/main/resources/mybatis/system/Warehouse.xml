@@ -1,0 +1,456 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WarehouseMapper">
+
+	<!-- <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/> -->
+
+
+
+	<resultMap id="getOrders" type="com.fh.entity.warehouse.orderslist.Order">
+		<id property="id" column="id" />
+		<result property="date_created" column="date_created" />
+		<result property="remark" column="remark" />
+		<collection property="line_items" javaType="ArrayList"
+			ofType="com.fh.entity.warehouse.orderslist.Iterm">
+			<id property="OrderItems_ID" column="OrderItems_ID" />
+			<result property="Order_ID" column="Order_ID" />
+			<result property="sku" column="sku" />
+			<result property="total" column="price" />
+		</collection>
+	</resultMap>
+
+	<resultMap id="clientsResultMap" type="com.fh.entity.warehouse.Clients">
+		<id column="Dept_ID" property="Dept_ID" />
+		<result column="Domain_Name" property="Domain_Name" />
+	</resultMap>
+
+
+
+
+
+
+	<!-- 入库单列表 -->
+	<select id="listAlLStockIn" parameterType="pd" resultType="pd"
+		useCache="true">
+		SELECT * FROM enterstock e , storehouse st WHERE
+		st.StoreHouse_ID=e.StoreHouse_ID
+		and Dept_ID=#{Dept_ID}
+
+		and e.EnterDate between STR_TO_DATE(#{start}, '%Y-%m-%d') and
+		STR_TO_DATE(#{end}, '%Y-%m-%d')
+
+	</select>
+
+
+
+	<!-- 入库单详细列表 -->
+	<select id="listStockInDetail" parameterType="pd"
+		resultType="com.fh.entity.warehouse.EnterStockDetail" useCache="true">
+		SELECT
+		* FROM enterstock_detail e, product p WHERE e.Product_ID=p.Product_ID
+		AND e.EnterStock_ID=#{EnterStock_ID}
+
+	</select>
+
+
+
+
+	<!-- 总库存表 -->
+	<select id="listStock" parameterType="pd" resultType="pd"
+		useCache="true">
+		SELECT * FROM stockpile ,storehouse , product where
+		product.Product_ID= stockpile.Product_ID and stockpile.StoreHouse_ID=
+		storehouse.StoreHouse_ID
+
+		and stockpile.Dept_ID=#{Dept_ID}
+
+		<if test="StoreHouse_ID != null ">
+			and stockpile.StoreHouse_ID=#{StoreHouse_ID}
+		</if>
+
+
+
+		<if test="Product_ID != null ">
+			and product.Product_ID=#{Product_ID}
+		</if>
+
+	</select>
+
+
+	<!-- 更新总库存 -->
+	<update id="updateStockDetail" parameterType="pd" flushCache="false">
+		update stockpile
+		set
+		LastLeaveDate=#{LastLeaveDate},
+		Quantity=#{Quantity},
+		Price=#{Price}
+		where
+		StockPile_ID = #{StockPile_ID}
+	</update>
+
+
+
+
+
+
+
+	<!-- 新增总库存 -->
+	<insert id="saveStockpileDetail" parameterType="pd"
+		useGeneratedKeys="true">
+		insert into stockpile (
+		Dept_ID,
+		StoreHouse_ID,
+		Product_ID,
+		FirstEnterDate,
+		LastLeaveDate,
+		Quantity,
+		Price
+		) values
+
+		(
+		#{Dept_ID},
+		#{StoreHouse_ID},
+		#{Product_ID},
+		now(),
+		null,
+		#{Quantity},
+		#{Price}
+
+
+		)
+
+	</insert>
+
+
+
+
+
+	<!-- 客户 列表(全部) -->
+	<select id="listAlLClientsBybean" resultType="com.fh.entity.warehouse.Clients"
+		useCache="true">
+		SELECT Dept_ID,Name FROM `Dept` WHERE 1
+
+	</select>
+	<!-- anfa 订单 -->
+
+	<select id="getOrdersQuery" parameterType="com.fh.entity.AnfiApi"
+		resultMap="getOrders" useCache="true">
+		SELECT o.Original_ID id,
+		DATE_FORMAT(o.CreateDate, '%Y-%m-%d') AS date_created
+		,o.Order_ID,i.*,p.sku FROM orders o ,orderitems i,product p WHERE
+		o.Order_ID=i.Order_ID and p.Product_ID=i.Product_ID
+		and o.CreateDate
+		between STR_TO_DATE(#{start}, '%Y-%m-%d') and
+		STR_TO_DATE(#{to},
+		'%Y-%m-%d')
+		and o.dept_id=2
+
+
+	</select>
+
+
+
+	<!-- 新增产品 -->
+	<insert id="" parameterType="com.fh.entity.system.BaseProductsEntity"
+		flushCache="false">
+		replace into product (
+		Name,
+		Name_CN,
+		SKU
+		) values (
+		#{Name},
+		#{NameCN},
+		#{SKU}
+		)
+	</insert>
+
+
+
+	<!-- 产品列表(全部) -->
+	<select id="listAlLProducts" resultType="pd" useCache="true">
+		SELECT
+		Product_ID,Name,Name_CN,SKU,Remark,CreateDate FROM
+		`product` WHERE 1
+
+	</select>
+
+
+
+
+	<!-- check if the user in database -->
+	<select id="checkOrder" parameterType="com.fh.entity.warehouse.orderslist.Order"
+		resultType="java.lang.Integer">
+		SELECT count(*) FROM `orders` WHERE Dept_ID=#{Dept_ID} and
+		Original_ID=#{Original_ID}
+	</select>
+
+	<!-- select product base on sku -->
+
+	<select id="searchProduct" parameterType="java.lang.String"
+		resultType="java.lang.Integer">
+		SELECT product_id FROM `product` where sku=#{sku}
+	</select>
+
+	<!-- 新增入库单 -->
+	<insert id="saveStock" parameterType="com.fh.entity.warehouse.EnterStock"
+		useGeneratedKeys="true" keyProperty="EnterStock_ID">
+		insert into
+		enterstock (
+		Dept_ID,
+		EnterDate,
+		StoreHouse_ID
+		) values (
+
+		#{Dept_ID},
+		now(),
+		#{StoreHouse_ID}
+
+		)
+	</insert>
+
+
+
+
+	<!-- 新增入库明细 -->
+	<insert id="saveStockDetail" parameterType="java.util.List"
+		useGeneratedKeys="true">
+		insert into enterstock_detail (
+		EnterStock_ID,
+		Product_ID,
+		Quantity,
+		Price,
+		HaveInvoice,
+		Durability,
+		Remaining_amount,
+		InvoiceNum
+
+		) values
+
+		<foreach collection="list" item="itm" index="index" separator=",">
+
+
+			(
+			#{itm.EnterStock_ID},
+			#{itm.Product_ID},
+			#{itm.Quantity},
+
+			#{itm.Price},
+			#{itm.HaveInvoice},
+			#{itm.Durability},
+
+			#{itm.Remaining_amount},
+			#{itm.InvoiceNum}
+
+			)
+
+		</foreach>
+	</insert>
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 新增订单(安发) -->
+	<insert id="saveOrder" parameterType="com.fh.entity.warehouse.orderslist.Order"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into Orders (
+		Status,
+		TotalPrice,
+		Dept_ID,
+		CreateDate,
+		Remark,
+		Address,
+		Tel,
+		Name,
+		Email,
+		Original_ID
+		) values (
+		1,
+
+		CAST(IFNULL (#{total},0) AS DECIMAL(10,2)),
+		#{Dept_ID},
+		DATE_FORMAT(#{date_created},'%Y-%m-%d %H:%i:%S'),
+		#{remark},
+
+		#{billing.address_1},
+		#{billing.phone},
+		#{billing.first_name},
+		#{billing.email},
+		#{Original_ID}
+		)
+	</insert>
+
+
+
+
+	<!-- 新增明细 -->
+	<insert id="saveOrderitems" parameterType="java.util.List"
+		useGeneratedKeys="true">
+		insert into orderitems (
+		Order_ID,
+		Product_ID,
+		Price
+
+		) values
+
+		<foreach collection="list" item="itm" index="index" separator=",">
+
+
+			(
+			#{itm.Order_ID},
+			#{itm.Product_ID},
+			#{itm.total}
+			)
+
+		</foreach>
+
+
+
+	</insert>
+
+
+	<insert id="insertStudents" parameterType="java.util.List">
+		insert into t_student(
+		city_id
+		)
+		values
+		<foreach collection="list" item="itm" index="index" separator=",">
+			(
+			#{itm.city_id}
+			)
+		</foreach>
+	</insert>
+
+
+
+	<!-- Name varchar(30) NOT NULL, /* 名称 */ Domain_Name varchar(30) NOT NULL, 
+		/*域名*/ Consumer_Key varchar(30) NULL, Consumer_Secret varchar(30) NULL, Address 
+		varchar(256) NULL, /* 地址 */ Phone varchar(32) NULL, /* 电话 */ Remark varchar(250) 
+		NULL,/* 描述,备注 */ CreateDate datetime(3) Not NULL default current_timestamp, 
+		Status CHAR(1) NOT Null, -->
+
+	<!-- 新增客户 -->
+	<insert id="saveClients" parameterType="pd" flushCache="false">
+		insert
+		into Dept (
+		Name,
+		Domain_Name,
+		Consumer_Key,
+		Consumer_Secret,
+		Address,
+		Phone,
+		Remark,
+		Status
+
+		) values (
+		#{USERNAME},
+		#{URL},
+		#{Key},
+		#{Secret},
+		#{Address},
+		#{Phone},
+		#{Remark},
+		1
+
+		)
+	</insert>
+
+
+	<!-- 新增仓库 -->
+	<insert id="saveWarehouse" parameterType="pd" flushCache="false"
+		useGeneratedKeys="true" keyProperty="StoreHouse_ID">
+		insert into StoreHouse (
+		Address,
+		Phone
+
+
+		) values (
+		#{Address},
+		#{Phone}
+
+
+		)
+	</insert>
+
+	<!-- 新增商户仓库 -->
+	<insert id="saveClientsWarehouse" parameterType="pd" flushCache="false">
+		insert into Dept_StoreHouse (
+		Dept_ID,
+		StoreHouse_ID
+
+
+		) values (
+		#{DEP_ID},
+		#{StoreHouse_ID}
+
+		)
+	</insert>
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- 客户 列表(全部) -->
+	<select id="listAlLClients" parameterType="pd" resultType="pd"
+		useCache="true">
+		SELECT * FROM `Dept` WHERE 1
+
+	</select>
+
+
+
+
+
+	<!-- 仓库列表(全部) -->
+	<select id="listAlLWareHouses" parameterType="pd" resultType="pd"
+		useCache="true">
+		SELECT storehouse.*,Dept.name FROM storehouse, Dept_StoreHouse ,Dept
+		WHERE storehouse.StoreHouse_ID=Dept_StoreHouse.StoreHouse_ID and
+		Dept_StoreHouse.Dept_ID=dept.Dept_ID
+
+
+
+		<if test="Dept_ID != null and Dept_ID != ''">
+			and Dept_StoreHouse.Dept_ID = #{Dept_ID}
+		</if>
+
+
+
+	</select>
+
+
+
+	<!-- 删除 -->
+	<delete id="deleteWareHouses" parameterType="pd" flushCache="false">
+		delete from storehouse
+		where
+		StoreHouse_ID = #{StoreHouse_ID}
+	</delete>
+
+	<!-- 删除 -->
+	<delete id="deleteClientsWarehouse" parameterType="pd"
+		flushCache="false">
+		delete from dept_storehouse
+		where
+		StoreHouse_ID =
+		#{StoreHouse_ID}
+	</delete>
+
+
+</mapper>

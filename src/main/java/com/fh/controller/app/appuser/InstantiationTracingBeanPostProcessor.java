@@ -14,7 +14,7 @@ public class InstantiationTracingBeanPostProcessor implements ApplicationListene
 public void onApplicationEvent(ContextRefreshedEvent event) {
 	try {
 		
-		System.out.println("startdsfaaaaaaaaaaaaaaaaaaaaaa ");
+		System.out.println("this is invoked  ");
 		this.productService.listAllProducts();
 	} catch (Exception e) {
 		// TODO Auto-generated catch block

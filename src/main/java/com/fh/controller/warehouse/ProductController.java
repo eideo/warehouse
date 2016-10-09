@@ -49,7 +49,7 @@ public class ProductController extends BaseController {
 //	@Resource(name="roleService")
 //	private RoleService roleService;
 //	@Resource(name="menuService")
-	private MenuService menuService;
+
 	
 
 	

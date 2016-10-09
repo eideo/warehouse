@@ -35,14 +35,34 @@ public class EnterStockController extends BaseController {
 	String dep = null;
 	@Resource(name = "clientsService")
 	private ClientsService clientsService;
+	
+	
+	
+	
+	
+	
+	@RequestMapping(value =  { "/outStock" } )
+	public ModelAndView outStock(Page page) {
+		ModelAndView rs=null;
+		try {
+			rs = listEnterStock(page, "out");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rs;
+	
+	}
 
 	/**
 	 * 显示入库单列表
 	 */
-	@RequestMapping(value = "/enterStock")
+	//enterStock/outStock.do
+	@RequestMapping(value =  { "/enterStock"} )
 	public ModelAndView listEnterStock(Page page, @RequestParam(value = "out", required = false) String out)
 			throws Exception {
 		ModelAndView mv = this.getModelAndView();
+		System.out.println("testesteste1");
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();

@@ -40,49 +40,52 @@ public class EnterStockController extends BaseController {
 	 * 显示入库单列表
 	 */
 	@RequestMapping(value = "/enterStock")
-	public ModelAndView listEnterStock(Page page) throws Exception {
+	public ModelAndView listEnterStock(Page page, @RequestParam(value = "out", required = false) String out)
+			throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("Dept_ID", getDepId());
 
-		List<PageData> wareHousesList = clientsService.listAlLWareHouses(pd); // 列出用户列表
+		List<PageData> wareHousesList = clientsService.listAlLWareHouses(pd); //
 		mv.setViewName("warehouse/stock/stockList");
 		mv.addObject("wareHousesList", wareHousesList);
+		mv = getModel(mv, out);
 		// System.out.println("testlist:================"+productsList.size());
 		mv.addObject("pd", pd);
 		// mv.addObject(Const.SESSION_QX,this.getHC()); //按钮权限
 		return mv;
 	}
 
-	
-	
-	
-	
+	private ModelAndView getModel(ModelAndView mv, String out) {
+		if (StringUtils.isNotEmpty(out) && out.equalsIgnoreCase("out")) {
+			mv.addObject("title", "出库");
+		} else {
+			mv.addObject("title", "入库");
+		}
+		return mv;
+	}
 
 	/**
 	 * 显示库存总表
 	 */
-	@RequestMapping(value="/storeProducts")
-	public ModelAndView listtabUsers(Page page)throws Exception{
+	@RequestMapping(value = "/storeProducts")
+	public ModelAndView listtabUsers(Page page, @RequestParam(value = "out", required = false) String out)
+			throws Exception {
 		ModelAndView mv = this.getModelAndView();
-		//PageData pd = new PageData();
-		PageData	pd = this.getPageData();
+		// PageData pd = new PageData();
+		PageData pd = this.getPageData();
 		pd.put("Dept_ID", getDepId());
-		List<PageData>	productsList = clientsService.listStock(pd);			
+		List<PageData> productsList = clientsService.listStock(pd);
 		mv.setViewName("warehouse/stock/stockpileList");
 		mv.addObject("productsList", productsList);
-		System.out.println("testlist:================"+productsList.size());
+		System.out.println("testlist:================" + productsList.size());
 		mv.addObject("pd", pd);
-		//mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
+		// mv.addObject(Const.SESSION_QX,this.getHC()); //按钮权限
 		return mv;
 	}
-	
-	
-	
-	
-	
+
 	/**
 	 * 
 	 * @return
@@ -95,11 +98,12 @@ public class EnterStockController extends BaseController {
 	}
 
 	@RequestMapping(value = "/search")
-	public ModelAndView searchEnterStock(Page page,
+	public ModelAndView searchEnterStock(Page page, @RequestParam(value = "out", required = false) String out,
 			@RequestParam(value = "lastLoginStart", required = false) String start,
 			@RequestParam(value = "lastLoginEnd", required = false) String end,
 			@RequestParam(value = "EnterStock_ID", required = false) String EnterStock_ID) throws Exception {
 		ModelAndView mv = this.getModelAndView();
+		mv = getModel(mv, out);
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -132,11 +136,13 @@ public class EnterStockController extends BaseController {
 	 */
 	@RequestMapping(value = "/readExcel")
 	public ModelAndView readExcel(@RequestParam(value = "csv_file", required = false) MultipartFile file,
+			@RequestParam(value = "out", required = false) String out,
 			@RequestParam(value = "choseWarehouse", required = false) String choseWarehouse) throws Exception {
 		// ModelAndView mv = this.getModelAndView();
 		// PageData pd = this.getPageData();
 
 		ModelAndView modelAndView = new ModelAndView();
+		modelAndView = getModel(modelAndView, out);
 		modelAndView.setViewName("warehouse/stock/stockList");
 		// if(!Jurisdiction.buttonJurisdiction(menuUrl, "add")){return null;}
 
@@ -144,7 +150,6 @@ public class EnterStockController extends BaseController {
 			String filePath = PathUtil.getClasspath() + Const.FILEPATHFILE; // 文件上传路径
 			String fileName = FileUpload.fileUp(file, filePath, "stockexcel"); // 执行上传
 
-		
 			EnterStock enterStock = new EnterStock();
 			enterStock.setStoreHouse_ID(Integer.parseInt(choseWarehouse));
 			if (getCurrentUser().getDep_id() == null) {
@@ -159,7 +164,6 @@ public class EnterStockController extends BaseController {
 			// List<Role> roleList = roleService.listAllERRoles(); //列出所有二级角色
 
 			// pd.put("ROLE_ID", roleList.get(0).getROLE_ID()); //设置角色ID为随便第一个
-
 
 			List<EnterStockDetail> list = new ArrayList<>();
 

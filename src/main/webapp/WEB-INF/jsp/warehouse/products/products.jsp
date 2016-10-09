@@ -47,7 +47,7 @@
 					<th class="center">
 						<label><input type="checkbox" id="zcheckbox" /><span class="lbl"></span></label>
 					</th>
-					<th>SKY</th>
+					<th>SKU</th>
 					<th>NAME</th>
 					<th>NAME_CN</th>
 					<th> Remark</th>

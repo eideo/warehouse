@@ -38,7 +38,7 @@
 					<th class="center">
 						<label><input type="checkbox" id="zcheckbox" /><span class="lbl"></span></label>
 					</th>
-					<th>SKY</th>
+					<th>SKU</th>
 					<th>NAME</th>
 					<th>数量</th>
 					<th>平均成本价</th>

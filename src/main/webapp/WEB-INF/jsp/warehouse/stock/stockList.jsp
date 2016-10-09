@@ -27,7 +27,9 @@
 					<div class="widget-box transparent invoice-box">
 						<div class="widget-header widget-header-large">
 							<h3 class="pull-left grey lighter position-relative grey">
-								<i class="icon-leaf green"></i> 生成入库单并导入
+								<i class="icon-leaf green"></i> 生成${title}单并导入
+								
+								
 							</h3>
 
 							<div class="widget-toolbar no-border invoice-info">
@@ -67,7 +69,7 @@
 
 
 							<button type="button" class="btn btn-primary"
-								onclick="addStock();">生成入库单</button>
+								onclick="addStock();">生成${title}单</button>
 							<input id="upload" disabled="true" type="submit" value="提交"
 								class="btn btn-primary"> <input type="file"
 								name="csv_file" id="csv_file" onchange="fileSelected();"
@@ -89,7 +91,7 @@
 											<div class="row-fluid">
 												<div
 													class="span12 label label-large label-info arrowed-in arrowed-right">
-													<b>入库信息</b>
+													<b>${title}信息</b>
 												</div>
 											</div>
 											<div class="row-fluid ">
@@ -116,7 +118,7 @@
 											<div class="row-fluid">
 												<div
 													class="span12 label label-large label-info arrowed-in arrowed-right">
-													<b>入库单查询</b>
+													<b>${title}单查询</b>
 												</div>
 											</div>
 											<div class="space"></div>
@@ -204,7 +206,7 @@
 										<div class="row-fluid">
 											<div
 												class="span12 label label-large label-info arrowed-in arrowed-right">
-												<b>入库单明细</b>
+												<b>${title}单明细</b>
 											</div>
 										</div>
 
@@ -289,7 +291,7 @@
 
 										<div class="row-fluid">
 											<div class="span12 well">
-												入库明细不允许手工调整,如果更改数量或者价格许上传出库单对冲</div>
+												${title}明细不允许手工调整,如果更改数量或者价格许上传出库单对冲</div>
 										</div>
 
 									</div>

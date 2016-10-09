@@ -96,7 +96,7 @@ public class ClientsService {
 
 	private void updateOrInsertStock(PageData pd, EnterStockDetail d) throws Exception {
 
-		PageData pageData = (PageData) dao.findForList("WarehouseMapper.listStock", pd);
+		List<PageData> pageData = (List) dao.findForList("WarehouseMapper.listStock", pd);
 		if (pageData == null) {
 			// Quantity,
 			// Price
@@ -105,17 +105,18 @@ public class ClientsService {
 			dao.save("WarehouseMapper.saveStockpileDetail", pd);
 
 		} else {
-			int num = (int) pageData.get("Quantity");
-			double price = ((BigDecimal) pageData.get("Price")).doubleValue();
+			  PageData temp=pageData.get(0);
+			int num = (int) temp.get("Quantity");
+			double price = ((BigDecimal) temp.get("Price")).doubleValue();
 			int total = num + d.getQuantity();
-
+           
 			double aveprice = (num * price + d.getPrice() * d.getQuantity()) / total;
-			pageData.put("Quantity", total);
-			pageData.put("Price", aveprice);
+			temp.put("Quantity", total);
+			temp.put("Price", aveprice);
 			System.out.println("aveprice+********************"+aveprice);
 			// LastLeaveDate
-			pageData.put("LastLeaveDate", null);
-			dao.update("WarehouseMapper.updateStockDetail", pageData);
+			temp.put("LastLeaveDate", null);
+			dao.update("WarehouseMapper.updateStockDetail", temp);
 		}
 
 	}

@@ -218,7 +218,7 @@ public class EnterStockController extends BaseController {
 
 				detail.setProduct_ID(productid);
 				detail.setNAME(name);
-				System.out.println("list+  " + productid);
+				
 				int t = Integer.parseInt(pageData.getString("var1").trim());
 				detail.setQuantity(t);
 				detail.setRemaining_amount(t);
@@ -236,7 +236,7 @@ public class EnterStockController extends BaseController {
 			}
 			clientsService.saveStock(enterStock, isout);
 			// pd.put("EnterStockDetailList", list);
-			System.out.println("sizefff is " + list.size());
+	
 			modelAndView.addObject("EnterStockDetailList", list);
 			/* 存入数据库操作====================================== */
 

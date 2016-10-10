@@ -80,7 +80,9 @@ public class ClientsService {
 
 	public void saveStock(EnterStock enterStock,boolean out) throws Exception {
 		if(out){
+			System.out.println("test insert");
 			dao.save("WarehouseMapper.saveOutStock", enterStock);
+			
 		}else{
 			dao.save("WarehouseMapper.saveStock", enterStock);
 		}
@@ -100,6 +102,7 @@ public class ClientsService {
 		if(!out){
 			dao.save("WarehouseMapper.saveStockDetail", list);
 		}else{
+			System.out.println("test insert detail");
 			dao.save("WarehouseMapper.saveStockOutDetail", list);
 		}
 	

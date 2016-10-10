@@ -46,7 +46,7 @@
 
 
 
-						<form method="post" id="myform" action="enterStock/readExcel.do"
+						<form method="post" id="myform" action="enterStock/readExcel.do?out=${isout}"
 							enctype="multipart/form-data">
 							<div class="row-fluid">
 
@@ -250,7 +250,7 @@
 																<tr>
 																	<td class='center' style="width: 30px;"></td>
 																	<td>${detail.SKU }</td>
-																	<td><a>${detail.NAME }</a></td>
+																	<td>${detail.NAME }</td>
 																	<td>${detail.quantity }</td>
 																	<td>${detail.price }</td>
 																	<td>${detail.durability }</td>
@@ -270,14 +270,6 @@
 											</table>
 
 										</div>
-
-
-
-
-
-
-
-
 										<div class="hr hr8 hr-double hr-dotted"></div>
 
 										<div class="row-fluid">

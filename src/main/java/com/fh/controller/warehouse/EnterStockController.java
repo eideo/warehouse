@@ -40,7 +40,7 @@ public class EnterStockController extends BaseController {
 	public ModelAndView outStock(Page page) {
 		ModelAndView rs = null;
 		try {
-			rs = listEnterStock(page, "out");
+			rs = listEnterStock(page, true);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,7 +54,7 @@ public class EnterStockController extends BaseController {
 	 */
 	// enterStock/outStock.do
 	@RequestMapping(value = { "/enterStock" })
-	public ModelAndView listEnterStock(Page page, @RequestParam(value = "out", required = false) String out)
+	public ModelAndView listEnterStock(Page page, @RequestParam(value = "out", required = false) boolean out)
 			throws Exception {
 		ModelAndView mv = this.getModelAndView();
 
@@ -73,8 +73,8 @@ public class EnterStockController extends BaseController {
 		return mv;
 	}
 
-	private ModelAndView getModel(ModelAndView mv, String out) {
-		if (StringUtils.isNotEmpty(out) && out.equalsIgnoreCase("out")) {
+	private ModelAndView getModel(ModelAndView mv, boolean out) {
+		if (out) {
 			mv.addObject("title", "出库");
 			mv.addObject("isout",true);
 		} else {
@@ -120,7 +120,7 @@ public class EnterStockController extends BaseController {
 			@RequestParam(value = "lastLoginEnd", required = false) String end,
 			@RequestParam(value = "EnterStock_ID", required = false) String EnterStock_ID) throws Exception {
 		ModelAndView mv = this.getModelAndView();
-		System.out.println("test+++++++++++++++++"+out);
+		
 		//mv = getModel(mv, out);
 		// mv.
 		PageData pd = new PageData();
@@ -157,7 +157,7 @@ public class EnterStockController extends BaseController {
 		mv.addObject("stockList", stockList);
 		// System.out.println("testlist:================"+productsList.size());
 		mv.addObject("pd", pd);
-		// mv.addObject(Const.SESSION_QX,this.getHC()); //按钮权限
+	
 		return mv;
 	}
 
@@ -166,7 +166,7 @@ public class EnterStockController extends BaseController {
 	 */
 	@RequestMapping(value = "/readExcel")
 	public ModelAndView readExcel(@RequestParam(value = "csv_file", required = false) MultipartFile file,
-			@RequestParam(value = "out", required = false) String out,
+			@RequestParam(value = "out", required = false) boolean out,
 			@RequestParam(value = "choseWarehouse", required = false) String choseWarehouse) throws Exception {
 		// ModelAndView mv = this.getModelAndView();
 		// PageData pd = this.getPageData();
@@ -230,7 +230,7 @@ public class EnterStockController extends BaseController {
 			}
 			enterStock.setEnterStockDetailList(list);
 			boolean isout = false;
-			if (StringUtils.isNotEmpty(out)) {
+			if (out) {
 				isout = true;
 
 			}

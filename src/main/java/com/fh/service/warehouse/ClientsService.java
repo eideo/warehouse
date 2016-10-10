@@ -12,6 +12,7 @@ import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.EnterStockDetail;
+import com.fh.util.DateUtil;
 import com.fh.util.PageData;
 
 @Service("clientsService")
@@ -77,8 +78,13 @@ public class ClientsService {
 	 * 进货单导入
 	 */
 
-	public void saveStock(EnterStock enterStock) throws Exception {
-		dao.save("WarehouseMapper.saveStock", enterStock);
+	public void saveStock(EnterStock enterStock,boolean out) throws Exception {
+		if(out){
+			dao.save("WarehouseMapper.saveOutStock", enterStock);
+		}else{
+			dao.save("WarehouseMapper.saveStock", enterStock);
+		}
+	
 		// enterStock.getDept_ID();
 		// enterStock.getStoreHouse_ID();
 		PageData pData = new PageData();
@@ -89,14 +95,20 @@ public class ClientsService {
 		for (EnterStockDetail enterStockDetail : list) {
 			enterStockDetail.setEnterStock_ID(enterStock.getEnterStock_ID());
 			pData.put("Product_ID", enterStockDetail.getProduct_ID());
-			this.updateOrInsertStock(pData,enterStockDetail);
+			this.updateOrInsertStock(pData,enterStockDetail,out);
 		}
-		dao.save("WarehouseMapper.saveStockDetail", list);
+		if(!out){
+			dao.save("WarehouseMapper.saveStockDetail", list);
+		}else{
+			dao.save("WarehouseMapper.saveStockOutDetail", list);
+		}
+	
 	}
 
-	private void updateOrInsertStock(PageData pd, EnterStockDetail d) throws Exception {
+	private void updateOrInsertStock(PageData pd, EnterStockDetail d,boolean out) throws Exception {
 
 		List<PageData> pageData = (List) dao.findForList("WarehouseMapper.listStock", pd);
+		if(!out){
 		if (pageData == null) {
 			// Quantity,
 			// Price
@@ -117,6 +129,17 @@ public class ClientsService {
 			// LastLeaveDate
 			temp.put("LastLeaveDate", null);
 			dao.update("WarehouseMapper.updateStockDetail", temp);
+		}
+		}else{
+			if(pageData!=null){
+				  PageData temp=pageData.get(0);
+					int total = (int) temp.get("Quantity") - d.getQuantity();
+					temp.put("Quantity", total);
+					temp.put("LastLeaveDate", DateUtil.getDay());
+					dao.update("WarehouseMapper.updateStockDetail", temp);
+				  
+				  
+			}
 		}
 
 	}

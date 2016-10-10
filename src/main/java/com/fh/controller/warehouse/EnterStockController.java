@@ -35,15 +35,10 @@ public class EnterStockController extends BaseController {
 	String dep = null;
 	@Resource(name = "clientsService")
 	private ClientsService clientsService;
-	
-	
-	
-	
-	
-	
-	@RequestMapping(value =  { "/outStock" } )
+
+	@RequestMapping(value = { "/outStock" })
 	public ModelAndView outStock(Page page) {
-		ModelAndView rs=null;
+		ModelAndView rs = null;
 		try {
 			rs = listEnterStock(page, "out");
 		} catch (Exception e) {
@@ -51,18 +46,18 @@ public class EnterStockController extends BaseController {
 			e.printStackTrace();
 		}
 		return rs;
-	
+
 	}
 
 	/**
 	 * 显示入库单列表
 	 */
-	//enterStock/outStock.do
-	@RequestMapping(value =  { "/enterStock"} )
+	// enterStock/outStock.do
+	@RequestMapping(value = { "/enterStock" })
 	public ModelAndView listEnterStock(Page page, @RequestParam(value = "out", required = false) String out)
 			throws Exception {
 		ModelAndView mv = this.getModelAndView();
-		System.out.println("testesteste1");
+
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -81,8 +76,10 @@ public class EnterStockController extends BaseController {
 	private ModelAndView getModel(ModelAndView mv, String out) {
 		if (StringUtils.isNotEmpty(out) && out.equalsIgnoreCase("out")) {
 			mv.addObject("title", "出库");
+			mv.addObject("isout",true);
 		} else {
 			mv.addObject("title", "入库");
+			mv.addObject("isout",false);
 		}
 		return mv;
 	}
@@ -118,12 +115,13 @@ public class EnterStockController extends BaseController {
 	}
 
 	@RequestMapping(value = "/search")
-	public ModelAndView searchEnterStock(Page page, @RequestParam(value = "out", required = false) String out,
+	public ModelAndView searchEnterStock(Page page, @RequestParam(value = "out", required = false) boolean out,
 			@RequestParam(value = "lastLoginStart", required = false) String start,
 			@RequestParam(value = "lastLoginEnd", required = false) String end,
 			@RequestParam(value = "EnterStock_ID", required = false) String EnterStock_ID) throws Exception {
 		ModelAndView mv = this.getModelAndView();
-		mv = getModel(mv, out);
+		System.out.println("test+++++++++++++++++"+out);
+		//mv = getModel(mv, out);
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();
@@ -135,10 +133,22 @@ public class EnterStockController extends BaseController {
 		pd.put("start", start);
 		pd.put("end", end);
 
-		List<PageData> wareHousesList = clientsService.listAlLWareHouses(pd); // 列出用户列表
+		List<PageData> wareHousesList = clientsService.listAlLWareHouses(pd);
+		String table = "enterstock";// enterstock
+		if (out) {
+			table = "LeaveStock";
+		}
+		pd.put("table", table);
 		List<PageData> stockList = clientsService.listAlLStockIn(pd);
+
 		if (EnterStock_ID != null) {
 			pd.put("EnterStock_ID", EnterStock_ID);
+			if(out){
+				pd.put("enterstock_detail", "leavestock_detail");
+			}else{
+				pd.put("enterstock_detail", "enterstock_detail");
+				
+			}
 			List<EnterStockDetail> list = clientsService.listStockDetal(pd);
 			mv.addObject("EnterStockDetailList", list);
 		}
@@ -219,8 +229,12 @@ public class EnterStockController extends BaseController {
 
 			}
 			enterStock.setEnterStockDetailList(list);
+			boolean isout = false;
+			if (StringUtils.isNotEmpty(out)) {
+				isout = true;
 
-			clientsService.saveStock(enterStock);
+			}
+			clientsService.saveStock(enterStock, isout);
 			// pd.put("EnterStockDetailList", list);
 			System.out.println("sizefff is " + list.size());
 			modelAndView.addObject("EnterStockDetailList", list);

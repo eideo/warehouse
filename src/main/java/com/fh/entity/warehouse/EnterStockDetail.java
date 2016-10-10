@@ -33,6 +33,15 @@ public class EnterStockDetail {
 
 
 private int	EnterStock_ID;
+private int LeaveStock_ID;
+public int getLeaveStock_ID() {
+	return LeaveStock_ID;
+}
+
+public void setLeaveStock_ID(int leaveStock_ID) {
+	LeaveStock_ID = leaveStock_ID;
+}
+
 public int getEnterStock_ID() {
 	return EnterStock_ID;
 }

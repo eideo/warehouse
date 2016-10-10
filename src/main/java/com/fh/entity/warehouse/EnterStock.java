@@ -47,10 +47,25 @@ public class EnterStock {
 //	  Employee_ID      INT                     NULL,  /* 入库人 ,  外键 ( 参照 EMPLOYEE 表)*/
 //
 	private int EnterStock_ID;
+	public int getLeaveStock_ID() {
+		return LeaveStock_ID;
+	}
+	public void setLeaveStock_ID(int leaveStock_ID) {
+		LeaveStock_ID = leaveStock_ID;
+	}
+	public String getLeaveDate() {
+		return LeaveDate;
+	}
+	public void setLeaveDate(String leaveDate) {
+		LeaveDate = leaveDate;
+	}
+	private int LeaveStock_ID;
+	private String LeaveDate;
 	private int Dept_ID;
 	private int StoreHouse_ID;
 	private int Employee_ID;
 	private String EnterDate;
+
 	
 
 }

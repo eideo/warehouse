@@ -33,7 +33,7 @@
 	<!-- 入库单列表 -->
 	<select id="listAlLStockIn" parameterType="pd" resultType="pd"
 		useCache="true">
-		SELECT * FROM enterstock e , storehouse st WHERE
+		SELECT * FROM ${table}  e , storehouse st WHERE
 		st.StoreHouse_ID=e.StoreHouse_ID
 		and Dept_ID=#{Dept_ID}
 
@@ -48,7 +48,7 @@
 	<select id="listStockInDetail" parameterType="pd"
 		resultType="com.fh.entity.warehouse.EnterStockDetail" useCache="true">
 		SELECT
-		* FROM enterstock_detail e, product p WHERE e.Product_ID=p.Product_ID
+		* FROM ${enterstock_detail} e, product p WHERE e.Product_ID=p.Product_ID
 		AND e.EnterStock_ID=#{EnterStock_ID}
 
 	</select>
@@ -208,7 +208,60 @@
 
 		)
 	</insert>
+	
+	
+		<!-- 新增入库单 -->
+	<insert id="saveOutStock" parameterType="com.fh.entity.warehouse.EnterStock"
+		useGeneratedKeys="true" keyProperty="LeaveStock_ID">
+		insert into
+		LeaveStock (
+		Dept_ID,
+		EnterDate,
+		StoreHouse_ID
+		) values (
 
+		#{Dept_ID},
+		now(),
+		#{StoreHouse_ID}
+
+		)
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+
+	<!-- 新增出库明细 -->
+	<insert id="saveStockOutDetail" parameterType="java.util.List"
+		useGeneratedKeys="true">
+		insert into leavestock_detail (
+		LeaveStock_ID,
+		Product_ID,
+		Quantity,
+		Price
+		
+
+		) values
+
+		<foreach collection="list" item="itm" index="index" separator=",">
+
+
+			(
+			#{itm.LeaveStock_ID},
+			#{itm.Product_ID},
+			#{itm.Quantity},
+
+			#{itm.Price}
+			
+
+			)
+
+		</foreach>
+	</insert>
 
 
 
@@ -292,7 +345,7 @@
 
 
 
-	<!-- 新增明细 -->
+	<!-- 新增订单明细 -->
 	<insert id="saveOrderitems" parameterType="java.util.List"
 		useGeneratedKeys="true">
 		insert into orderitems (

@@ -77,12 +77,6 @@
 
 
 						</form>
-
-
-
-
-
-
 						<div class="widget-body">
 							<div class="widget-main padding-24">
 								<div class="row-fluid">
@@ -121,9 +115,18 @@
 													<b>${title}单查询</b>
 												</div>
 											</div>
-											<div class="space"></div>
-											<form method="post" id="myform" action="enterStock/search.do"
+
+
+
+
+
+
+
+
+   <form method="post" id="myform" action="enterStock/search.do?out=${isout}"
 												enctype="multipart/form-data">
+					
+											
 												<td><input class="span10 date-picker"
 													name="lastLoginStart" id="Start" data-provide="datepicker"
 													type="text" data-date-format="yyyy-mm-dd"

@@ -91,6 +91,31 @@
 	</update>
 
 
+	<!-- 新增产品 -->
+	<insert id="saveProducts" parameterType="com.fh.entity.system.BaseProductsEntity"
+		useGeneratedKeys="true">
+	
+				INSERT
+INTO
+  product(
+    Name,
+    Name_CN,
+    SKU
+
+  )
+VALUES(
+  #{Name},
+		#{NameCN},
+		#{SKU}
+
+)
+		
+		
+		
+		
+		
+
+	</insert>
 
 
 

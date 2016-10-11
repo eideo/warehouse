@@ -96,6 +96,7 @@ public class ClientsService {
 		List<EnterStockDetail> list = enterStock.getEnterStockDetailList();
 		for (EnterStockDetail enterStockDetail : list) {
 			enterStockDetail.setEnterStock_ID(enterStock.getEnterStock_ID());
+			enterStockDetail.setLeaveStock_ID(enterStock.getLeaveStock_ID());
 			pData.put("Product_ID", enterStockDetail.getProduct_ID());
 			this.updateOrInsertStock(pData,enterStockDetail,out);
 		}

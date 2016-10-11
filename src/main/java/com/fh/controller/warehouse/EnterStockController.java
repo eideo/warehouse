@@ -129,7 +129,7 @@ public class EnterStockController extends BaseController {
 
 		start = (start == null) ? DateUtil.getDay() : start;
 		end = (end == null) ? DateUtil.getDay() : end;
-
+     
 		pd.put("start", start);
 		pd.put("end", end);
 
@@ -145,8 +145,10 @@ public class EnterStockController extends BaseController {
 			pd.put("EnterStock_ID", EnterStock_ID);
 			if(out){
 				pd.put("enterstock_detail", "leavestock_detail");
+				pd.put("coloum", "LeaveStock_ID");
 			}else{
 				pd.put("enterstock_detail", "enterstock_detail");
+				pd.put("coloum", "EnterStock_ID");
 				
 			}
 			List<EnterStockDetail> list = clientsService.listStockDetal(pd);

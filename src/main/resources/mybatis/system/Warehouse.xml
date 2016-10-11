@@ -38,7 +38,8 @@
 		and Dept_ID=#{Dept_ID}
 
 		and e.EnterDate between STR_TO_DATE(#{start}, '%Y-%m-%d') and
-		STR_TO_DATE(#{end}, '%Y-%m-%d')
+		date_add(STR_TO_DATE(#{end}, '%Y-%m-%d'), interval 1 day); 
+		
 
 	</select>
 
@@ -49,7 +50,7 @@
 		resultType="com.fh.entity.warehouse.EnterStockDetail" useCache="true">
 		SELECT
 		* FROM ${enterstock_detail} e, product p WHERE e.Product_ID=p.Product_ID
-		AND e.EnterStock_ID=#{EnterStock_ID}
+		AND e.${coloum}=#{EnterStock_ID}
 
 	</select>
 

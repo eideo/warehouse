@@ -126,15 +126,20 @@ public class ProductController extends BaseController {
 			 */
 			BaseProductsEntity bf= new BaseProductsEntity();
 			for (PageData pageData : listPd) {
-				System.out.println(pageData.getString("var0").trim());
+				
+				String sku=pageData.getString("var0").trim();
+				System.out.println(sku);
 				System.out.println(pageData.getString("var1").trim());
 				System.out.println(pageData.getString("var2").trim());
+			
 //				pd.put("NAME", pageData.getString("var1"));	
 //				pd.put("Name_CN", pageData.getString("var2"));	
 //				pd.put("SKU", pageData.getString("var0"));	
 				bf.setName(pageData.getString("var1").trim());
 				bf.setNameCN(pageData.getString("var2").trim());
-				bf.setSKU(pageData.getString("var0").trim());
+				bf.setSKU(sku);
+				
+				
 				productService.saveProduct(bf);
 				
 			}

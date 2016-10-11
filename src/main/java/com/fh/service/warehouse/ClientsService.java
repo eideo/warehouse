@@ -113,7 +113,7 @@ public class ClientsService {
 
 		List<PageData> pageData = (List) dao.findForList("WarehouseMapper.listStock", pd);
 		if(!out){
-		if (pageData == null) {
+		if (pageData == null||pageData.size()==0) {
 			// Quantity,
 			// Price
 			pd.put("Quantity", d.getQuantity());

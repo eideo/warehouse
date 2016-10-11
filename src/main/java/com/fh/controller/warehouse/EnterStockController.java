@@ -225,7 +225,16 @@ public class EnterStockController extends BaseController {
 				detail.setQuantity(t);
 				detail.setRemaining_amount(t);
 				detail.setPrice(Double.parseDouble(pageData.getString("var2").trim()));
-				detail.setDurability(pageData.getString("var3").trim());
+				
+			String str=	pageData.getString("var3").trim();
+			if(StringUtils.isNotEmpty(str)){
+				detail.setDurability(str);
+			}
+					
+					
+					
+					
+				//detail.setDurability(pageData.getString("var3").trim());
 				detail.setInvoiceNum(pageData.getString("var4").trim());
 				list.add(detail);
 

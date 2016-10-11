@@ -33,13 +33,14 @@
 	<!-- 入库单列表 -->
 	<select id="listAlLStockIn" parameterType="pd" resultType="pd"
 		useCache="true">
-		SELECT * FROM ${table}  e , storehouse st WHERE
+		SELECT * FROM ${table} e , storehouse st WHERE
 		st.StoreHouse_ID=e.StoreHouse_ID
 		and Dept_ID=#{Dept_ID}
 
-		and e.EnterDate between STR_TO_DATE(#{start}, '%Y-%m-%d') and
-		date_add(STR_TO_DATE(#{end}, '%Y-%m-%d'), interval 1 day); 
-		
+		and e.EnterDate
+		between STR_TO_DATE(#{start}, '%Y-%m-%d') and
+		date_add(STR_TO_DATE(#{end}, '%Y-%m-%d'), interval 1 day);
+
 
 	</select>
 
@@ -49,10 +50,22 @@
 	<select id="listStockInDetail" parameterType="pd"
 		resultType="com.fh.entity.warehouse.EnterStockDetail" useCache="true">
 		SELECT
-		* FROM ${enterstock_detail} e, product p WHERE e.Product_ID=p.Product_ID
+		* FROM ${enterstock_detail} e, product p WHERE
+		e.Product_ID=p.Product_ID
 		AND e.${coloum}=#{EnterStock_ID}
 
 	</select>
+
+
+
+	<!-- check产品 -->
+	<select id="checkProduct" parameterType="String" resultType="pd"
+		useCache="true">
+		SELECT
+		* FROM product p WHERE p.sku=#{sku}
+
+	</select>
+
 
 
 
@@ -89,34 +102,6 @@
 		where
 		StockPile_ID = #{StockPile_ID}
 	</update>
-
-
-	<!-- 新增产品 -->
-	<insert id="saveProducts" parameterType="com.fh.entity.system.BaseProductsEntity"
-		useGeneratedKeys="true">
-	
-				INSERT
-INTO
-  product(
-    Name,
-    Name_CN,
-    SKU
-
-  )
-VALUES(
-  #{Name},
-		#{NameCN},
-		#{SKU}
-
-)
-		
-		
-		
-		
-		
-
-	</insert>
-
 
 
 
@@ -178,7 +163,7 @@ VALUES(
 
 
 	<!-- 新增产品 -->
-	<insert id="" parameterType="com.fh.entity.system.BaseProductsEntity"
+	<insert id="saveProducts" parameterType="com.fh.entity.system.BaseProductsEntity"
 		flushCache="false">
 		replace into product (
 		Name,
@@ -234,9 +219,9 @@ VALUES(
 
 		)
 	</insert>
-	
-	
-		<!-- 新增入库单 -->
+
+
+	<!-- 新增入库单 -->
 	<insert id="saveOutStock" parameterType="com.fh.entity.warehouse.EnterStock"
 		useGeneratedKeys="true" keyProperty="LeaveStock_ID">
 		insert into
@@ -252,14 +237,14 @@ VALUES(
 
 		)
 	</insert>
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
 
 	<!-- 新增出库明细 -->
 	<insert id="saveStockOutDetail" parameterType="java.util.List"
@@ -269,7 +254,7 @@ VALUES(
 		Product_ID,
 		Quantity,
 		Price
-		
+
 
 		) values
 
@@ -282,7 +267,7 @@ VALUES(
 			#{itm.Quantity},
 
 			#{itm.Price}
-			
+
 
 			)
 

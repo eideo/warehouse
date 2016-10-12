@@ -267,6 +267,11 @@ public class EnterStockController extends BaseController {
 
 				Element element = CacheUtil.getCacheObject(sku, "products");
 				if (element == null) {
+					
+					continue;
+				}
+				int t = Integer.parseInt(pageData.getString("var1").trim());
+				if(t==0){
 					continue;
 				}
 
@@ -279,7 +284,7 @@ public class EnterStockController extends BaseController {
 				detail.setProduct_ID(productid);
 				detail.setNAME(name);
 				
-				int t = Integer.parseInt(pageData.getString("var1").trim());
+				
 				detail.setQuantity(t);
 				detail.setRemaining_amount(t);
 				detail.setPrice(Double.parseDouble(pageData.getString("var2").trim()));

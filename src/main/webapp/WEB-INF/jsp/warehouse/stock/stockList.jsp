@@ -171,13 +171,13 @@
 
 
 
-																		<td class="center"><a href="enterStock/search.do?EnterStock_ID=${detail.EnterStock_ID }"> 详细信息</a></td>
+																		<td class="center"><a href="enterStock/search.do?out=${isout}&EnterStock_ID=${detail.EnterStock_ID }"> 详细信息</a></td>
 
 																		<td class="hidden-phone">${detail.Address }</td>
 																		<td class="hidden-phone">${detail.EnterDate }</td>
 
 
-																		<td>$10</td>
+																		<td>$0</td>
 
 
 

@@ -128,9 +128,6 @@ public class ProductController extends BaseController {
 			for (PageData pageData : listPd) {
 				
 				String sku=pageData.getString("var0").trim();
-				System.out.println(sku);
-				System.out.println(pageData.getString("var1").trim());
-				System.out.println(pageData.getString("var2").trim());
 			
 //				pd.put("NAME", pageData.getString("var1"));	
 //				pd.put("Name_CN", pageData.getString("var2"));	

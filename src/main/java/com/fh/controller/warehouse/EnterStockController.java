@@ -23,12 +23,10 @@ import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.FileUpload;
-import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelRead;
 import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.PathUtil;
-import com.fh.util.StringUtil;
 
 import net.sf.ehcache.Element;
 
@@ -118,11 +116,12 @@ public class EnterStockController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 		pd.put("Dept_ID", getDepId());
-
+		mv.addObject("isout", out);
 		List<PageData> wareHousesList = clientsService.listAlLWareHouses(pd); //
 		mv.setViewName("warehouse/stock/stockList");
 		mv.addObject("wareHousesList", wareHousesList);
 		mv = getModel(mv, out);
+	
 		// System.out.println("testlist:================"+productsList.size());
 		mv.addObject("pd", pd);
 		// mv.addObject(Const.SESSION_QX,this.getHC()); //按钮权限
@@ -149,6 +148,7 @@ public class EnterStockController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		// PageData pd = new PageData();
 		PageData pd = this.getPageData();
+	
 		pd.put("Dept_ID", getDepId());
 		List<PageData> productsList = clientsService.listStock(pd);
 		mv.setViewName("warehouse/stock/stockpileList");
@@ -181,6 +181,7 @@ public class EnterStockController extends BaseController {
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();
+	
 		pd.put("Dept_ID", getDepId());
 
 		start = (start == null) ? DateUtil.getDay() : start;
@@ -212,6 +213,7 @@ public class EnterStockController extends BaseController {
 		}
 		mv.setViewName("warehouse/stock/stockList");
 		mv.addObject("wareHousesList", wareHousesList);
+		mv.addObject("isout", out);
 		mv.addObject("stockList", stockList);
 		// System.out.println("testlist:================"+productsList.size());
 		mv.addObject("pd", pd);

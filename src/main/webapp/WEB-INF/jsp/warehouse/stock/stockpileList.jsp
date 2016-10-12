@@ -30,9 +30,12 @@
 
 	
 <div class="row-fluid">
-	
+<tr>
+</tr>
+<td>导出到EXCEL</td>
+		<td style="vertical-align:top;"><a class="btn btn-mini btn-light" onclick="toExcel();" title="导出到EXCEL"><i id="nav-search-icon" class="icon-download-alt"></i></a></td>
 		<table id="table_report" class="table table-striped table-bordered table-hover">
-			
+				
 			<thead>
 				<tr>
 					<th class="center">
@@ -266,6 +269,17 @@
 			$('.table_report_filter').css("color","red");
 			
 		});
+		
+		//导出excel
+		function toExcel(){
+
+	
+		window.location.href='<%=basePath%>enterStock/excel.do';
+		}
+		
+		
+		
+		
 		
 		</script>
 		

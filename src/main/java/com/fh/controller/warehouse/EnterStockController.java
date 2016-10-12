@@ -1,7 +1,9 @@
 package com.fh.controller.warehouse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -21,9 +23,12 @@ import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.FileUpload;
+import com.fh.util.Jurisdiction;
 import com.fh.util.ObjectExcelRead;
+import com.fh.util.ObjectExcelView;
 import com.fh.util.PageData;
 import com.fh.util.PathUtil;
+import com.fh.util.StringUtil;
 
 import net.sf.ehcache.Element;
 
@@ -48,7 +53,58 @@ public class EnterStockController extends BaseController {
 		return rs;
 
 	}
-
+	@RequestMapping(value="/excel")
+	public ModelAndView exportExcel(){
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+		pd = this.getPageData();
+		pd.put("Dept_ID", getDepId());
+		try{
+			
+				
+				Map<String,Object> dataMap = new HashMap<String,Object>();
+				List<String> titles = new ArrayList<String>();
+				
+				titles.add("sku"); 		//1
+				titles.add("名称");  		//2
+				titles.add("数量");			//3
+				titles.add("平均成本价");			//4
+				titles.add("所属仓库");			//5
+				titles.add("首次入库时间");			//6
+				titles.add("最后出库时间");		//7
+				
+				
+				dataMap.put("titles", titles);
+				
+			//	List<PageData> userList = userService.listAllUser(pd);
+				
+				List<PageData> stocklist = clientsService.listStock(pd);
+				System.out.println("ttttt "+ stocklist.size());
+				List<PageData> varList = new ArrayList<PageData>();
+				for(int i=0;i<stocklist.size();i++){
+					PageData vpd = new PageData();
+			
+					vpd.put("var1", stocklist.get(i).getString("SKU"));		//1
+					vpd.put("var2", stocklist.get(i).getString("Name_CN"));		//2
+					
+					
+					vpd.put("var3", String.valueOf(stocklist.get(i).get("Quantity")));			//3
+					vpd.put("var4", String.valueOf(stocklist.get(i).get("Price")));	//4
+					vpd.put("var5", stocklist.get(i).getString("Address"));		//5
+					vpd.put("var6", String.valueOf(stocklist.get(i).get("FirstEnterDate")));		//6
+					vpd.put("var7", String.valueOf(stocklist.get(i).get("LastLeaveDate")));	//7
+					
+					varList.add(vpd);
+				}
+				dataMap.put("varList", varList);
+				ObjectExcelView erv = new ObjectExcelView();					//执行excel操作
+				mv = new ModelAndView(erv,dataMap);
+			
+		} catch(Exception e){
+			logger.error(e.toString(), e);
+		}
+		return mv;
+	}
 	/**
 	 * 显示入库单列表
 	 */

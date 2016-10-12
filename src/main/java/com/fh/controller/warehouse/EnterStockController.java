@@ -177,7 +177,7 @@ public class EnterStockController extends BaseController {
 			@RequestParam(value = "EnterStock_ID", required = false) String EnterStock_ID) throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		
-		//mv = getModel(mv, out);
+		mv = getModel(mv, out);
 		// mv.
 		PageData pd = new PageData();
 		pd = this.getPageData();

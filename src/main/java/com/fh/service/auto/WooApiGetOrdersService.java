@@ -79,13 +79,13 @@ public class WooApiGetOrdersService {
 	}
 	
 	
-	private void saveOrders(List<Order> l,int dept) throws Exception{
+	public void saveOrders(List<Order> l,int dept) throws Exception{
 		if(l!=null&&l.size()!=0){
 		for (Order order : l) {
 		//	dao.findForObject("WarehouseMapper.checkOrder", order);
 			//System.out.println(order.getId()+order.getDate_created());
 			order.setOriginal_ID(order.getId());
-			order.setDept_ID(2);
+			order.setDept_ID(dept);
 			
 			int m=(int)dao.findForObject("WarehouseMapper.checkOrder", order);
 			

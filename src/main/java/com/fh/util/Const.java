@@ -60,7 +60,17 @@ public class Const {
 	public static final  String url="https://myalpha.co.nz/wp-json/wc/v1/orders?per_page=100&status=completed&after=";
 	public static final  String username="ck_9c69de5c44e4aa66588d610f17f6d0c09d25cc78";//"ck_3db1c674a6c6bbd9ccd50671ebdfda99b8f46067";
 	public  static final String password="cs_cf89e7f43aef93aeb44f0063994166909820d73f";//"cs_9c597830c0f6ed61bb157c10106577fb097b402f";
-                                 
+	
+	
+	//sysOrder
+	public static final String status="completed";
+	
+//	xfd.co.nz
+//	newco.co.nz
+//	lovehealth.nz
+//	myalpha.co.nz
+//	gopost.nz
+//                                 
       public static final int SERVER_ERROR=500;       
       public static final int Not_Acceptable=406; 
       public static final int Unsupported_Media=415;       

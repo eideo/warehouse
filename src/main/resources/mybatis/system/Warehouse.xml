@@ -149,7 +149,7 @@
 		resultMap="getOrders" useCache="true">
 		SELECT o.Original_ID id,
 		DATE_FORMAT(o.CreateDate, '%Y-%m-%d') AS date_created
-		,o.Order_ID,i.*,p.sku FROM orders o ,orderitems i,product p WHERE
+		,o.Order_ID,i.price,i.product_id,i.Order_ID,p.sku,o.remark FROM orders o ,orderitems i,product p WHERE
 		o.Order_ID=i.Order_ID and p.Product_ID=i.Product_ID
 		and o.CreateDate
 		between STR_TO_DATE(#{start}, '%Y-%m-%d') and

@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fh.util.CustomerDateAndTimeDeserialize;
 /**
  * Auto-generated: 2016-09-26 15:42:20
  *
@@ -35,18 +38,21 @@ public class Order {
 	public Date getCreated_at() {
 		return created_at;
 	}
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize .class)
 	public void setCreated_at(Date created_at) {
 		this.created_at = created_at;
 	}
 	public Date getUpdated_at() {
 		return updated_at;
 	}
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize .class)
 	public void setUpdated_at(Date updated_at) {
 		this.updated_at = updated_at;
 	}
 	public Date getCompleted_at() {
 		return completed_at;
 	}
+	@JsonDeserialize(using=CustomerDateAndTimeDeserialize .class)
 	public void setCompleted_at(Date completed_at) {
 		this.completed_at = completed_at;
 	}
@@ -158,10 +164,10 @@ public class Order {
 	public void setCustomer_id(int customer_id) {
 		this.customer_id = customer_id;
 	}
-	public Date getView_order_url() {
+	public String getView_order_url() {
 		return view_order_url;
 	}
-	public void setView_order_url(Date view_order_url) {
+	public void setView_order_url(String view_order_url) {
 		this.view_order_url = view_order_url;
 	}
 	public List<Line_Items> getLine_items() {
@@ -249,7 +255,7 @@ public class Order {
     @JsonProperty("customer_id")
     private int customer_id;
     @JsonProperty("view_order_url")
-    private Date view_order_url;
+    private String view_order_url;
     @JsonProperty("line_items")
     private List<Line_Items> line_items;
     @JsonProperty("shipping_lines")

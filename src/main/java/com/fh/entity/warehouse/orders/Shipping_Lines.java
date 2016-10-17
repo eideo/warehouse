@@ -19,10 +19,10 @@ public class Shipping_Lines {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public Date getMethod_id() {
+	public String getMethod_id() {
 		return method_id;
 	}
-	public void setMethod_id(Date method_id) {
+	public void setMethod_id(String method_id) {
 		this.method_id = method_id;
 	}
 	public String getMethod_title() {
@@ -39,7 +39,7 @@ public class Shipping_Lines {
 	}
 	private int id;
     @JsonProperty("method_id")
-    private Date method_id;
+    private String method_id;
     @JsonProperty("method_title")
     private String method_title;
     private String total;

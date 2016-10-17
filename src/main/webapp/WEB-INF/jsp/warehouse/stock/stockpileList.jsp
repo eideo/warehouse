@@ -278,7 +278,27 @@
 		}
 		
 		
-		
+
+        $(function(){  
+      	  alert("table_report ");
+      	  alert("I am an alert box!");
+      	  
+      	  
+      	   var totalRow = 0  ;
+      	    $('#table_report tr').each(function() {  
+      	        $(this).find('(3)').each(function(){  
+      	                totalRow += parseFloat($(this).text());   
+      	                alert(""+totalRow);
+      	        });  
+      	    });  
+      	      
+      	    $('#totalRow').append('<td>合计</td><td></td><td>'+totalRow+'</td><td></td>');  
+      	  
+      	  
+      	  
+      	  
+      	 
+      	});  
 		
 		
 		</script>

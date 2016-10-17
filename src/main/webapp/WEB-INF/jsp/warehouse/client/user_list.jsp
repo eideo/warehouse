@@ -55,7 +55,7 @@
 				<c:forEach items="${userList}" var="user" varStatus="vs">
 				<tr>
 					<td class='center' style="width: 30px;">
-						<c:if test="${user.USERNAME != 'admin'}"><label><input type='checkbox' name='ids' value="${user.USER_ID }"/><span class="lbl"></span></label></c:if>
+						<c:if test="${user.USERNAME != 'admin'}"><label><input type='checkbox' name='ids' value="${user.Dept_ID }"/><span class="lbl"></span></label></c:if>
 						<c:if test="${user.USERNAME == 'admin'}"><label><input type='checkbox' disabled="disabled" /><span class="lbl"></span></label></c:if>
 					</td>
 					<td>${user.Name }</td>
@@ -79,7 +79,7 @@
 								<c:when test="${user.USERNAME=='admin'}"></c:when>
 								<c:otherwise>
 									<c:if test="${QX.del == 1 }">
-									 <a class='btn btn-mini btn-danger' title="删除" onclick="delUser('${user.USER_ID }','${user.USERNAME }');"><i class='icon-trash'></i></a>
+									 <a class='btn btn-mini btn-danger' title="删除" onclick="delUser('${user.Dept_ID }','${user.USERNAME }');"><i class='icon-trash'></i></a>
 									</c:if>
 								</c:otherwise>
 							</c:choose>
@@ -218,10 +218,15 @@
 		//删除
 		function delUser(userId,msg){
 			bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
+				alert("userId "+userId);
+				alert("userId "+result);
 				if(result) {
-					var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>clients/deleteDept.do?Dept_ID="+userId;
+					alert("userId "+url);
 					$.get(url,function(data){
+						alert("TEST "+url);
 						if(data=="success"){
+							alert("TEST2 "+url);
 							document.location.reload();
 							top.jzts();
 						}

@@ -30,6 +30,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fh.controller.app.response.ResBase;
 import com.fh.controller.base.BaseController;
 import com.fh.controller.base.ResponseData;
@@ -40,8 +41,11 @@ import com.fh.entity.warehouse.orders.JsonRootBean;
 import com.fh.entity.warehouse.orders.Order;
 import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.service.system.appuser.AppuserService;
+import com.fh.util.Const;
+import com.fh.util.CustomerDateAndTimeDeserialize;
 import com.fh.util.MD5;
 import com.fh.util.PageData;
+import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 /**
  * 会员-接口类
@@ -99,6 +103,7 @@ public class IntAppuserController extends BaseController {
 
 	private boolean checkToken() {
 		String token = request.getHeader("password");
+		System.out.println("password is "+token);
 		boolean rs = false;
 		if (StringUtils.isEmpty(token) || !token.equalsIgnoreCase("cs_9c597830c0f6ed61bb157c10106577fb097b402f")) {
 			rs = true;
@@ -119,6 +124,7 @@ public class IntAppuserController extends BaseController {
 			res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return "please check your password";
 		}
+		System.out.println();
 		//
 		if(StringUtils.isEmpty(start)||StringUtils.isEmpty(to)){
 			res.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -129,12 +135,28 @@ public class IntAppuserController extends BaseController {
 	}
 	
 
-	// http://nebulahub.asuscomm.com/Warehouse//appapi/orderApi
-	@RequestMapping(value = { "/orderApi" }, method = RequestMethod.POST, produces = {
+	// http://127.0.0.1:8080/Warehouse/appapi/orderApi
+	@RequestMapping(value = { "/orderApi/{dpt}" }, method = RequestMethod.POST, produces = {
 			"application/json;charset=UTF-8" })
 	@ResponseBody
-	public Object getOrders(@RequestBody JsonRootBean jsonRootBean, HttpServletRequest req) {
+	
+	public Object getOrders(@RequestBody JsonRootBean jsonRootBean,@PathVariable String dpt, HttpServletRequest req) {
+
+		
 		Order o = jsonRootBean.getOrder();
+		String tmp=o.getStatus();
+		if(StringUtils.isNotEmpty(tmp)&&tmp.equalsIgnoreCase(Const.status)){
+			
+			System.out.println("dpt is "+dpt);
+			if(jsonRootBean !=null){
+				System.out.println("this is be invoked id is   "+o .getId());
+				
+				
+				System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
+			}
+		}
+	
+	
 	
 	//	System.out.println(o.getTeString());
 ////

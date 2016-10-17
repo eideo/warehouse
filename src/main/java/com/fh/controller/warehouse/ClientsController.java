@@ -20,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -162,7 +164,7 @@ public class ClientsController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		System.out.println("testestestest");
+
 		List<PageData>	userList = clientsService.listAlLClients(pd);			//列出用户列表
 		mv.setViewName("warehouse/client/user_list");
 		mv.addObject("userList", userList);
@@ -174,12 +176,15 @@ public class ClientsController extends BaseController {
 	/**
 	 * 删除用户
 	 */
-	@RequestMapping(value="/deleteU")
-	public void deleteU(PrintWriter out){
+	@RequestMapping(value="/deleteDept", method = RequestMethod.GET)
+	public void deleteU(PrintWriter out,@RequestParam(value = "Dept_ID") String Dept_ID){
+
 		PageData pd = new PageData();
+		System.out.println("id== CXZVCXZV  "+Dept_ID);
 		try{
 			pd = this.getPageData();
-			if(Jurisdiction.buttonJurisdiction(menuUrl, "del")){clientsService.deleteU(pd);}
+			if(Jurisdiction.buttonJurisdiction(menuUrl, "del")){clientsService.deleteU(Dept_ID);}
+			
 			out.write("success");
 			out.close();
 		} catch(Exception e){
@@ -195,6 +200,7 @@ public class ClientsController extends BaseController {
 	@ResponseBody
 	public Object deleteAllU() {
 		PageData pd = new PageData();
+		System.out.println("del all users");
 		Map<String,Object> map = new HashMap<String,Object>();
 		try {
 			pd = this.getPageData();

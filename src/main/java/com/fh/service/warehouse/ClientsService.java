@@ -217,7 +217,7 @@ public class ClientsService {
 	/*
 	 * 删除用户
 	 */
-	public void deleteU(PageData pd) throws Exception {
+	public void deleteU(String Dept_ID) throws Exception {
 		// dao.delete("UserXMapper.deleteU", pd);
 	}
 

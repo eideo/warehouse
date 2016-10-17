@@ -221,7 +221,7 @@
 
 										<div class="row-fluid">
 
-											<table class="table table-striped table-bordered table-hover">
+											<table id="mytable" class="table table-striped table-bordered table-hover">
 
 												<thead>
 													<tr>
@@ -275,7 +275,7 @@
 										<div class="row-fluid">
 											<div class="span5 pull-right">
 												<h4 class="pull-right">
-													Total amount : <span class="red">$</span>
+													Total amount : <span id="total" class="red">0.00$</span>
 												</h4>
 											</div>
 
@@ -286,7 +286,7 @@
 
 										<div class="row-fluid">
 											<div class="span12 well">
-												${title}明细不允许手工调整,如果更改数量或者价格许上传出库单对冲</div>
+												${title}明细不允许手工调整,如果更改数量或者价格请使用盘点模块</div>
 										</div>
 
 									</div>
@@ -313,16 +313,17 @@
 							.write("<script src='js/jquery-1.9.1.min.js'>\x3C/script>");
 		</script>
 
-
-		<!-- page specific plugin scripts -->
-
-		<!-- ace scripts -->
-
-		<!-- 引入 -->
-
-
-
 		<script src="static/js/ace.min.js"></script>
+	
+			<script type="text/javascript">
+			$(top.hangge());			
+
+          $(function(){  
+        	  alert("fdg2fdfsfd ");
+        	  alert("I am an alert box!");
+        	 
+        	});  
+		</script>
 
 		<script type="text/javascript" src="static/js/chosen.jquery.min.js"></script>
 		<!-- 下拉框 -->
@@ -330,72 +331,11 @@
 			src="static/js/bootstrap-datepicker.min.js"></script>
 		<!-- 日期框 -->
 		<script type="text/javascript" src="static/js/bootbox.min.js"></script>
-		<!-- 确认窗口 -->
-		<!-- 引入 -->
-		<!-- inline scripts related to this page -->
-		<script type="text/javascript">
-			$(top.hangge());
-
-			$(function() {
-				var oTable1 = $('#table_report').dataTable({
-					"aoColumns" : [ {
-						"bSortable" : false
-					}, null, null, null, null, null, {
-						"bSortable" : false
-					} ]
-				});
-
-				$('table th input:checkbox').on(
-						'click',
-						function() {
-							var that = this;
-							$(this).closest('table').find(
-									'tr > td:first-child input:checkbox').each(
-									function() {
-										this.checked = that.checked;
-										$(this).closest('tr').toggleClass(
-												'selected');
-									});
-
-						});
-				$('[data-rel=tooltip]').tooltip();
-			})
-
-			//修改
-			function addStock() {
-				//	$("#stock").css.(display: none;);
-				var temp = $('#choseWarehouse');
-				// $(".selector").val();
-				if (!jQuery.isEmptyObject(temp.val())) {
-					//console.log("dsfdsf "+temp);
-					//	alert("dsfdsfsdf");
-					var mydate = new Date();
-					var t = mydate.toLocaleString()
-
-					$("#timestock").text(t);
-
-					$("#stockaddress").text(temp.text());
-
-					$('#upload').removeAttr("disabled");
-
-					$('#stock').show();
-					$('#queryStock').hide();
-
-				} else {
-					alert("pleas chose one warehouse");
-				}
-
-			}
-
-			$(function() {
-				alert("test");
-				//日期框
-				$('.date-picker').datepicker();
-
-				//下拉框
-
-			});
-		</script>
+	
+	
 </body>
+
+		
+
 </html>
 

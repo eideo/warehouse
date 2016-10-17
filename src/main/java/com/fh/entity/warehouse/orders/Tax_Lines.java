@@ -25,10 +25,10 @@ public class Tax_Lines {
 	public void setRate_id(String rate_id) {
 		this.rate_id = rate_id;
 	}
-	public Date getCode() {
+	public String getCode() {
 		return code;
 	}
-	public void setCode(Date code) {
+	public void setCode(String code) {
 		this.code = code;
 	}
 	public String getTitle() {
@@ -52,7 +52,7 @@ public class Tax_Lines {
 	private int id;
     @JsonProperty("rate_id")
     private String rate_id;
-    private Date code;
+    private String code;
     private String title;
     private String total;
     private boolean compound;

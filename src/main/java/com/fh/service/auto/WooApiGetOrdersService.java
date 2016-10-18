@@ -18,6 +18,7 @@ import com.fh.entity.AnfiApi;
 import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Iterm;
 import com.fh.entity.warehouse.orderslist.Order;
+import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.JsonUtil;
@@ -27,6 +28,8 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+
+import net.sf.ehcache.Element;
 
 @Service("autoApiService")
 public class WooApiGetOrdersService {
@@ -52,7 +55,7 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa()
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String date = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
+		String date = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-7));
 
 		HttpResponse<JsonNode> response = Unirest.get(this.url + date).basicAuth(this.username, this.password).asJson();
 
@@ -104,8 +107,20 @@ public class WooApiGetOrdersService {
 					// System.out.println("productid======"+order.getId());
 					List<Iterm> iterms = order.getLine_items();
 					for (Iterm iterm : iterms) {
-						int productid = (int) dao.findForObject("WarehouseMapper.searchProduct", iterm.getSku());
-						// System.out.println("sku+++++++++++++++++++++++++"+iterm.getSku());
+						System.out.println("sku is "+iterm.getSku());
+						
+						Element element = CacheUtil.getCacheObject(iterm.getSku(), "products");
+						if (element == null) {
+							
+							continue;
+						}
+						
+						
+						
+						PageData tmPageData = (PageData) element.getObjectValue();
+
+						int productid = (Integer) tmPageData.get("Product_ID");
+		
 						iterm.setOrder_ID(order.getId());
 
 						iterm.setProduct_ID(productid);

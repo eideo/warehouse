@@ -25,11 +25,14 @@ import com.fh.entity.Page;
 import com.fh.entity.system.BaseProductsEntity;
 import com.fh.service.system.menu.MenuService;
 import com.fh.service.warehouse.ProductService;
+import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.FileUpload;
 import com.fh.util.ObjectExcelRead;
 import com.fh.util.PageData;
 import com.fh.util.PathUtil;
+
+import net.sf.ehcache.Element;
 
 
 /** 
@@ -128,10 +131,16 @@ public class ProductController extends BaseController {
 			for (PageData pageData : listPd) {
 				
 				String sku=pageData.getString("var0").trim();
+				
+				
+				Element element = CacheUtil.getCacheObject(sku, "products");
+				if (element != null) {
+					
+					continue;
+				}
+				
 			
-//				pd.put("NAME", pageData.getString("var1"));	
-//				pd.put("Name_CN", pageData.getString("var2"));	
-//				pd.put("SKU", pageData.getString("var0"));	
+                System.out.println("new      "+sku);
 				bf.setName(pageData.getString("var1").trim());
 				bf.setNameCN(pageData.getString("var2").trim());
 				bf.setSKU(sku);

@@ -2,6 +2,7 @@ package com.fh.controller.app.appuser;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -41,11 +42,14 @@ import com.fh.entity.warehouse.orders.JsonRootBean;
 import com.fh.entity.warehouse.orders.Order;
 import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.service.system.appuser.AppuserService;
+import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.CustomerDateAndTimeDeserialize;
 import com.fh.util.MD5;
 import com.fh.util.PageData;
 import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
+
+import net.sf.ehcache.Element;
 
 /**
  * 会员-接口类
@@ -136,23 +140,37 @@ public class IntAppuserController extends BaseController {
 	
 
 	// http://127.0.0.1:8080/Warehouse/appapi/orderApi
-	@RequestMapping(value = { "/orderApi/{dpt}" }, method = RequestMethod.POST, produces = {
+	@RequestMapping(value = { "/orderApi/{key}" }, method = RequestMethod.POST, produces = {
 			"application/json;charset=UTF-8" })
 	@ResponseBody
 	
-	public Object getOrders(@RequestBody JsonRootBean jsonRootBean,@PathVariable String dpt, HttpServletRequest req) {
+	public Object getOrders(@RequestBody JsonRootBean jsonRootBean,@PathVariable String key, HttpServletRequest req) {
 
 		
 		Order o = jsonRootBean.getOrder();
+		
+		//order.setLine_items(o.getLine_items());
+		System.out.println("dpt key is "+key);
 		String tmp=o.getStatus();
-		if(StringUtils.isNotEmpty(tmp)&&tmp.equalsIgnoreCase(Const.status)){
-			
-			System.out.println("dpt is "+dpt);
+		if(StringUtils.isNotEmpty(tmp)){
+			Element element = CacheUtil.getCacheObject(key, "clients");
+			PageData tmPageData = (PageData) element.getObjectValue();
+			int dptint=(Integer) tmPageData.get("Dept_ID");
+			System.out.println("dpt is "+dptint);
 			if(jsonRootBean !=null){
 				System.out.println("this is be invoked id is   "+o .getId());
 				
-				
-				System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
+				o.setDept_ID(dptint);
+				//System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
+				java.util.List<Order> list= new ArrayList<Order>();
+				list.add(o);
+			
+				try {
+					autoApiService.saveOrdersCommon(list,dptint);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	

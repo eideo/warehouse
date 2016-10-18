@@ -192,7 +192,7 @@
 	<!-- check if the user in database -->
 	<select id="checkOrder" parameterType="com.fh.entity.warehouse.orderslist.Order"
 		resultType="java.lang.Integer">
-		SELECT count(*) FROM `orders` WHERE Dept_ID=#{Dept_ID} and
+		SELECT Order_ID FROM `orders` WHERE Dept_ID=#{Dept_ID} and
 		Original_ID=#{Original_ID}
 	</select>
 
@@ -354,10 +354,88 @@
 	</insert>
 
 
+	<!-- 新增订单(通用) -->
+	<insert id="saveOrderCommon" parameterType="com.fh.entity.warehouse.orders.Order"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into Orders (
+		Status,
+		TotalPrice,
+		Dept_ID,
+		CreateDate,
+		Remark,
+		Address,
+		Tel,
+		Name,
+		Email,
+		Original_ID
+		) values (
+		1,
+
+		CAST(IFNULL (#{total},0) AS DECIMAL(10,2)),
+		#{Dept_ID},
+		DATE_FORMAT(#{completed_at},'%Y-%m-%d %H:%i:%S'),
+		#{remark},
+
+		#{billing_address.address_1},
+		#{billing_address.phone},
+		#{billing_address.first_name},
+		#{billing_address.email},
+		#{Original_ID}
+		)
+	</insert>
 
 
-	<!-- 新增订单明细 -->
+
+
+
+
+
+
+	<!-- 新增订单明细anfa -->
 	<insert id="saveOrderitems" parameterType="java.util.List"
+		useGeneratedKeys="true">
+		insert into orderitems (
+		Order_ID,
+		Product_ID,
+		Price
+
+		) values
+
+		<foreach collection="list" item="itm" index="index" separator=",">
+
+
+			(
+			#{itm.Order_ID},
+			#{itm.Product_ID},
+			#{itm.total}
+			)
+
+		</foreach>
+
+
+
+	</insert>
+	
+	
+	
+	
+	<!-- 更新订单 -->
+	<update id="updateOrderstatus" parameterType="pd" flushCache="false">
+		update Orders
+		set
+		Status=#{Status}
+		where
+		Order_ID = #{Order_ID}
+		
+		
+	</update>
+
+	
+	
+	
+
+	<!-- 新增订单明细 通用-->
+	<insert id="saveCommonOrderitems" parameterType="java.util.List"
 		useGeneratedKeys="true">
 		insert into orderitems (
 		Order_ID,
@@ -471,7 +549,7 @@
 
 
 	<!-- 客户 列表(全部) -->
-	<select id="listAlLClients" parameterType="pd" resultType="pd"
+	<select id="listAlLClients"  resultType="pd"
 		useCache="true">
 		SELECT * FROM `Dept` WHERE 1
 
@@ -506,6 +584,21 @@
 		where
 		StoreHouse_ID = #{StoreHouse_ID}
 	</delete>
+	
+	
+	
+	
+	<!-- 删除 客户-->
+	<delete id="deleteClients" parameterType="String" flushCache="false">
+		delete from dept
+		where
+		Dept_ID = #{Dept_ID}
+	</delete>
+	
+	
+	
+	
+	
 
 	<!-- 删除 -->
 	<delete id="deleteClientsWarehouse" parameterType="pd"

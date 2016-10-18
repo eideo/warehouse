@@ -12,6 +12,7 @@ import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.EnterStockDetail;
+import com.fh.util.CacheUtil;
 import com.fh.util.DateUtil;
 import com.fh.util.PageData;
 
@@ -32,9 +33,14 @@ public class ClientsService {
 	/*
 	 * 用户列表(全部)
 	 */
-	/// @Cacheable(value = "productCache", key="products")
-	public List<PageData> listAlLClients(PageData pd) throws Exception {
-		return (List<PageData>) dao.findForList("WarehouseMapper.listAlLClients", pd);
+	//@Cacheable(value = "productCache", key="products")
+	public List<PageData> listAlLClients() throws Exception {
+		List<PageData> list = (List<PageData>) (List<PageData>) dao.findForList("WarehouseMapper.listAlLClients", null);
+		for (PageData pageData : list) {
+			CacheUtil.cacheSave(pageData.get("Consumer_Key"), pageData, "clients");
+		}
+		
+		return list;
 	}
 
 	/*
@@ -218,7 +224,7 @@ public class ClientsService {
 	 * 删除用户
 	 */
 	public void deleteU(String Dept_ID) throws Exception {
-		// dao.delete("UserXMapper.deleteU", pd);
+		 dao.delete("WarehouseMapper.deleteClients", Dept_ID);
 	}
 
 	/*

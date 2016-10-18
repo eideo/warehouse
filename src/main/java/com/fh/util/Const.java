@@ -78,6 +78,16 @@ public class Const {
       public static final int Method_Not_Allowed=405;  
       public static final int Bad_Reques=400;   
       public static final int Not_Found=404;  
+      
+      //wwh  13:54:14
+   //   pending, processing, on-hold, completed, cancelled, refunded , failed.
+      
+      public enum Status {  
+    	  pending, processing, onhold, completed,  cancelled,refunded , failed
+    	} 
+      
+      
+
  
 /*
  * 100	Continue	继续。客户端应继续其请求

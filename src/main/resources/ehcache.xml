@@ -53,6 +53,21 @@
         diskSpoolBufferSizeMB="50" 
         diskExpiryThreadIntervalSeconds="120"
         memoryStoreEvictionPolicy="LFU" /> 
+        
+        
+                     
+            <cache name="clients"         
+        maxElementsInMemory="150"
+        maxElementsOnDisk="0" 
+        eternal="true" 
+        overflowToDisk="false"
+        diskPersistent="false" 
+        timeToIdleSeconds="120" 
+        timeToLiveSeconds="300"
+        diskSpoolBufferSizeMB="50" 
+        diskExpiryThreadIntervalSeconds="120"
+        memoryStoreEvictionPolicy="LFU" /> 
+        
 
         
      

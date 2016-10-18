@@ -101,6 +101,19 @@ public class Line_Items {
     private int product_id;
     private String sku;
     private List<String> meta;
-    
+    public int getOrder_ID() {
+		return Order_ID;
+	}
+	public void setOrder_ID(int order_ID) {
+		Order_ID = order_ID;
+	}
+	public int getProduct_ID() {
+		return Product_ID;
+	}
+	public void setProduct_ID(int product_ID) {
+		Product_ID = product_ID;
+	}
+	private int Order_ID;
+    private int Product_ID;
 
 }

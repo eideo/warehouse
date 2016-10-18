@@ -218,13 +218,12 @@
 		//删除
 		function delUser(userId,msg){
 			bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
-				alert("userId "+userId);
-				alert("userId "+result);
+			
 				if(result) {
-					var url = "<%=basePath%>clients/deleteDept.do?Dept_ID="+userId;
+					var url = "<%=basePath%>clients/deleteDepts.do?Dept_ID="+userId;
 					alert("userId "+url);
 					$.get(url,function(data){
-						alert("TEST "+url);
+				
 						if(data=="success"){
 							alert("TEST2 "+url);
 							document.location.reload();

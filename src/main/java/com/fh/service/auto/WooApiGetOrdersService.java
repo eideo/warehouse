@@ -16,12 +16,14 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.AnfiApi;
+import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Iterm;
 import com.fh.entity.warehouse.orderslist.Order;
 import com.fh.util.Const;
 import com.fh.util.DateUtil;
 import com.fh.util.JsonUtil;
 import com.fh.util.Logger;
+import com.fh.util.PageData;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -119,6 +121,77 @@ public class WooApiGetOrdersService {
 		}
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public void saveOrdersCommon(List<com.fh.entity.warehouse.orders.Order> l,int dept) throws Exception{
+		if(l!=null&&l.size()!=0){
+		for (com.fh.entity.warehouse.orders.Order order : l) {
+		//	dao.findForObject("WarehouseMapper.checkOrder", order);
+			//System.out.println(order.getId()+order.getDate_created());
+			order.setOriginal_ID(order.getId());
+			order.setDept_ID(dept);
+			
+			int m=(int)dao.findForObject("WarehouseMapper.checkOrder", order);
+			
+			
+			
+			
+		//	System.out.println(dao.findForObject("WarehouseMapper.checkOrder", order));
+			
+			if(m==0){
+			//  String remark=order.getBilling().getCity()+","+order.getBilling().getCompany();
+			
+			//	order.setRemark(remark);
+				//order.setDept_ID(dept);
+				//order.setId(null);
+				dao.save("WarehouseMapper.saveOrderCommon", order);
+				
+				System.out.println("saveOrderCommon第三方======"+order.getId());
+				List<Line_Items> iterms = order.getLine_items();
+				for (Line_Items iterm : iterms) {
+					int productid =(int)dao.findForObject("WarehouseMapper.searchProduct", iterm.getSku());
+					//System.out.println("sku+++++++++++++++++++++++++"+iterm.getSku());
+					iterm.setOrder_ID(order.getId());
+					
+					iterm.setProduct_ID(productid);
+					
+					//System.out.println("ppp===="+productid);
+					
+				}
+				dao.save("WarehouseMapper.saveOrderitems", iterms);
+				
+				
+			}else {
+				PageData pD =new PageData();
+				pD.put("Order_ID", m);
+				pD.put("Status", order.getStatus());
+				dao.update("WarehouseMapper.updateOrderstatus", pD);
+			}
+			
+		}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	
 	/**

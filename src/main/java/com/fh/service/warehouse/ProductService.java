@@ -8,7 +8,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.fh.dao.DaoSupport;
-import com.fh.entity.Page;
 import com.fh.entity.system.BaseProductsEntity;
 import com.fh.util.CacheUtil;
 import com.fh.util.PageData;

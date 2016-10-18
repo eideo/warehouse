@@ -34,6 +34,7 @@ import com.fh.service.warehouse.ClientsService;
 import com.fh.util.AppUtil;
 import com.fh.util.Const;
 import com.fh.util.Jurisdiction;
+import com.fh.util.MD5;
 import com.fh.util.PageData;
 
 /** 
@@ -72,7 +73,10 @@ public class ClientsController extends BaseController {
 //		pd.put("SKIN", "default");				//默认皮肤
 //		Clients clients= new Clients();
 //		clients.setName(pd.ge);
-		System.out.println(""+pd.getString("USERNAME"));
+	
+		pd.put("Key",MD5.md5(pd.getString("USERNAME")) );
+	
+		System.out.println(""+MD5.md5(pd.getString("USERNAME")));
 		clientsService.saveClients(pd);
 		
 		
@@ -165,7 +169,7 @@ public class ClientsController extends BaseController {
 		PageData pd = new PageData();
 		pd = this.getPageData();
 
-		List<PageData>	userList = clientsService.listAlLClients(pd);			//列出用户列表
+		List<PageData>	userList = clientsService.listAlLClients();			//列出用户列表
 		mv.setViewName("warehouse/client/user_list");
 		mv.addObject("userList", userList);
 		mv.addObject("pd", pd);
@@ -176,13 +180,13 @@ public class ClientsController extends BaseController {
 	/**
 	 * 删除用户
 	 */
-	@RequestMapping(value="/deleteDept", method = RequestMethod.GET)
+	@RequestMapping(value="/deleteDepts", method = RequestMethod.GET)
 	public void deleteU(PrintWriter out,@RequestParam(value = "Dept_ID") String Dept_ID){
 
-		PageData pd = new PageData();
+
 		System.out.println("id== CXZVCXZV  "+Dept_ID);
 		try{
-			pd = this.getPageData();
+		
 			if(Jurisdiction.buttonJurisdiction(menuUrl, "del")){clientsService.deleteU(Dept_ID);}
 			
 			out.write("success");

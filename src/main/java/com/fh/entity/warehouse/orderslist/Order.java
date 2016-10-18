@@ -77,7 +77,13 @@ public void setTotal(String total) {
 	this.total = total;
 }
 private String total;
-
+private String status;
+public String getStatus() {
+	return status;
+}
+public void setStatus(String status) {
+	this.status = status;
+}
 
 
 

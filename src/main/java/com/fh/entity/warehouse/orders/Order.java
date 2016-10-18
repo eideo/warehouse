@@ -269,6 +269,30 @@ public class Order {
     @JsonProperty("is_vat_exempt")
     private boolean is_vat_exempt;
     private Customer customer;
+    
+    public int getDept_ID() {
+		return Dept_ID;
+	}
+	public void setDept_ID(int dept_ID) {
+		Dept_ID = dept_ID;
+	}
+	private int Dept_ID;
+	private int Original_ID;
+
+	public int getOriginal_ID() {
+		return Original_ID;
+	}
+	public void setOriginal_ID(int original_ID) {
+		Original_ID = original_ID;
+	}
+	
+	public String getRemark() {
+		return remark;
+	}
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	private String remark;
   
 
 }

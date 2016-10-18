@@ -89,8 +89,8 @@ public class WooApiGetOrdersService {
 				// System.out.println(order.getId()+order.getDate_created());
 				order.setOriginal_ID(order.getId());
 				order.setDept_ID(dept);
-
-				int m = (int) dao.findForObject("WarehouseMapper.checkOrder", order);
+                  Object tmp =dao.findForObject("WarehouseMapper.checkOrder", order);
+				 int m = (tmp==null)?0:(int)tmp;
 
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
 				// order));
@@ -127,8 +127,9 @@ public class WooApiGetOrdersService {
 				// System.out.println(order.getId()+order.getDate_created());
 				order.setOriginal_ID(order.getId());
 				order.setDept_ID(dept);
-
-				int m = (int) dao.findForObject("WarehouseMapper.checkOrder", order);
+				  Object tmp =dao.findForObject("WarehouseMapper.checkOrder", order);
+					 int m = (tmp==null)?0:(int)tmp;
+				
 
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
 				// order));

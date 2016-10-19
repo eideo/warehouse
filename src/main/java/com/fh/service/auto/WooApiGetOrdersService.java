@@ -52,26 +52,29 @@ public class WooApiGetOrdersService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	private List<Order> getOrdersFromAnfa()
+	private List<Order> getOrdersFromAnfa(int num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String date = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-2));
+        String before= DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
+        String finalurl=this.url + after+"&before="+before+"&page="+num;
+		HttpResponse<JsonNode> response = Unirest.get(finalurl).basicAuth(this.username, this.password).asJson();
 
-		HttpResponse<JsonNode> response = Unirest.get(this.url + date).basicAuth(this.username, this.password).asJson();
-
-		System.out.println(" :" + this.url + date);
-		System.out.println("username:" + this.username);
-		System.out.println("password:" + this.password);
+	
 
 		String jsonString = response.getBody().getArray().toString();
 		System.out.println(jsonString);
+		System.out.println(finalurl);
+		System.out.println("username:" + this.username);
+		System.out.println("password:" + this.password);
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
+		System.out.println(lst.size());
 		if (lst.isEmpty()) {
 
 			return null;
 		}
 		for (Order order : lst) {
-			System.out.println(order.getBilling().getAddress_1() + order.getBilling().getPhone());
+		//System.out.println(order.getDate_created()+order.getDate_created());
 			List<Iterm> iterms = order.getLine_items();
 			if (iterms != null) {
 				for (Iterm iterm : iterms) {
@@ -107,11 +110,11 @@ public class WooApiGetOrdersService {
 					// System.out.println("productid======"+order.getId());
 					List<Iterm> iterms = order.getLine_items();
 					for (Iterm iterm : iterms) {
-						System.out.println("sku is "+iterm.getSku());
+						
 						
 						Element element = CacheUtil.getCacheObject(iterm.getSku(), "products");
 						if (element == null) {
-							
+							System.out.println("not this sku "+iterm.getSku());
 							continue;
 						}
 						
@@ -192,13 +195,21 @@ public class WooApiGetOrdersService {
 	public void sysOrderAnfaOrder()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 		System.out.println("this method be invoked22");
-		this.saveOrders(this.getOrdersFromAnfa(), 2);
+		int num=1;
+		List<Order> list =this.getOrdersFromAnfa(num);
+	
+		while (list!=null&&list.size()!=0) {
+			this.saveOrders(list,2);
+			num++;
+			list =this.getOrdersFromAnfa(num);
+		}
+		//this.saveOrders(this.getOrdersFromAnfa(), 2);
 	}
 
 	public static void main(String[] args) {
 		try {
 			WooApiGetOrdersService wooApiGetOrders = new WooApiGetOrdersService();
-			wooApiGetOrders.getOrdersFromAnfa();
+		//	wooApiGetOrders.getOrdersFromAnfa();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

@@ -31,23 +31,23 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fh.controller.app.response.ResBase;
 import com.fh.controller.base.BaseController;
 import com.fh.controller.base.ResponseData;
 import com.fh.entity.AnfiApi;
 import com.fh.entity.Page;
 import com.fh.entity.TestEntity;
+import com.fh.entity.system.BaseProductsEntity;
 import com.fh.entity.warehouse.orders.JsonRootBean;
 import com.fh.entity.warehouse.orders.Order;
+import com.fh.entity.warehouse.orderslist.Product;
+import com.fh.entity.warehouse.orderslist.ProductRootBean;
 import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.service.system.appuser.AppuserService;
+import com.fh.service.warehouse.ProductService;
 import com.fh.util.CacheUtil;
-import com.fh.util.Const;
-import com.fh.util.CustomerDateAndTimeDeserialize;
 import com.fh.util.MD5;
 import com.fh.util.PageData;
-import com.sun.xml.internal.bind.v2.schemagen.xmlschema.List;
 
 import net.sf.ehcache.Element;
 
@@ -66,6 +66,11 @@ public class IntAppuserController extends BaseController {
 	private AppuserService appuserService;
 	@Resource(name="autoApiService")
 	private WooApiGetOrdersService autoApiService;
+	
+	
+	
+	@Resource(name="productService")
+	private ProductService productService;
 	
 	/**
 	 * 
@@ -140,41 +145,98 @@ public class IntAppuserController extends BaseController {
 	
 
 	// http://127.0.0.1:8080/Warehouse/appapi/orderApi
-	@RequestMapping(value = { "/orderApi/{key}" }, method = RequestMethod.POST, produces = {
+	@RequestMapping(value = { "/productApi/{key}" }, method = RequestMethod.POST, produces = {
 			"application/json;charset=UTF-8" })
 	@ResponseBody
 	
-	public Object getOrders(@RequestBody JsonRootBean jsonRootBean,@PathVariable String key, HttpServletRequest req) {
+	public void getProduct(@RequestBody ProductRootBean jsonRootBean,@PathVariable String key, HttpServletRequest req) {
 
 		
-		Order o = jsonRootBean.getOrder();
+		Product o = jsonRootBean.getProduct();
 		
-		//order.setLine_items(o.getLine_items());
-		System.out.println("dpt key is "+key);
-		String tmp=o.getStatus();
-		if(StringUtils.isNotEmpty(tmp)){
-			Element element = CacheUtil.getCacheObject(key, "clients");
-			PageData tmPageData = (PageData) element.getObjectValue();
-			int dptint=(Integer) tmPageData.get("Dept_ID");
-			System.out.println("dpt is "+dptint);
-			if(jsonRootBean !=null){
-				System.out.println("this is be invoked id is   "+o .getId());
+		
+		if(o!=null){
+			Element element = CacheUtil.getCacheObject(o.getSku(), "products");
+			if (element == null) {
 				
-				o.setDept_ID(dptint);
-				//System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
-				java.util.List<Order> list= new ArrayList<Order>();
-				list.add(o);
-			
+				BaseProductsEntity pro= new BaseProductsEntity();
+				pro.setName(o.getTitle());
+				pro.setSKU(o.getSku());
+				pro.setNameCN(o.getTitle());
 				try {
-					autoApiService.saveOrdersCommon(list,dptint);
+					productService.saveProduct(pro);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+			
+			
+			
+		}
+		
+		
+		//order.setLine_items(o.getLine_items());
+		System.out.println("dpt key is "+key);
+		//String tmp=o.getStatus();
+//		if(StringUtils.isNotEmpty(tmp)){
+//			Element element = CacheUtil.getCacheObject(key, "clients");
+//			PageData tmPageData = (PageData) element.getObjectValue();
+//			int dptint=(Integer) tmPageData.get("Dept_ID");
+//			System.out.println("dpt is "+dptint);
+//			if(jsonRootBean !=null){
+//				System.out.println("this is be invoked id is   "+o .getId());
+//				
+//				o.setDept_ID(dptint);
+//				//System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
+//				java.util.List<Order> list= new ArrayList<Order>();
+//				list.add(o);
+//			
+//				try {
+//					autoApiService.saveOrdersCommon(list,dptint);
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 		}
 	
-	
+
+		// http://127.0.0.1:8080/Warehouse/appapi/orderApi
+		@RequestMapping(value = { "/orderApi/{key}" }, method = RequestMethod.POST, produces = {
+				"application/json;charset=UTF-8" })
+		@ResponseBody
+		
+		public Object getOrders(@RequestBody JsonRootBean jsonRootBean,@PathVariable String key, HttpServletRequest req) {
+
+			
+			Order o = jsonRootBean.getOrder();
+			
+			//order.setLine_items(o.getLine_items());
+			System.out.println("dpt key is "+key);
+			String tmp=o.getStatus();
+			if(StringUtils.isNotEmpty(tmp)){
+				Element element = CacheUtil.getCacheObject(key, "clients");
+				PageData tmPageData = (PageData) element.getObjectValue();
+				int dptint=(Integer) tmPageData.get("Dept_ID");
+				System.out.println("dpt is "+dptint);
+				if(jsonRootBean !=null){
+					System.out.println("this is be invoked id is   "+o .getId());
+					
+					o.setDept_ID(dptint);
+					//System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
+					java.util.List<Order> list= new ArrayList<Order>();
+					list.add(o);
+				
+					try {
+						autoApiService.saveOrdersCommon(list,dptint);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		
 	
 	//	System.out.println(o.getTeString());
 ////

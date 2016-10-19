@@ -55,7 +55,7 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa()
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String date = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-7));
+		String date = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
 
 		HttpResponse<JsonNode> response = Unirest.get(this.url + date).basicAuth(this.username, this.password).asJson();
 

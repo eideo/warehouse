@@ -85,19 +85,22 @@
 								<!-- 开始循环 -->
 								<c:choose>
 									<c:when test="${not empty userList}">
-										<c:if test="${QX.cha == 1 }">
+										
 											<c:forEach items="${userList}" var="user" varStatus="vs">
 
 												<tr>
-													<td class='center' style="width: 30px;"><c:if
-															test="${user.USERNAME != 'admin'}">
+													<td class='center' style="width: 30px;">
+													<c:if test="${user.USERNAME != 'admin'}">
 															<label><input type='checkbox' name='ids'
 																value="${user.USER_ID }" id="${user.EMAIL }"
 																alt="${user.PHONE }" /><span class="lbl"></span></label>
-														</c:if> <c:if test="${user.USERNAME == 'admin'}">
+														</c:if> 
+														<c:if test="${user.USERNAME == 'admin'}">
 															<label><input type='checkbox' disabled="disabled" /><span
 																class="lbl"></span></label>
-														</c:if></td>
+														</c:if>
+														
+														</td>
 													<td class='center' style="width: 30px;">${vs.index+1}</td>
 													<td>${user.Phone }</td>
 													<td>${user.Address } ${user.name}</td>
@@ -140,7 +143,7 @@
 												</tr>
 
 											</c:forEach>
-										</c:if>
+									
 
 									</c:when>
 									<c:otherwise>
@@ -149,18 +152,17 @@
 										</tr>
 									</c:otherwise>
 								</c:choose>
-
-
+                         
+                                 <!-- end  -->
 							</tbody>
 						</table>
 
 						<div class="page-header position-relative">
 							<table style="width: 100%;">
 								<tr>
-									<td style="vertical-align: top;"><c:if
-											test="${QX.add == 1 }">
+									<td style="vertical-align: top;">
 											<a class="btn btn-small btn-success" onclick="add();">新增</a>
-										</c:if> 
+									
 									
 									
 										

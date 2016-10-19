@@ -199,7 +199,7 @@ public class WarehouseController extends BaseController {
 		mv.addObject("userList", userList);
 		mv.addObject("clientsList", clientsList);
 		mv.addObject("pd", pd);
-		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
+	//	mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
 		return mv;
 	}
 

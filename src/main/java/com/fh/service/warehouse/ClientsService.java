@@ -109,7 +109,7 @@ public class ClientsService {
 		if(!out){
 			dao.save("WarehouseMapper.saveStockDetail", list);
 		}else{
-			System.out.println("test insert detail");
+	
 			dao.save("WarehouseMapper.saveStockOutDetail", list);
 		}
 	

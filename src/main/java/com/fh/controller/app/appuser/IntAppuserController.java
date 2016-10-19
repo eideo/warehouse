@@ -144,21 +144,27 @@ public class IntAppuserController extends BaseController {
 	}
 	
 
-	// http://127.0.0.1:8080/Warehouse/appapi/orderApi
+	// http://127.0.0.1:8080/Warehouse/appapi/productApi/{key}
+	//http://nebulahub.asuscomm.com:8080/warehouse/appapi/productApi/{key}
 	@RequestMapping(value = { "/productApi/{key}" }, method = RequestMethod.POST, produces = {
 			"application/json;charset=UTF-8" })
 	@ResponseBody
 	
-	public void getProduct(@RequestBody ProductRootBean jsonRootBean,@PathVariable String key, HttpServletRequest req) {
+	public Object getProduct(@RequestBody ProductRootBean jsonRootBean,@PathVariable String key, HttpServletRequest req,HttpServletResponse res) {
 
-		
+
+		if(StringUtils.isEmpty(key)||CacheUtil.getCacheObject(key, "clients")==null){
+			
+			res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			return null;
+		}
 		Product o = jsonRootBean.getProduct();
 		
-		
+	
 		if(o!=null){
 			Element element = CacheUtil.getCacheObject(o.getSku(), "products");
 			if (element == null) {
-				
+				System.out.println("test2 "+o.getTitle()+o.getSku());
 				BaseProductsEntity pro= new BaseProductsEntity();
 				pro.setName(o.getTitle());
 				pro.setSKU(o.getSku());
@@ -171,34 +177,15 @@ public class IntAppuserController extends BaseController {
 				}
 			}
 			
-			
+			return null;
 			
 		}
 		
 		
-		//order.setLine_items(o.getLine_items());
-		System.out.println("dpt key is "+key);
-		//String tmp=o.getStatus();
-//		if(StringUtils.isNotEmpty(tmp)){
-//			Element element = CacheUtil.getCacheObject(key, "clients");
-//			PageData tmPageData = (PageData) element.getObjectValue();
-//			int dptint=(Integer) tmPageData.get("Dept_ID");
-//			System.out.println("dpt is "+dptint);
-//			if(jsonRootBean !=null){
-//				System.out.println("this is be invoked id is   "+o .getId());
-//				
-//				o.setDept_ID(dptint);
-//				//System.out.println("this is be invoked ip is   "+o .getCustomer_ip());
-//				java.util.List<Order> list= new ArrayList<Order>();
-//				list.add(o);
-//			
-//				try {
-//					autoApiService.saveOrdersCommon(list,dptint);
-//				} catch (Exception e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
+
 //				}
 //			}
+		return o;
 		}
 	
 

@@ -306,24 +306,8 @@
 			<i class="icon-double-angle-up icon-only"></i>
 		</a>
 		<!-- basic scripts -->
-
-		<script type="text/javascript">
-			window.jQuery
-					|| document
-							.write("<script src='js/jquery-1.9.1.min.js'>\x3C/script>");
-		</script>
-
-		<script src="static/js/ace.min.js"></script>
 	
-			<script type="text/javascript">
-			$(top.hangge());			
-
-          $(function(){  
-        	  alert("fdg2fdfsfd ");
-        	  alert("I am an alert box!");
-        	 
-        	});  
-		</script>
+		<script src="static/js/ace.min.js"></script>
 
 		<script type="text/javascript" src="static/js/chosen.jquery.min.js"></script>
 		<!-- 下拉框 -->
@@ -331,6 +315,87 @@
 			src="static/js/bootstrap-datepicker.min.js"></script>
 		<!-- 日期框 -->
 		<script type="text/javascript" src="static/js/bootbox.min.js"></script>
+	<script type="text/javascript">
+			$(top.hangge());
+
+			$(function() {
+				var oTable1 = $('#table_report').dataTable({
+					"aoColumns" : [ {
+						"bSortable" : false
+					}, null, null, null, null, null, {
+						"bSortable" : false
+					} ]
+				});
+
+				$('table th input:checkbox').on(
+						'click',
+						function() {
+							var that = this;
+							$(this).closest('table').find(
+									'tr > td:first-child input:checkbox').each(
+									function() {
+										this.checked = that.checked;
+										$(this).closest('tr').toggleClass(
+												'selected');
+									});
+
+						});
+				$('[data-rel=tooltip]').tooltip();
+			})
+
+			//修改
+			function addStock() {
+				//	$("#stock").css.(display: none;);
+				var temp = $('#choseWarehouse');
+				// $(".selector").val();
+				if (!jQuery.isEmptyObject(temp.val())) {
+					//console.log("dsfdsf "+temp);
+					//	alert("dsfdsfsdf");
+					var mydate = new Date();
+					var t = mydate.toLocaleString()
+
+					$("#timestock").text(t);
+
+					$("#stockaddress").text(temp.text());
+
+					$('#upload').removeAttr("disabled");
+
+					$('#stock').show();
+					$('#queryStock').hide();
+
+				} else {
+					alert("pleas chose one warehouse");
+				}
+
+			}
+
+			$(function() {
+				alert("test");
+				//日期框
+				$('.date-picker').datepicker();
+
+				//下拉框
+
+			});
+			
+			
+			$(document).ready(function(){ 
+				  var totalRow=0 
+				  alert(""+totalRow);
+				  $('#mytable tr').each(function(){ 
+				    $(this).find('td:eq(8)').each(function(){ 
+				    totalRow += parseFloat($(this).text()); 
+				    alert(""+totalRow)
+				  }); 
+				}); 
+				$('#total').append('<td>合计</td><td></td><td>'+totalRow+'</td><td></td>'); 
+				}); 
+			
+			
+			
+			
+			
+		</script>
 	
 	
 </body>

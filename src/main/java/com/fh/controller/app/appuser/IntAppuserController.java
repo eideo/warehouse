@@ -164,7 +164,7 @@ public class IntAppuserController extends BaseController {
 		if(o!=null){
 			Element element = CacheUtil.getCacheObject(o.getSku(), "products");
 			if (element == null) {
-				System.out.println("test2 "+o.getTitle()+o.getSku());
+				//System.out.println("test2 "+o.getTitle()+o.getSku());
 				BaseProductsEntity pro= new BaseProductsEntity();
 				pro.setName(o.getTitle());
 				pro.setSKU(o.getSku());

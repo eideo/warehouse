@@ -30,4 +30,18 @@ public class CacheUtil {
 		return  CacheManager.getInstance().getCache(cache_name);
 		
 	}
+	/**
+	 * 
+	 * @param key
+	 * @param cache_name
+	 * @param elementClasses
+	 * @return
+	 */
+	public static Class<?> getCacheObject(Object key,String cache_name,Class<?>... elementClasses){
+		Object object=getCacheObject(key,cache_name).getObjectValue();
+		if(object==null){
+			return null;
+		}
+		return (Class<?>)object;	
+	}
 }

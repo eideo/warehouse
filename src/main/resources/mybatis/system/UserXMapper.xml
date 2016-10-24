@@ -258,7 +258,7 @@ LEFT JOIN dept on a.dep_id=dept.Dept_ID
 				u.NUMBER,
 				u.PHONE,
 				r.ROLE_ID,
-				r.dep_id,
+				u.dep_id,
 				r.ROLE_NAME
 		from SYS_USER u, SYS_ROLE r 
 		where u.ROLE_ID = r.ROLE_ID 

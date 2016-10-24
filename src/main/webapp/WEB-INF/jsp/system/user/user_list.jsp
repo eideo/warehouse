@@ -121,9 +121,9 @@
 												<a class='btn btn-mini btn-danger' title="不能删除"><i class='icon-trash'></i></a>
 											</c:when>
 											<c:otherwise>
-												<c:if test="${QX.del == 1 }">
+											
 												 <a class='btn btn-mini btn-danger' title="删除" onclick="delUser('${user.USER_ID }','${user.USERNAME }');"><i class='icon-trash'></i></a>
-												</c:if>
+											
 											</c:otherwise>
 										</c:choose>
 									</div>
@@ -275,25 +275,43 @@
 			 diag.Height = 415;
 			 diag.CancelEvent = function(){ //关闭事件
 				 if(diag.innerFrame.contentWindow.document.getElementById('zhongxin').style.display == 'none'){
-					nextPage(${page.currentPage});
+				//	nextPage(${page.currentPage});
 				}
 				diag.close();
 			 };
 			 diag.show();
 		}
 		
+	
+		
+		
 		//删除
 		function delUser(userId,msg){
 			bootbox.confirm("确定要删除["+msg+"]吗?", function(result) {
+			
 				if(result) {
-					top.jzts();
-					var url = "<%=basePath%>user/deleteU.do?USER_ID="+userId+"&tm="+new Date().getTime();
+					var url = "<%=basePath%>clients/deleteDepts.do?Dept_ID="+userId;
+					alert("userId "+url);
 					$.get(url,function(data){
-						nextPage(${page.currentPage});
+				
+						if(data=="success"){
+							alert("TEST2 "+url);
+							document.location.reload();
+							top.jzts();
+						}
 					});
 				}
 			});
 		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		
 		//批量操作
 		function makeAll(msg){
@@ -414,7 +432,7 @@
 						 top.jzts();
 						 setTimeout("self.location.reload()",100);
 					 }else{
-						 nextPage(${page.currentPage});
+						// nextPage(${page.currentPage});
 					 }
 				}
 				diag.close();

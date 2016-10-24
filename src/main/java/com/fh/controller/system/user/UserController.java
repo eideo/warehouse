@@ -128,9 +128,9 @@ public class UserController extends BaseController {
 		try{
 			pd = this.getPageData();
 			
-			if(userService.findByUE(pd) != null){
-				errInfo = "error";
-			}
+//			if(userService.findByUE(pd) != null){
+//				errInfo = "error";
+//			}
 		} catch(Exception e){
 			logger.error(e.toString(), e);
 		}
@@ -299,6 +299,7 @@ public class UserController extends BaseController {
 	@RequestMapping(value="/deleteU")
 	public void deleteU(PrintWriter out){
 		PageData pd = new PageData();
+		System.out.println("delete the user");
 		try{
 			pd = this.getPageData();
 			if(Jurisdiction.buttonJurisdiction(menuUrl, "del")){userService.deleteU(pd);}

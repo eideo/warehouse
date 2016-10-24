@@ -77,7 +77,7 @@ public class EnterStockController extends BaseController {
 			//	List<PageData> userList = userService.listAllUser(pd);
 				
 				List<PageData> stocklist = clientsService.listStock(pd);
-				System.out.println("ttttt "+ stocklist.size());
+			
 				List<PageData> varList = new ArrayList<PageData>();
 				for(int i=0;i<stocklist.size();i++){
 					PageData vpd = new PageData();

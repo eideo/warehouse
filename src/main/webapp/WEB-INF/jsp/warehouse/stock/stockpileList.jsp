@@ -280,8 +280,7 @@
 		
 
         $(function(){  
-      	  alert("table_report ");
-      	  alert("I am an alert box!");
+
       	  
       	  
       	   var totalRow = 0  ;

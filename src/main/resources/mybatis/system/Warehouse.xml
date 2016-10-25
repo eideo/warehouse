@@ -397,18 +397,23 @@
 		insert into orderitems (
 		Order_ID,
 		Product_ID,
+			Quantity,
+				UnitPric,
 		Price
 
 		) values
-
 		<foreach collection="list" item="itm" index="index" separator=",">
 
 
+		
 			(
 			#{itm.Order_ID},
 			#{itm.Product_ID},
+			#{itm.quantity},
+		    #{itm.price},	
 			#{itm.total}
 			)
+
 
 		</foreach>
 
@@ -440,6 +445,8 @@
 		insert into orderitems (
 		Order_ID,
 		Product_ID,
+			Quantity,
+				UnitPric,
 		Price
 
 		) values
@@ -450,6 +457,8 @@
 			(
 			#{itm.Order_ID},
 			#{itm.Product_ID},
+			#{itm.quantity},
+		    #{itm.price},	
 			#{itm.total}
 			)
 

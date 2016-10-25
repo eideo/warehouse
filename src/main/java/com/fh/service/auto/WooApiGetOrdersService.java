@@ -55,7 +55,7 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa(int num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-2));
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-7));
         String before= DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
         String finalurl=this.url + after+"&before="+before+"&page="+num;
 		HttpResponse<JsonNode> response = Unirest.get(finalurl).basicAuth(this.username, this.password).asJson();
@@ -79,6 +79,7 @@ public class WooApiGetOrdersService {
 			if (iterms != null) {
 				for (Iterm iterm : iterms) {
 					iterm.getSku();
+					
 					// System.out.println(iterm.getSku());
 					// System.out.println(iterm.getTotal());
 				}
@@ -166,7 +167,7 @@ public class WooApiGetOrdersService {
 
 
 					}
-					dao.save("WarehouseMapper.saveOrderitems", iterms);
+					dao.save("WarehouseMapper.saveCommonOrderitems", iterms);
 
 				} else {
 					PageData pD = new PageData();

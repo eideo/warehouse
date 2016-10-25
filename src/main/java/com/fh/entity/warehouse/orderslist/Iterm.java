@@ -37,4 +37,24 @@ public int getProduct_ID() {
 public void setProduct_ID(int product_ID) {
 	Product_ID = product_ID;
 }
+
+
+//"price": "78.90",
+//"quantity": 1,
+
+private String price;
+public String getPrice() {
+	return price;
+}
+public void setPrice(String price) {
+	this.price = price;
+}
+public int getQuantity() {
+	return quantity;
+}
+public void setQuantity(int quantity) {
+	this.quantity = quantity;
+}
+private int quantity;
+
 }

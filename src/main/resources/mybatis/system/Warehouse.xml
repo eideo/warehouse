@@ -185,6 +185,38 @@
 		`product` WHERE 1
 
 	</select>
+	
+	
+	
+	<!-- 订单(全部) -->
+	<select id="listAlLOrders" parameterType="pd" resultType="pd" useCache="true">
+SELECT `Order_ID`, `Status`, `Dept_ID`, `CreateDate`, `Address`, `TotalPrice`, `TotalPriceGst`, `Shipping_Cost`, `Discont`, `Currency`, `Tel`, `Name`, `Email`, `Remark`, `Original_ID` FROM `orders` 
+WHERE 1=1 and Dept_ID=#{Dept_ID}  
+
+<if test="USERNAME != null and USERNAME != ''"><!-- 关键词检索 -->
+			and
+				(
+					 orders.Address LIKE CONCAT(CONCAT('%', #{USERNAME}),'%')
+					 or 
+					 orders.Name LIKE CONCAT(CONCAT('%', #{USERNAME}),'%') 
+					
+				)
+		</if>
+		
+		
+			<if test="lastLoginStart!=null and lastLoginStart!=''"><!-- 登录时间检索 -->
+			and orders.CreateDate &gt;= #{lastLoginStart} 
+		</if>
+		<if test="lastLoginEnd!=null and lastLoginEnd!=''"><!-- 登录时间检索 -->
+			and orders.CreateDate &lt;= #{lastLoginEnd} 
+		</if>
+		
+		
+
+order BY CreateDate DESC
+LIMIT 100
+	</select>
+	
 
 
 

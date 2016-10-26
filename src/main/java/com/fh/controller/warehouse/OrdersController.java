@@ -3,6 +3,7 @@ package com.fh.controller.warehouse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -15,10 +16,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
+import com.fh.entity.Page;
+import com.fh.entity.system.Role;
 import com.fh.service.system.menu.MenuService;
+import com.fh.service.warehouse.ProductService;
 import com.fh.util.Const;
+import com.fh.util.PageData;
 
 /** 
  * 类名称：UserController
@@ -35,11 +41,59 @@ public class OrdersController extends BaseController {
 //	private UserService userService;
 //	@Resource(name="roleService")
 //	private RoleService roleService;
-	@Resource(name="menuService")
-	private MenuService menuService;
+	@Resource(name="productService")
+	private ProductService productService;
 	
 	
+	/**
+	 * 显示用户列表(用户组)
+	 */
+	@RequestMapping(value="/listorders")
+	public ModelAndView listUsers(Page page){
+		String dept=super.getCurrentUser().getDep_id();
+		System.out.println("user id is "+super.getCurrentUser().getDep_id());
+		ModelAndView mv = this.getModelAndView();
+		PageData pd = new PageData();
+	   // pd.put("Dept_ID", dept);
+	
+		pd = this.getPageData();
+	    pd.put("Dept_ID", 2);
+		//System.out.println("test deptid222======            "+pd.get("Dept_ID"));
+		String USERNAME =pd.getString("USERNAME");
+		
+		
+		pd.put("USERNAME", USERNAME);
+	
+		
 
+		String lastLoginStart = pd.getString("lastLoginStart");
+		//lastLoginStart = lastLoginStart+" 00:00:00";
+		pd.put("lastLoginStart", lastLoginStart);
+		String lastLoginEnd = pd.getString("lastLoginEnd");
+		//lastLoginEnd = lastLoginEnd+" 00:00:00";
+		pd.put("lastLoginEnd", lastLoginEnd);
+
+		
+		page.setPd(pd);
+		List<PageData> userList=null;
+		try {
+			
+			
+		
+			userList = productService.listAllOrdersByClient(pd);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			//
+	//	List<Role> roleList = roleService.listAllERRoles();						
+		
+		mv.setViewName("warehouse/orders/orders");
+		mv.addObject("userList", userList);
+	//	mv.addObject("roleList", roleList);
+		mv.addObject("pd", pd);
+//		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
+		return mv;
+	}
 	
 	
 	

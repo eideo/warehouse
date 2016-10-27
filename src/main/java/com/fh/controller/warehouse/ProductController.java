@@ -23,7 +23,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
 import com.fh.entity.system.BaseProductsEntity;
-import com.fh.service.system.menu.MenuService;
 import com.fh.service.warehouse.ProductService;
 import com.fh.util.CacheUtil;
 import com.fh.util.Const;
@@ -62,8 +61,8 @@ public class ProductController extends BaseController {
 	@RequestMapping(value="/listProduct1")
 	public ModelAndView listProducts(Page page)throws Exception{
 		ModelAndView mv = this.getModelAndView();
-		PageData pd = new PageData();
-		pd = this.getPageData();
+		//PageData pd = this.getPageData();
+	
 		
 	
 		mv.setViewName("warehouse/products/products");

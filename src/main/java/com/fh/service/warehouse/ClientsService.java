@@ -81,7 +81,7 @@ public class ClientsService {
 	}
 
 	/*
-	 * 进货单导入
+	 * 货单导入
 	 */
 
 	public void saveStock(EnterStock enterStock,boolean out) throws Exception {
@@ -116,7 +116,11 @@ public class ClientsService {
 	}
 
 	private void updateOrInsertStock(PageData pd, EnterStockDetail d,boolean out) throws Exception {
-
+		
+        int dept=(int)pd.get("Dept_ID");
+        String sku=d .getSKU();
+        int n=0;
+        
 		List<PageData> pageData = (List) dao.findForList("WarehouseMapper.listStock", pd);
 		if(!out){
 		if (pageData == null||pageData.size()==0) {
@@ -125,17 +129,19 @@ public class ClientsService {
 			pd.put("Quantity", d.getQuantity());
 			pd.put("Price", d.getPrice());
 			dao.save("WarehouseMapper.saveStockpileDetail", pd);
+			n= d.getQuantity();
 
 		} else {
 			  PageData temp=pageData.get(0);
 			int num = (int) temp.get("Quantity");
 			double price = ((BigDecimal) temp.get("Price")).doubleValue();
 			int total = num + d.getQuantity();
+			n=total;
            
 			double aveprice = (num * price + d.getPrice() * d.getQuantity()) / total;
 			temp.put("Quantity", total);
 			temp.put("Price", aveprice);
-			System.out.println("aveprice+********************"+aveprice);
+	
 			// LastLeaveDate
 			temp.put("LastLeaveDate", null);
 			dao.update("WarehouseMapper.updateStockDetail", temp);
@@ -144,15 +150,30 @@ public class ClientsService {
 			if(pageData!=null){
 				  PageData temp=pageData.get(0);
 					int total = (int) temp.get("Quantity") - d.getQuantity();
+					n=total;
 					temp.put("Quantity", total);
 					temp.put("LastLeaveDate", DateUtil.getDay());
 					dao.update("WarehouseMapper.updateStockDetail", temp);
 				  
 				  
 			}
+			
+		  
 		}
-
+		 this.updateWooStock(sku, n, dept);
 	}
+	/**
+	 * 
+	 * @param sku
+	 * @param total
+	 * @param Dept
+	 */
+	private void updateWooStock(String sku,int total ,int Dept){
+		System.out.println("sku +total+ dept   "+sku+total+Dept);
+	}
+	
+	
+	
 	
 	public 	List<PageData> listStock(PageData pd) throws Exception {
 		

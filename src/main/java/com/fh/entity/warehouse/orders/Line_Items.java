@@ -115,5 +115,13 @@ public class Line_Items {
 	}
 	private int Order_ID;
     private int Product_ID;
+    
+    public int getStatus() {
+		return status;
+	}
+	public void setStatus(int status) {
+		this.status = status;
+	}
+	private int status;
 
 }

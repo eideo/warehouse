@@ -16,12 +16,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fh.entity.warehouse.orders.Line_Items;
+import com.fh.entity.warehouse.orders.Order;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
-import com.fh.entity.system.Role;
-import com.fh.service.system.menu.MenuService;
 import com.fh.service.warehouse.ProductService;
 import com.fh.util.Const;
 import com.fh.util.PageData;
@@ -43,6 +44,49 @@ public class OrdersController extends BaseController {
 //	private RoleService roleService;
 	@Resource(name="productService")
 	private ProductService productService;
+	
+	
+	
+	
+	
+	/**
+	 * 显示用户列表(用户组)
+	 */
+	@RequestMapping(value="/detail")
+	public ModelAndView orderDetail(Page page,@RequestParam(value = "orderid", required = false) int orderid){
+
+		ModelAndView mv = this.getModelAndView();
+		com.fh.util.PageData order=null;
+		try {
+			System.out.println("dsafsdfdfdsf  "+orderid);		   
+			order = productService.listDetail(orderid);
+			if(order!=null){
+				System.out.println("test"+order .get("id"));	
+				List<Line_Items> list =(List) order .get("line_items");
+				System.out.println("iterm"+list.size());
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}			//	
+		
+		mv.setViewName("warehouse/orders/orderDetail");
+		mv.addObject("order", order);
+	//	mv.addObject("roleList", roleList);
+		//mv.addObject("pd", pd);
+//		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
+		return mv;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**

@@ -57,4 +57,12 @@ public void setQuantity(int quantity) {
 }
 private int quantity;
 
+private String productName;
+public String getProductName() {
+	return productName;
+}
+public void setProductName(String productName) {
+	this.productName = productName;
+}
+
 }

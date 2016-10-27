@@ -107,7 +107,7 @@
 								
 										
 										<c:if test="${QX.edit == 1 }">
-											<c:if test="${user.USERNAME != 'admin'}">     <c:if test="${user.Status == 1}">      <a class='btn btn-mini btn-info' title="出库" onclick="editUser('${user.USER_ID }');">出库<i class='icon-edit'></i></a></c:if></c:if>
+											<c:if test="${user.USERNAME != 'admin'}">        <a class='btn btn-mini btn-info' title="出库" onclick="editStock('${user.Order_ID }');">出库<i class='icon-edit'></i></a></c:if>
 											<c:if test="${user.USERNAME == 'admin'}"><a class='btn btn-mini btn-info' title="您不能出库"><i class='icon-edit'></i></a></c:if>
 										</c:if>
 										
@@ -183,35 +183,7 @@
 		}
 		
 		
-		//去发送电子邮件页面
-		function sendEmail(EMAIL){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="发送电子邮件";
-			 diag.URL = '<%=basePath%>head/goSendEmail.do?EMAIL='+EMAIL;
-			 diag.Width = 660;
-			 diag.Height = 470;
-			 diag.CancelEvent = function(){ //关闭事件
-				diag.close();
-			 };
-			 diag.show();
-		}
-		
-		//去发送短信页面
-		function sendSms(phone){
-			 top.jzts();
-			 var diag = new top.Dialog();
-			 diag.Drag=true;
-			 diag.Title ="发送短信";
-			 diag.URL = '<%=basePath%>head/goSendSms.do?PHONE='+phone+'&msg=appuser';
-			 diag.Width = 600;
-			 diag.Height = 265;
-			 diag.CancelEvent = function(){ //关闭事件
-				diag.close();
-			 };
-			 diag.show();
-		}
+
 		//新增
 		function add(){
 			 top.jzts();
@@ -253,7 +225,10 @@
 			 diag.show();
 		}
 		
-	
+		function editStock(user_id){
+			alert("test");
+			window.location.href='<%=basePath%>order/detail.do?orderid='+user_id;
+		}
 		
 		
 		//删除

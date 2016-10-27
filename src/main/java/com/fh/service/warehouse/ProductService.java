@@ -12,7 +12,7 @@ import com.fh.entity.Page;
 import com.fh.entity.system.BaseProductsEntity;
 import com.fh.util.CacheUtil;
 import com.fh.util.PageData;
-
+import com.fh.entity.warehouse.orders.Order;
 @Service("productService")
 public class ProductService {
 
@@ -58,6 +58,17 @@ public class ProductService {
 	
 
 		return list;
+	}
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 * @throws Exception
+	 */
+	public com.fh.util.PageData listDetail(int id) throws Exception{
+		
+	return	(com.fh.util.PageData)dao.findForObject("WarehouseMapper.getOrdersDetail", id);
+		
 	}
 	
 

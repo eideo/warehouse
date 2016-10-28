@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -53,18 +54,21 @@ public class OrdersController extends BaseController {
 	 * 显示用户列表(用户组)
 	 */
 	@RequestMapping(value="/detail")
-	public ModelAndView orderDetail(Page page,@RequestParam(value = "orderid", required = false) int orderid){
+	public ModelAndView orderDetail(Page page,@RequestParam(value = "orderid", required = false) String orderid){
 
 		ModelAndView mv = this.getModelAndView();
 		com.fh.util.PageData order=null;
+		List<Line_Items> list =null;
 		try {
-			System.out.println("dsafsdfdfdsf  "+orderid);		   
-			order = productService.listDetail(orderid);
-			if(order!=null){
-				System.out.println("test"+order .get("id"));	
-				List<Line_Items> list =(List) order .get("line_items");
-				System.out.println("iterm"+list.size());
-			}
+			   if(StringUtils.isNotEmpty(orderid)){
+				   order = productService.listDetail(orderid);
+					if(order!=null){
+						System.out.println("test"+order .get("id"));	
+					    list =(List) order .get("line_items");
+						System.out.println("iterm"+list.size());
+					}
+			   }
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,7 +76,7 @@ public class OrdersController extends BaseController {
 		
 		mv.setViewName("warehouse/orders/orderDetail");
 		mv.addObject("order", order);
-	//	mv.addObject("roleList", roleList);
+    	mv.addObject("itermList",list);
 		//mv.addObject("pd", pd);
 //		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
 		return mv;

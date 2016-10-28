@@ -32,12 +32,18 @@
 		<result property="date_created" column="date_created" />
 		
 		<result property="TotalPrice" column="TotalPrice" />
+		<result property="Original_ID" column="Original_ID" />
+		<result property="Status" column="Status" />
+		<result property="Tel" column="Tel" />
+		
+		
 		<result property="Address" column="Address" />
 		<result property="Name" column="Name" />
 		<result property="Remark" column="Remark" />
 		<collection property="line_items" javaType="ArrayList"
 			ofType="com.fh.entity.warehouse.orders.Line_Items">
-			<id property="status" column="status" />
+			<id property="id" column="OrderItems_ID" />
+			<result property="status" column="status" />
 			<result property="Order_ID" column="Order_ID" />
 			<result property="sku" column="sku" />
 			<result property="name" column="Name_CN" />

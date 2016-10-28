@@ -65,7 +65,7 @@ public class ProductService {
 	 * @return
 	 * @throws Exception
 	 */
-	public com.fh.util.PageData listDetail(String id) throws Exception{
+	public com.fh.util.PageData listDetail(PageData id) throws Exception{
 		
 	return	(com.fh.util.PageData)dao.findForObject("WarehouseMapper.getOrdersDetail", id);
 		

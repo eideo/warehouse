@@ -3,6 +3,7 @@ package com.fh.controller.base;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
@@ -17,6 +18,9 @@ import com.fh.util.UuidUtil;
 public class BaseController {
 
    private User user;
+   
+   private String dept;
+   
 	
 	protected Logger logger = Logger.getLogger(this.getClass());
 
@@ -27,6 +31,14 @@ public class BaseController {
 		}
 	return user;
 		
+	}
+	
+	
+	public String getDeptId() {
+		if(StringUtils.isEmpty(dept)){
+			dept=this.getCurrentUser().getDep_id();
+		}
+		return dept;
 	}
 	/**
 	 * 得到PageData

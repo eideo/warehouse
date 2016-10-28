@@ -45,27 +45,27 @@ public class OrdersController extends BaseController {
 //	private RoleService roleService;
 	@Resource(name="productService")
 	private ProductService productService;
+
 	
-	
-	
-	
-	
-	/**
-	 * 显示用户列表(用户组)
-	 */
+
 	@RequestMapping(value="/detail")
 	public ModelAndView orderDetail(Page page,@RequestParam(value = "orderid", required = false) String orderid){
 
 		ModelAndView mv = this.getModelAndView();
+		com.fh.util.PageData 	pd=new com.fh.util.PageData  ();
+		pd.put("Original_ID", orderid);
+		//pd.put("Dept_ID", super.getDeptId());
+	    pd.put("Dept_ID", 2);
+	    System.out.println("%%%%%%%%%%%%"+orderid);
 		com.fh.util.PageData order=null;
 		List<Line_Items> list =null;
 		try {
 			   if(StringUtils.isNotEmpty(orderid)){
-				   order = productService.listDetail(orderid);
+				   order = productService.listDetail(pd);
 					if(order!=null){
-						System.out.println("test"+order .get("id"));	
+				
 					    list =(List) order .get("line_items");
-						System.out.println("iterm"+list.size());
+
 					}
 			   }
 			
@@ -98,13 +98,14 @@ public class OrdersController extends BaseController {
 	 */
 	@RequestMapping(value="/listorders")
 	public ModelAndView listUsers(Page page){
-		String dept=super.getCurrentUser().getDep_id();
-		System.out.println("user id is "+super.getCurrentUser().getDep_id());
+		//String dept=super.getCurrentUser().getDep_id();
+		//System.out.println("user id is "+super.getCurrentUser().getDep_id());
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 	   // pd.put("Dept_ID", dept);
 	
 		pd = this.getPageData();
+	  //pd.put("Dept_ID", super.getDeptId());
 	    pd.put("Dept_ID", 2);
 		//System.out.println("test deptid222======            "+pd.get("Dept_ID"));
 		String USERNAME =pd.getString("USERNAME");

@@ -107,7 +107,7 @@
 								
 										
 										<c:if test="${QX.edit == 1 }">
-											<c:if test="${user.USERNAME != 'admin'}">        <a class='btn btn-mini btn-info' title="出库" onclick="editStock('${user.Order_ID }');">出库<i class='icon-edit'></i></a></c:if>
+											<c:if test="${user.USERNAME != 'admin'}">        <a class='btn btn-mini btn-info' title="出库" onclick="editStock('${user.Original_ID }');">出库<i class='icon-edit'></i></a></c:if>
 											<c:if test="${user.USERNAME == 'admin'}"><a class='btn btn-mini btn-info' title="您不能出库"><i class='icon-edit'></i></a></c:if>
 										</c:if>
 										
@@ -226,7 +226,7 @@
 		}
 		
 		function editStock(user_id){
-			alert("test");
+		
 			window.location.href='<%=basePath%>order/detail.do?orderid='+user_id;
 		}
 		

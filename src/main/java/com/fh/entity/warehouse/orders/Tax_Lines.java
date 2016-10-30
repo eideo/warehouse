@@ -2,8 +2,6 @@
   * Copyright 2016 aTool.org 
   */
 package com.fh.entity.warehouse.orders;
-import java.util.Date;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 /**
  * Auto-generated: 2016-09-26 15:42:20

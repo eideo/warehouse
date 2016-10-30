@@ -159,7 +159,16 @@ public class WooApiGetOrdersService {
 
 					List<Line_Items> iterms = order.getLine_items();
 					for (Line_Items iterm : iterms) {
-						int productid = (int) dao.findForObject("WarehouseMapper.searchProduct", iterm.getSku());
+					Element element=	CacheUtil.getCacheObject( iterm.getSku(), "products");
+					int productid=0;
+					if(element==null){
+						continue;
+					}else{
+						PageData tmPageData = (PageData) element.getObjectValue();
+
+						 productid = (Integer) tmPageData.get("Product_ID");
+					}
+					//	int productid = (int) dao.findForObject("WarehouseMapper.searchProduct", iterm.getSku());
 					
 						iterm.setOrder_ID(order.getId());
 

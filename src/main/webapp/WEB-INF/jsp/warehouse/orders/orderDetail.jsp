@@ -41,11 +41,17 @@
 							method="post">
 							<input class="ace-tooltip" type="text" name="orderid"
 								id="orderid" placeholder="please input orderid" title=""
-								data-placement="bottom" value="${Original_ID}">
+								data-placement="bottom" value="${order.Original_ID}">
 							<button type="summit" class="btn btn-primary" id="searchid">查询</button>
 						</form>
 					</div>
 				</div>
+				
+
+				
+				
+				
+				
 				<div class="widget-body">
 					<div class="widget-main padding-24">
 						<div class="row-fluid">
@@ -95,7 +101,13 @@
 										</div>
 									</div>
 								</div>
+				<form action="order/stackOut.do" name="outStack" id="outStack">
+<input class="ace-tooltip"  type="text" name="sku" id="sku">
+<input type="hidden" name="order" id="order" value="${Original_ID}">
+		<button type="summit" class="btn btn-primary" id="out">出库</button>
 
+
+</form>
 								<div class="space"></div>
 
 								<div class="row-fluid">
@@ -123,7 +135,7 @@
 
 															<td class="center">${detail.id }</td>
 
-															<td class="center">${detail.name }</td>
+															<td class="center">${detail.name } SKU: ${detail.sku }</td>
 
 															<td class="hidden-phone">${detail.quantity }</td>
 															<td class="hidden-phone">${detail.price }</td>
@@ -195,10 +207,24 @@
 				var temp=$('#orderid').val();
 				if(temp==""){
 					 $("#orderid").focus();
+				}else{
+					  $("#sku").focus();
 				}
 			
 				
-			
+				 $('#sku').bind('keypress',function(event){
+
+		             if(event.keyCode == "13")   
+
+		             {
+
+		          
+		                 $("#out").click();
+
+		             }
+
+		         });
+				 
 				
 			
 				 

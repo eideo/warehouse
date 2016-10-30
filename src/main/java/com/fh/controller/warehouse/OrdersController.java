@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orders.Order;
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
+import com.fh.entity.ProductEntity;
 import com.fh.service.warehouse.ProductService;
+import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.PageData;
 
@@ -49,14 +52,14 @@ public class OrdersController extends BaseController {
 	
 
 	@RequestMapping(value="/detail")
-	public ModelAndView orderDetail(Page page,@RequestParam(value = "orderid", required = false) String orderid){
+	public ModelAndView orderDetail(@RequestParam(value = "orderid", required = false) String orderid){
 
 		ModelAndView mv = this.getModelAndView();
 		com.fh.util.PageData 	pd=new com.fh.util.PageData  ();
 		pd.put("Original_ID", orderid);
 		//pd.put("Dept_ID", super.getDeptId());
 	    pd.put("Dept_ID", 2);
-	    System.out.println("%%%%%%%%%%%%"+orderid);
+	 
 		com.fh.util.PageData order=null;
 		List<Line_Items> list =null;
 		try {
@@ -81,6 +84,50 @@ public class OrdersController extends BaseController {
 //		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
 		return mv;
 	}
+	
+	
+	
+	
+
+	
+	@RequestMapping(value="/stackOut")
+	public String  orderStackOut(Page page,@RequestParam(value = "order", required = false) String orderid,@RequestParam(value = "sku", required = false) String sku,RedirectAttributes attr){
+
+		ModelAndView mv = this.getModelAndView();
+		com.fh.util.PageData 	pd=new com.fh.util.PageData  ();
+		System.out.println("sku        "+sku);
+		PageData product=(PageData)CacheUtil.getCacheObject(sku, "products").getObjectValue();
+		//attr.addFlashAttribute("orderid", orderid); 
+		attr.addAttribute("orderid", orderid);
+		System.out.println("id  is"+product.get("Product_ID"));
+//		pd.put("Original_ID", orderid);
+//		//pd.put("Dept_ID", super.getDeptId());
+//	    pd.put("Dept_ID", 2);
+//	 
+//		com.fh.util.PageData order=null;
+//		List<Line_Items> list =null;
+//		try {
+//			   if(StringUtils.isNotEmpty(orderid)){
+//				   order = productService.listDetail(pd);
+//					if(order!=null){
+//				
+//					    list =(List) order .get("line_items");
+//
+//					}
+//			   }
+//			
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}			//	
+		
+	
+		//mv.addObject("pd", pd);
+//		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
+		 return "redirect:/order/detail";
+	}
+	
+	
 	
 	
 	

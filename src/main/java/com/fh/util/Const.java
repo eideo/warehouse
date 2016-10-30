@@ -83,7 +83,52 @@ public class Const {
    //   pending, processing, on-hold, completed, cancelled, refunded , failed.
       
       public enum Status {  
-    	  pending, processing, onhold, completed,  cancelled,refunded , failed
+    	  pending("pending",2), processing("processing",3), onhold("onhold",4), completed("completed",1),  cancelled("cancelled",5),refunded("refunded",6) , failed("failed",7);
+    	  
+    	  
+    	  // 普通方法  
+    	    public static String getName(int index) {  
+    	        for (Status c : Status.values()) {  
+    	            if (c.getIndex() == index) {  
+    	                return c.name;  
+    	            }  
+    	        }  
+    	        return null;  
+    	    }  
+    	  
+    		  
+      	  // 普通方法  
+      	    public static int getIndex(String name) {  
+      	        for (Status c : Status.values()) {  
+      	            if (c.getName().equalsIgnoreCase(name)) {  
+      	                return c.index;  
+      	            }  
+      	        }  
+      	        return 0;  
+      	    }  
+      	  
+    	  
+    	    public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+			private String name;  
+    	    private int index;  
+    	    // 构造方法  
+    	    private Status(String name, int index) {  
+    	        this.name = name;  
+    	        this.index = index;  
+    	    }  
+    	  
+    	  
     	} 
       
       

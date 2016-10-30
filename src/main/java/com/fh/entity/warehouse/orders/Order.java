@@ -294,5 +294,13 @@ public class Order {
 	}
 	private String remark;
   
+	private int statusInt;
+
+	public int getStatusInt() {
+		return statusInt;
+	}
+	public void setStatusInt(int statusInt) {
+		this.statusInt = statusInt;
+	}
 
 }

@@ -20,6 +20,7 @@ import com.fh.entity.warehouse.orderslist.Iterm;
 import com.fh.entity.warehouse.orderslist.Order;
 import com.fh.util.CacheUtil;
 import com.fh.util.Const;
+import com.fh.util.Const.Status;
 import com.fh.util.DateUtil;
 import com.fh.util.JsonUtil;
 import com.fh.util.Logger;
@@ -152,8 +153,9 @@ public class WooApiGetOrdersService {
 
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
 				// order));
-
+					 int t=Status.getIndex( order.getStatus());
 				if (m == 0) {
+					order.setStatusInt(t);
 			
 					dao.save("WarehouseMapper.saveOrderCommon", order);
 
@@ -181,7 +183,8 @@ public class WooApiGetOrdersService {
 				} else {
 					PageData pD = new PageData();
 					pD.put("Order_ID", m);
-					pD.put("Status", order.getStatus());
+					//int t=Status.getIndex( order.getStatus());
+					pD.put("Status", t);
 					dao.update("WarehouseMapper.updateOrderstatus", pD);
 				}
 

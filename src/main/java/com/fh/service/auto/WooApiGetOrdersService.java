@@ -18,6 +18,7 @@ import com.fh.entity.AnfiApi;
 import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Iterm;
 import com.fh.entity.warehouse.orderslist.Order;
+
 import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.Const.Status;
@@ -29,6 +30,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.mashape.unirest.request.body.RequestBodyEntity;
 
 import net.sf.ehcache.Element;
 
@@ -40,6 +42,32 @@ public class WooApiGetOrdersService {
 	protected Logger logger = Logger.getLogger(this.getClass());
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
+	
+	
+	public String getJsonString(String url ,String username,String password) throws UnirestException, JsonParseException, JsonMappingException, IOException {
+
+		HttpResponse<JsonNode> response = Unirest.get(url).basicAuth(username, password).asJson();
+
+	
+
+	return	 response.getBody().getArray().toString();
+		
+		
+	}
+	
+	
+	public void putJsonString(String url ,String body,int num) throws UnirestException, JsonParseException, JsonMappingException, IOException {
+        url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
+		HttpResponse<JsonNode> response = Unirest.put(url).field(body, num).asJson();
+		//Unirest.put(url).
+		System.out.println( response.getBody().getArray().toString());
+		
+	}
+	
+	
+	
+	
+	
 
 	/**
 	 * https://myalpha.co.nz/wp-json/wc/v1/orders?per_page=100&after=2016-09-
@@ -56,37 +84,37 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa(int num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-32));
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-7));
         String before= DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
         String finalurl=this.url + after+"&before="+before+"&page="+num;
-		HttpResponse<JsonNode> response = Unirest.get(finalurl).basicAuth(this.username, this.password).asJson();
+	//	HttpResponse<JsonNode> response = Unirest.get(finalurl).basicAuth(this.username, this.password).asJson();
 
 	
 
-		String jsonString = response.getBody().getArray().toString();
-		System.out.println(jsonString);
-		System.out.println(finalurl);
-		System.out.println("username:" + this.username);
-		System.out.println("password:" + this.password);
+		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
+//		System.out.println(jsonString);
+//		System.out.println(finalurl);
+//		System.out.println("username:" + this.username);
+//		System.out.println("password:" + this.password);
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
 		System.out.println(lst.size());
 		if (lst.isEmpty()) {
 
 			return null;
 		}
-		for (Order order : lst) {
-		//System.out.println(order.getDate_created()+order.getDate_created());
-			List<Iterm> iterms = order.getLine_items();
-			if (iterms != null) {
-				for (Iterm iterm : iterms) {
-					iterm.getSku();
-					
-					// System.out.println(iterm.getSku());
-					// System.out.println(iterm.getTotal());
-				}
-			}
-
-		}
+//		for (Order order : lst) {
+//		//System.out.println(order.getDate_created()+order.getDate_created());
+//			List<Iterm> iterms = order.getLine_items();
+//			if (iterms != null) {
+//				for (Iterm iterm : iterms) {
+//					iterm.getSku();
+//					
+//					// System.out.println(iterm.getSku());
+//					// System.out.println(iterm.getTotal());
+//				}
+//			}
+//
+//		}
 		return lst;
 	}
 

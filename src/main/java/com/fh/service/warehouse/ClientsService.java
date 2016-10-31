@@ -1,5 +1,6 @@
 package com.fh.service.warehouse;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -7,21 +8,30 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.EnterStockDetail;
+import com.fh.entity.warehouse.orderslist.Product;
+
+import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.util.CacheUtil;
+import com.fh.util.Const;
 import com.fh.util.DateUtil;
+import com.fh.util.JsonUtil;
 import com.fh.util.PageData;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 @Service("clientsService")
 public class ClientsService {
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
-
+	@Resource(name="autoApiService")
+	private WooApiGetOrdersService autoApiService;
 	/*
 	 * 保存产品
 	 */
@@ -167,12 +177,36 @@ public class ClientsService {
 	 * @param sku
 	 * @param total
 	 * @param Dept
+	 * @throws IOException 
+	 * @throws UnirestException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
 	 */
-	private void updateWooStock(String sku,int total ,int Dept){
+	public void updateWooStock(String sku,int total ,int Dept) throws JsonParseException, JsonMappingException, UnirestException, IOException{
+		String url=Const.gopost_url+"?sku="+sku+"&"+Const.gopost_username+Const.gopost_password;
+		System.out.println(url);
 		System.out.println("sku +total+ dept   "+sku+total+Dept);
+		String jsonString=autoApiService.getJsonString(url, Const.gopost_username, Const.gopost_password);
+		System.out.println(Const.gopost_username);
+		System.out.println(Const.gopost_password);
+		System.out.println("jsonString "+jsonString);
+	//stock_quantity
+		int id=0;
+		List<Product> lst = JsonUtil.getListFromJson(jsonString, List.class, Product.class);
+		for (Product product : lst) {
+			System.out.println("id is "+product.getId());
+			id=product.getId();
+		}
+		String urlPut=Const.gopost_url+"/"+id+"?"+Const.gopost_username+Const.gopost_password;
+		System.out.println(urlPut);
+//		UpdateStock t =new UpdateStock();
+//		t.setStock_quantity(10);
+		autoApiService.putJsonString(urlPut, "stock_quantity",total);
+	
 	}
 	
-	
+    
+
 	
 	
 	public 	List<PageData> listStock(PageData pd) throws Exception {

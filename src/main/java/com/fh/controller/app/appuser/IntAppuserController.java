@@ -44,10 +44,12 @@ import com.fh.entity.warehouse.orderslist.Product;
 import com.fh.entity.warehouse.orderslist.ProductRootBean;
 import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.service.system.appuser.AppuserService;
+import com.fh.service.warehouse.ClientsService;
 import com.fh.service.warehouse.ProductService;
 import com.fh.util.CacheUtil;
 import com.fh.util.MD5;
 import com.fh.util.PageData;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import net.sf.ehcache.Element;
 
@@ -72,6 +74,13 @@ public class IntAppuserController extends BaseController {
 	@Resource(name="productService")
 	private ProductService productService;
 	
+	
+	
+	@Resource(name="clientsService")
+	private ClientsService clientsService;
+	
+	
+	
 	/**
 	 * 
 	 * @param p
@@ -81,7 +90,12 @@ public class IntAppuserController extends BaseController {
 	@ResponseBody
 
 	public Object getCurrentVersion() {
-
+		try {
+			clientsService.updateWooStock("9400501003738", 10, 2);
+		} catch (UnirestException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return new ResBase() {
 		};
 

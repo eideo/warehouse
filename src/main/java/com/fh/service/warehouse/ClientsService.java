@@ -183,7 +183,7 @@ public class ClientsService {
 	 * @throws JsonParseException 
 	 */
 	public void updateWooStock(String sku,int total ,int Dept) throws JsonParseException, JsonMappingException, UnirestException, IOException{
-		String url=Const.gopost_url+"?sku="+sku+"&"+Const.gopost_username+Const.gopost_password;
+		String url=Const.gopost_url+"?sku="+sku+"&"+Const.gopost_username+"&"+Const.gopost_password;
 		System.out.println(url);
 		System.out.println("sku +total+ dept   "+sku+total+Dept);
 		String jsonString=autoApiService.getJsonString(url, Const.gopost_username, Const.gopost_password);
@@ -193,6 +193,9 @@ public class ClientsService {
 	//stock_quantity
 		int id=0;
 		List<Product> lst = JsonUtil.getListFromJson(jsonString, List.class, Product.class);
+		if(lst!=null&&lst.size()>0){
+			
+		
 		for (Product product : lst) {
 			System.out.println("id is "+product.getId());
 			id=product.getId();
@@ -202,7 +205,7 @@ public class ClientsService {
 //		UpdateStock t =new UpdateStock();
 //		t.setStock_quantity(10);
 		autoApiService.putJsonString(urlPut, "stock_quantity",total);
-	
+		}
 	}
 	
     

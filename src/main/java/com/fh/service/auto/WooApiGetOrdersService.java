@@ -57,7 +57,7 @@ public class WooApiGetOrdersService {
 	
 	
 	public void putJsonString(String url ,String body,int num) throws UnirestException, JsonParseException, JsonMappingException, IOException {
-        url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
+     //   url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		HttpResponse<JsonNode> response = Unirest.put(url).field(body, num).asJson();
 		//Unirest.put(url).
 		System.out.println( response.getBody().getArray().toString());

@@ -258,18 +258,21 @@ public class EnterStockController extends BaseController {
 			List<EnterStockDetail> list = new ArrayList<>();
 
 			for (PageData pageData : listPd) {
-				if (pageData.getString("var0") == null) {
+				String v1=pageData.getString("var0");
+				if (!StringUtils.isNotEmpty(v1)) {
 					break;
 				}
 
 				EnterStockDetail detail = new EnterStockDetail();
-				String sku = pageData.getString("var0").trim();
+				String sku = v1.trim();
 
 				Element element = CacheUtil.getCacheObject(sku, "products");
 				if (element == null) {
 					
 					continue;
 				}
+				System.out.println("pageData.getString  "+pageData.getString("var1"));
+				System.out.println("pageData.sku  "+sku);
 				int t = Integer.parseInt(pageData.getString("var1").trim());
 				if(t==0){
 					continue;
@@ -289,16 +292,21 @@ public class EnterStockController extends BaseController {
 				detail.setRemaining_amount(t);
 				detail.setPrice(Double.parseDouble(pageData.getString("var2").trim()));
 				
-			String str=	pageData.getString("var3").trim();
+			String str=	pageData.getString("var3");
 			if(StringUtils.isNotEmpty(str)){
-				detail.setDurability(str);
+				detail.setDurability(str.trim());
 			}
 					
 					
 					
 					
 				//detail.setDurability(pageData.getString("var3").trim());
-				detail.setInvoiceNum(pageData.getString("var4").trim());
+			
+			String v4=pageData.getString("var4");
+				if(StringUtils.isNotEmpty(v4)){
+					detail.setInvoiceNum(v4.trim());
+				}
+					
 				list.add(detail);
 
 			}

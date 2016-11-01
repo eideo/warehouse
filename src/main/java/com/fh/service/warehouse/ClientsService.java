@@ -20,6 +20,7 @@ import com.fh.entity.warehouse.orderslist.Product;
 import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.util.CacheUtil;
 import com.fh.util.Const;
+import com.fh.util.Const.ClientUrl;
 import com.fh.util.DateUtil;
 import com.fh.util.JsonUtil;
 import com.fh.util.PageData;
@@ -30,8 +31,9 @@ public class ClientsService {
 
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
-	@Resource(name="autoApiService")
+	@Resource(name = "autoApiService")
 	private WooApiGetOrdersService autoApiService;
+
 	/*
 	 * 保存产品
 	 */
@@ -43,13 +45,13 @@ public class ClientsService {
 	/*
 	 * 用户列表(全部)
 	 */
-	//@Cacheable(value = "productCache", key="products")
+	// @Cacheable(value = "productCache", key="products")
 	public List<PageData> listAlLClients() throws Exception {
 		List<PageData> list = (List<PageData>) (List<PageData>) dao.findForList("WarehouseMapper.listAlLClients", null);
 		for (PageData pageData : list) {
 			CacheUtil.cacheSave(pageData.get("Consumer_Key"), pageData, "clients");
 		}
-		
+
 		return list;
 	}
 
@@ -94,15 +96,15 @@ public class ClientsService {
 	 * 货单导入
 	 */
 
-	public void saveStock(EnterStock enterStock,boolean out) throws Exception {
-		if(out){
+	public void saveStock(EnterStock enterStock, boolean out) throws Exception {
+		if (out) {
 			System.out.println("test insert");
 			dao.save("WarehouseMapper.saveOutStock", enterStock);
-			
-		}else{
+
+		} else {
 			dao.save("WarehouseMapper.saveStock", enterStock);
 		}
-	
+
 		// enterStock.getDept_ID();
 		// enterStock.getStoreHouse_ID();
 		PageData pData = new PageData();
@@ -114,110 +116,108 @@ public class ClientsService {
 			enterStockDetail.setEnterStock_ID(enterStock.getEnterStock_ID());
 			enterStockDetail.setLeaveStock_ID(enterStock.getLeaveStock_ID());
 			pData.put("Product_ID", enterStockDetail.getProduct_ID());
-			this.updateOrInsertStock(pData,enterStockDetail,out);
+			this.updateOrInsertStock(pData, enterStockDetail, out);
 		}
-		if(!out){
+		if (!out) {
 			dao.save("WarehouseMapper.saveStockDetail", list);
-		}else{
-	
+		} else {
+
 			dao.save("WarehouseMapper.saveStockOutDetail", list);
 		}
-	
+
 	}
 
-	private void updateOrInsertStock(PageData pd, EnterStockDetail d,boolean out) throws Exception {
-		
-        int dept=(int)pd.get("Dept_ID");
-        String sku=d .getSKU();
-        int n=0;
-        
+	private void updateOrInsertStock(PageData pd, EnterStockDetail d, boolean out) throws Exception {
+
+		int dept = (int) pd.get("Dept_ID");
+		String sku = d.getSKU();
+		int n = 0;
+
 		List<PageData> pageData = (List) dao.findForList("WarehouseMapper.listStock", pd);
-		if(!out){
-		if (pageData == null||pageData.size()==0) {
-			// Quantity,
-			// Price
-			pd.put("Quantity", d.getQuantity());
-			pd.put("Price", d.getPrice());
-			dao.save("WarehouseMapper.saveStockpileDetail", pd);
-			n= d.getQuantity();
+		if (!out) {
+			if (pageData == null || pageData.size() == 0) {
+				// Quantity,
+				// Price
+				pd.put("Quantity", d.getQuantity());
+				pd.put("Price", d.getPrice());
+				dao.save("WarehouseMapper.saveStockpileDetail", pd);
+				n = d.getQuantity();
 
-		} else {
-			  PageData temp=pageData.get(0);
-			int num = (int) temp.get("Quantity");
-			double price = ((BigDecimal) temp.get("Price")).doubleValue();
-			int total = num + d.getQuantity();
-			n=total;
-           
-			double aveprice = (num * price + d.getPrice() * d.getQuantity()) / total;
-			temp.put("Quantity", total);
-			temp.put("Price", aveprice);
-	
-			// LastLeaveDate
-			temp.put("LastLeaveDate", null);
-			dao.update("WarehouseMapper.updateStockDetail", temp);
-		}
-		}else{
-			if(pageData!=null){
-				  PageData temp=pageData.get(0);
-					int total = (int) temp.get("Quantity") - d.getQuantity();
-					n=total;
-					temp.put("Quantity", total);
-					temp.put("LastLeaveDate", DateUtil.getDay());
-					dao.update("WarehouseMapper.updateStockDetail", temp);
-				  
-				  
+			} else {
+				PageData temp = pageData.get(0);
+				int num = (int) temp.get("Quantity");
+				double price = ((BigDecimal) temp.get("Price")).doubleValue();
+				int total = num + d.getQuantity();
+				n = total;
+
+				double aveprice = (num * price + d.getPrice() * d.getQuantity()) / total;
+				temp.put("Quantity", total);
+				temp.put("Price", aveprice);
+
+				// LastLeaveDate
+				temp.put("LastLeaveDate", null);
+				dao.update("WarehouseMapper.updateStockDetail", temp);
 			}
-			
-		  
+		} else {
+			if (pageData != null) {
+				PageData temp = pageData.get(0);
+				int total = (int) temp.get("Quantity") - d.getQuantity();
+				n = total;
+				temp.put("Quantity", total);
+				temp.put("LastLeaveDate", DateUtil.getDay());
+				dao.update("WarehouseMapper.updateStockDetail", temp);
+
+			}
+
 		}
-		 this.updateWooStock(sku, n, dept);
+		this.updateWooStock(sku, n, dept);
 	}
+
 	/**
 	 * 
 	 * @param sku
 	 * @param total
 	 * @param Dept
-	 * @throws IOException 
-	 * @throws UnirestException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws IOException
+	 * @throws UnirestException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	public void updateWooStock(String sku,int total ,int Dept) throws JsonParseException, JsonMappingException, UnirestException, IOException{
-		String url=Const.gopost_url+"?sku="+sku+"&"+Const.gopost_username+"&"+Const.gopost_password;
-		System.out.println(url);
-		System.out.println("sku +total+ dept   "+sku+total+Dept);
-		String jsonString=autoApiService.getJsonString(url, Const.gopost_username, Const.gopost_password);
-		System.out.println(Const.gopost_username);
-		System.out.println(Const.gopost_password);
-		System.out.println("jsonString "+jsonString);
-	//stock_quantity
-		int id=0;
+	public void updateWooStock(String sku, int total, int dept)
+			throws JsonParseException, JsonMappingException, UnirestException, IOException {
+		// String
+		// url=Const.gopost_url+"?sku="+sku+"&"+Const.gopost_username+"&"+Const.gopost_password;
+
+		ClientUrl clientUrl = ClientUrl.getClientUrl(dept);
+		String url = clientUrl.getUrl() + "products?sku=" + sku + "&" + clientUrl.getUsername() + "&"
+				+ clientUrl.getPassword();
+
+		String jsonString = autoApiService.getJsonString(url, Const.gopost_username, Const.gopost_password);
+
+		// stock_quantity
+		int id = 0;
 		List<Product> lst = JsonUtil.getListFromJson(jsonString, List.class, Product.class);
-		if(lst!=null&&lst.size()>0){
-			
-		
-		for (Product product : lst) {
-			System.out.println("id is "+product.getId());
-			id=product.getId();
-		}
-		String urlPut=Const.gopost_url+"/"+id+"?"+Const.gopost_username+"&"+Const.gopost_password;
-		System.out.println(urlPut);
-//		UpdateStock t =new UpdateStock();
-//		t.setStock_quantity(10);
-		autoApiService.putJsonString(urlPut, "stock_quantity",total);
+		if (lst != null && lst.size() > 0) {
+
+			for (Product product : lst) {
+				//System.out.println("id is " + product.getId());
+				id = product.getId();
+			}
+			// String
+			// urlPut=Const.gopost_url+"/"+id+"?"+Const.gopost_username+"&"+Const.gopost_password;
+			String urlPut = clientUrl.getUrl() + "products/" + id + "?" + clientUrl.getUsername() + "&"
+					+ clientUrl.getPassword();
+
+			// UpdateStock t =new UpdateStock();
+			// t.setStock_quantity(10);
+			autoApiService.putJsonString(urlPut, "stock_quantity", total);
 		}
 	}
-	
-    
 
-	
-	
-	public 	List<PageData> listStock(PageData pd) throws Exception {
-		
+	public List<PageData> listStock(PageData pd) throws Exception {
+
 		return (List<PageData>) dao.findForList("WarehouseMapper.listStock", pd);
-		
-		
-		
+
 	}
 
 	/////////////////
@@ -282,7 +282,7 @@ public class ClientsService {
 	 * 删除用户
 	 */
 	public void deleteU(String Dept_ID) throws Exception {
-		 dao.delete("WarehouseMapper.deleteClients", Dept_ID);
+		dao.delete("WarehouseMapper.deleteClients", Dept_ID);
 	}
 
 	/*

@@ -74,6 +74,63 @@ private static final String commonUrl="/wp-json/wc/v1/";
 	//sysOrder
 	public static final String status="completed";
 	
+	
+	
+	
+	
+	public enum ClientUrl{
+		gopost(11,"https://gopost.nz"+commonUrl,"consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0","consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914");
+		
+		private ClientUrl(int dep_id,String url,String username,String password) {
+			this.dep_id=dep_id;
+			this.url=url;
+			this.username=username;
+			this.password=password;
+		}
+		
+	public int getDep_id() {
+			return dep_id;
+		}
+		public void setDep_id(int dep_id) {
+			this.dep_id = dep_id;
+		}
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+		public String getUsername() {
+			return username;
+		}
+		public void setUsername(String username) {
+			this.username = username;
+		}
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+	private	int dep_id;
+	private	String url;
+	private     String username;
+	private String password;
+		 // 普通方法  
+	    public static ClientUrl getClientUrl(int index) {  
+	        for (ClientUrl c : ClientUrl.values()) {  
+	            if (c.getDep_id() == index) {  
+	                return c;  
+	            }  
+	        }  
+	        return null;  
+	    }  
+	  
+		
+		
+	}
+	
 //	xfd.co.nz
 //	newco.co.nz
 //	lovehealth.nz

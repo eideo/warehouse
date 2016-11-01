@@ -54,6 +54,63 @@
 	</resultMap>
 
 	
+	<!-- 查找特定商户 -->
+	<select id="findByUiId" parameterType="pd" resultType="pd"
+		useCache="true">
+		SELECT
+  `Dept_ID`,
+  `Name`,
+  `Domain_Name`,
+  `Consumer_Key`,
+  `Consumer_Secret`,
+  `Address`,
+  `Phone`,
+  `Remark`,
+  `CreateDate`,
+  `Status`,
+  `ApiName`
+FROM
+  `dept`
+WHERE   `Dept_ID`= #{USER_ID}
+
+
+	</select>
+	
+	
+	
+	
+	<!-- 修改 -->
+	<update id="editU" parameterType="pd" flushCache="false">
+UPDATE
+  `dept`
+SET
+  `Name` = #{Name},
+  `Domain_Name` =#{Domain_Name},
+  `Consumer_Key` = #{Consumer_Key},
+  `Consumer_Secret` = #{Consumer_Secret},
+  `Address` = #{Address},
+  `Phone` = #{Phone},
+  `Remark` = #{Remark},
+  `ApiName` = #{ApiName}
+  
+WHERE   `Dept_ID`= #{USER_ID}
+	</update>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 	<!-- 入库单列表 -->
@@ -568,7 +625,8 @@ LIMIT 100
 		Address,
 		Phone,
 		Remark,
-		Status
+		Status,
+		ApiName
 
 		) values (
 		#{USERNAME},
@@ -578,8 +636,8 @@ LIMIT 100
 		#{Address},
 		#{Phone},
 		#{Remark},
-		1
-
+		1,
+         #{ApiName},
 		)
 	</insert>
 

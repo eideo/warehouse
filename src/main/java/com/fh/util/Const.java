@@ -67,7 +67,7 @@ private static final String commonUrl="/wp-json/wc/v1/";
 	
 		public static final  String gopost_url="https://gopost.nz"+commonUrl+"products";
 		public static final  String gopost_username="consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0";//"ck_3db1c674a6c6bbd9ccd50671ebdfda99b8f46067";
-		public  static final String gopost_password="&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";//"cs_9c597830c0f6ed61bb157c10106577fb097b402f";
+		public  static final String gopost_password="consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";//"cs_9c597830c0f6ed61bb157c10106577fb097b402f";
 		
 	//	https://gopost.nz/wp-json/wc/v1/products?sku=9400501003738&consumer_key=ck_cfe48598765854a8c828c46832a7725db4039637&consumer_secret=cs_ecee78830d883dc0b0c54cc9ce71d92884c41e24//
 	

@@ -197,7 +197,7 @@ public class ClientsService {
 			System.out.println("id is "+product.getId());
 			id=product.getId();
 		}
-		String urlPut=Const.gopost_url+"/"+id+"?"+Const.gopost_username+Const.gopost_password;
+		String urlPut=Const.gopost_url+"/"+id+"?"+Const.gopost_username+"&"+Const.gopost_password;
 		System.out.println(urlPut);
 //		UpdateStock t =new UpdateStock();
 //		t.setStock_quantity(10);
@@ -223,7 +223,7 @@ public class ClientsService {
 	 * 通过id获取数据
 	 */
 	public PageData findByUiId(PageData pd) throws Exception {
-		return (PageData) dao.findForObject("UserXMapper.findByUiId", pd);
+		return (PageData) dao.findForObject("WarehouseMapper.findByUiId", pd);
 	}
 
 	/*
@@ -258,14 +258,14 @@ public class ClientsService {
 	 * 保存产品
 	 */
 	public void saveProduct(com.fh.entity.system.Role pd) throws Exception {
-		dao.save("Warehouse.saveProducts", pd);
+		dao.save("WarehouseMapper.saveProducts", pd);
 	}
 
 	/*
 	 * 修改用户
 	 */
 	public void editU(PageData pd) throws Exception {
-		dao.update("UserXMapper.editU", pd);
+		dao.update("WarehouseMapper.editU", pd);
 	}
 
 	/*

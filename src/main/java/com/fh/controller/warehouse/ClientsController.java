@@ -37,188 +37,177 @@ import com.fh.util.Jurisdiction;
 import com.fh.util.MD5;
 import com.fh.util.PageData;
 
-/** 
- * 类名称：UserController
- * 创建人：FH 
- * 创建时间：2014年6月28日
+/**
+ * 类名称：UserController 创建人：FH 创建时间：2014年6月28日
+ * 
  * @version
  */
 @Controller
-@RequestMapping(value="/clients")
+@RequestMapping(value = "/clients")
 public class ClientsController extends BaseController {
-	
-	String menuUrl = "clients/listClents.do"; //菜单地址(权限用)
-	@Resource(name="clientsService")
+
+	String menuUrl = "clients/listClents.do"; // 菜单地址(权限用)
+	@Resource(name = "clientsService")
 	private ClientsService clientsService;
-	@Resource(name="roleService")
+	@Resource(name = "roleService")
 	private RoleService roleService;
-	@Resource(name="menuService")
+	@Resource(name = "menuService")
 	private MenuService menuService;
-	
-	
+
 	/**
 	 * 保存用户
 	 */
-	@RequestMapping(value="/saveU")
-	public ModelAndView saveU(PrintWriter out) throws Exception{
+	@RequestMapping(value = "/saveU")
+	public ModelAndView saveU(PrintWriter out) throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		
-//		pd.put("USER_ID", this.get32UUID());	//ID
-//		pd.put("RIGHTS", "");					//权限
-//		pd.put("LAST_LOGIN", "");				//最后登录时间
-//		pd.put("IP", "");						//IP
-//		pd.put("STATUS", "0");					//状态
-//		pd.put("SKIN", "default");				//默认皮肤
-//		Clients clients= new Clients();
-//		clients.setName(pd.ge);
-	
-		pd.put("Key",MD5.md5(pd.getString("USERNAME")) );
-	
-		System.out.println(""+MD5.md5(pd.getString("USERNAME")));
+
+		// pd.put("USER_ID", this.get32UUID()); //ID
+		// pd.put("RIGHTS", ""); //权限
+		// pd.put("LAST_LOGIN", ""); //最后登录时间
+		// pd.put("IP", ""); //IP
+		// pd.put("STATUS", "0"); //状态
+		// pd.put("SKIN", "default"); //默认皮肤
+		// Clients clients= new Clients();
+		// clients.setName(pd.ge);
+
+		pd.put("Key", MD5.md5(pd.getString("USERNAME")));
+
+		System.out.println("" + MD5.md5(pd.getString("USERNAME")));
 		clientsService.saveClients(pd);
-		
-		
-		//	if(Jurisdiction.buttonJurisdiction(menuUrl, "add")){clientsService.s(pd);} //判断新增权限
-			mv.addObject("msg","success");
-		
+
+		// if(Jurisdiction.buttonJurisdiction(menuUrl,
+		// "add")){clientsService.s(pd);} //判断新增权限
+		mv.addObject("msg", "success");
+
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
 
-
-	
 	/**
 	 * 修改用户
 	 */
-	@RequestMapping(value="/editU")
-	public ModelAndView editU() throws Exception{
+	@RequestMapping(value = "/editU")
+	public ModelAndView editU() throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		if(pd.getString("PASSWORD") != null && !"".equals(pd.getString("PASSWORD"))){
-			pd.put("PASSWORD", new SimpleHash("SHA-1", pd.getString("USERNAME"), pd.getString("PASSWORD")).toString());
-		}
-		if(Jurisdiction.buttonJurisdiction(menuUrl, "edit")){clientsService.editU(pd);}
-		mv.addObject("msg","success");
+		
+	System.out.println("URLURL"+pd.getString("URL"));
+	
+	System.out.println("Remark"+pd.getString("Remark"));
+	System.out.println("USER_ID"+pd.getString("USER_ID"));
+	
+			clientsService.editU(pd);
+		
+		mv.addObject("msg", "success");
 		mv.setViewName("save_result");
 		return mv;
 	}
-	
+
 	/**
 	 * 去修改用户页面
 	 */
-	@RequestMapping(value="/goEditU")
-	public ModelAndView goEditU() throws Exception{
+	@RequestMapping(value = "/goEditU")
+	public ModelAndView goEditU() throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		
-		//顶部修改个人资料
-		String fx = pd.getString("fx");
-		
-		//System.out.println(fx);
-		
-		if("head".equals(fx)){
-			mv.addObject("fx", "head");
-		}else{
-			mv.addObject("fx", "user");
-		}
-		
-		List<Role> roleList = roleService.listAllERRoles();			//列出所有二级角色
-		pd = clientsService.findByUiId(pd);							//根据ID读取
+
+		//
+		// List<Role> roleList = roleService.listAllERRoles(); //列出所有二级角色
+		pd = clientsService.findByUiId(pd); // 根据ID读取
 		mv.setViewName("warehouse/client/user_edit");
 		mv.addObject("msg", "editU");
 		mv.addObject("pd", pd);
-		mv.addObject("roleList", roleList);
-		
+		// mv.addObject("roleList", roleList);
+
 		return mv;
 	}
-	
+
 	/**
 	 * 去新增用户页面
 	 */
-	@RequestMapping(value="/goAddU")
-	public ModelAndView goAddU()throws Exception{
+	@RequestMapping(value = "/goAddU")
+	public ModelAndView goAddU() throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		//List<Role> roleList;
-		
-	//	roleList = roleService.listAllERRoles();			//列出所有二级角色
-		
+		// List<Role> roleList;
+
+		// roleList = roleService.listAllERRoles(); //列出所有二级角色
+
 		mv.setViewName("warehouse/client/user_edit");
 		mv.addObject("msg", "saveU");
 		mv.addObject("pd", pd);
-	//	mv.addObject("roleList", roleList);
+		// mv.addObject("roleList", roleList);
 
 		return mv;
 	}
-	
 
-
-	
 	/**
 	 * 显示用户列表(tab方式)
 	 */
-	@RequestMapping(value="/listClents")
-	public ModelAndView listtabUsers(Page page)throws Exception{
+	@RequestMapping(value = "/listClents")
+	public ModelAndView listtabUsers(Page page) throws Exception {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
 
-		List<PageData>	userList = clientsService.listAlLClients();			//列出用户列表
+		List<PageData> userList = clientsService.listAlLClients(); // 列出用户列表
 		mv.setViewName("warehouse/client/user_list");
 		mv.addObject("userList", userList);
 		mv.addObject("pd", pd);
-		mv.addObject(Const.SESSION_QX,this.getHC());	//按钮权限
+		mv.addObject(Const.SESSION_QX, this.getHC()); // 按钮权限
 		return mv;
 	}
-	
+
 	/**
 	 * 删除用户
 	 */
-	@RequestMapping(value="/deleteDepts", method = RequestMethod.GET)
-	public void deleteU(PrintWriter out,@RequestParam(value = "Dept_ID") String Dept_ID){
+	@RequestMapping(value = "/deleteDepts", method = RequestMethod.GET)
+	public void deleteU(PrintWriter out, @RequestParam(value = "Dept_ID") String Dept_ID) {
 
+		System.out.println("id== CXZVCXZV  " + Dept_ID);
+		try {
 
-		System.out.println("id== CXZVCXZV  "+Dept_ID);
-		try{
-		
-			if(Jurisdiction.buttonJurisdiction(menuUrl, "del")){clientsService.deleteU(Dept_ID);}
-			
+			if (Jurisdiction.buttonJurisdiction(menuUrl, "del")) {
+				clientsService.deleteU(Dept_ID);
+			}
+
 			out.write("success");
 			out.close();
-		} catch(Exception e){
+		} catch (Exception e) {
 			logger.error(e.toString(), e);
 		}
-		
+
 	}
-	
+
 	/**
 	 * 批量删除
 	 */
-	@RequestMapping(value="/deleteAllU")
+	@RequestMapping(value = "/deleteAllU")
 	@ResponseBody
 	public Object deleteAllU() {
 		PageData pd = new PageData();
 		System.out.println("del all users");
-		Map<String,Object> map = new HashMap<String,Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			pd = this.getPageData();
 			List<PageData> pdList = new ArrayList<PageData>();
 			String USER_IDS = pd.getString("USER_IDS");
-			
-			if(null != USER_IDS && !"".equals(USER_IDS)){
+
+			if (null != USER_IDS && !"".equals(USER_IDS)) {
 				String ArrayUSER_IDS[] = USER_IDS.split(",");
-				if(Jurisdiction.buttonJurisdiction(menuUrl, "del")){clientsService.deleteAllU(ArrayUSER_IDS);}
+				if (Jurisdiction.buttonJurisdiction(menuUrl, "del")) {
+					clientsService.deleteAllU(ArrayUSER_IDS);
+				}
 				pd.put("msg", "ok");
-			}else{
+			} else {
 				pd.put("msg", "no");
 			}
-			
+
 			pdList.add(pd);
 			map.put("list", pdList);
 		} catch (Exception e) {
@@ -228,22 +217,19 @@ public class ClientsController extends BaseController {
 		}
 		return AppUtil.returnObject(pd, map);
 	}
-	//===================================================================================================
-	
-	
-	
+	// ===================================================================================================
+
 	@InitBinder
-	public void initBinder(WebDataBinder binder){
+	public void initBinder(WebDataBinder binder) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(format,true));
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(format, true));
 	}
-	
 
 	/* ===============================权限================================== */
-	public Map<String, String> getHC(){
-		Subject currentUser = SecurityUtils.getSubject();  //shiro管理的session
+	public Map<String, String> getHC() {
+		Subject currentUser = SecurityUtils.getSubject(); // shiro管理的session
 		Session session = currentUser.getSession();
-		return (Map<String, String>)session.getAttribute(Const.SESSION_QX);
+		return (Map<String, String>) session.getAttribute(Const.SESSION_QX);
 	}
 	/* ===============================权限================================== */
 }

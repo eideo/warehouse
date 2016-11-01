@@ -75,7 +75,7 @@
 	</head>
 <body>
 	<form action="clients/${msg}.do" name="userForm" id="userForm" method="post">
-		<input type="hidden" name="USER_ID" id="user_id" value="${pd.USER_ID }"/>
+		<input type="hidden" name="USER_ID" id="user_id" value="${pd.Dept_ID }"/>
 		<div id="zhongxin" >
 		<table >
 			
@@ -83,21 +83,30 @@
 		
 			
 			<tr>
-				<td><input type="text" name="USERNAME" id="USERNAME" value="${pd.Name}" maxlength="32" placeholder="这里输入客户名" title="用户名"/></td>
+				<td><input type="text" name="Name" id="Name" value="${pd.Name}" maxlength="32" placeholder="这里输入客户名" title="用户名"/></td>
 			</tr>
 			
 			<tr>
-				<td><input type="text" name="URL" id="URL"  value="${pd.Domain_Name }"  placeholder="URL" title="URL"/></td>
+				<td><input type="text" name="Domain_Name" id="Domain_Name"  value="${pd.Domain_Name }"  placeholder="URL" title="URL"/></td>
 			</tr>
 			<tr>
 				<td><input  style="height:120px;" type="text" name="Remark" id="Remark"  value="${pd.Remark }"   placeholder="网站描述" title="网站描述"/></td>
 			</tr>
 			<tr>
-				<td><input type="text" name="Key" id="Key"  value="${pd.Consumer_Key }" placeholder="这里输入key" title="key" /></td>
+				<td><input type="text" name="Consumer_Key" id="Consumer_Key"  value="${pd.Consumer_Key }" placeholder="这里输入key" title="key" /></td>
 			</tr>
 			<tr>
-				<td><input type="text" name="Secret" id="Secret" value="${pd.Consumer_Secret }" placeholder="这里输入Secret"  title="Secret"/></td>
+				<td><input type="text" name="Consumer_Secret" id="Consumer_Secret" value="${pd.Consumer_Secret }" placeholder="这里输入Secret"  title="Secret"/></td>
 			</tr>
+			
+			
+			<tr>
+				<td><input type="text" name="ApiName" id="ApiName" value="${pd.ApiName }" placeholder="这里输入ApiName"  title="ApiName"/></td>
+			</tr>
+			
+			
+			
+			
 			<tr>
 				<td style="text-align: center;">
 					<a class="btn btn-mini btn-primary" onclick="save();">保存</a>

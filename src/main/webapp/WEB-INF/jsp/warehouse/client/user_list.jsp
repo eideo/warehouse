@@ -41,6 +41,7 @@
 					<th>remark</th>
 					<th>Consumer_Key</th>
 					<th>Consumer_Secret</th>
+					<th>Api_Name</th>
 					<th class="center">操作</th>
 					<th class="center">启用</th>
 				</tr>
@@ -63,7 +64,7 @@
 					<td>${user.Remark }</td>
 					<td>${user.Consumer_Key }</td>
 					<td>${user.Consumer_Secret }</td>
-					
+					<td>${user.ApiName }</td>
 					<td>
 						<div class='hidden-phone visible-desktop btn-group'>
 										
@@ -72,7 +73,7 @@
 							</c:if>
 							
 							<c:if test="${QX.edit == 1 }">
-							<c:if test="${user.USERNAME != 'admin'}"><a class='btn btn-mini btn-info' title="编辑" onclick="editUser('${user.USER_ID }');"><i class='icon-edit'></i></a></c:if>
+							<c:if test="${user.USERNAME != 'admin'}"><a class='btn btn-mini btn-info' title="编辑" onclick="editUser('${user.Dept_ID }');"><i class='icon-edit'></i></a></c:if>
 							<c:if test="${user.USERNAME == 'admin'}"><a class='btn btn-mini btn-info' title="不能编辑"><i class='icon-edit'></i></a></c:if>
 							</c:if>
 							<c:choose>

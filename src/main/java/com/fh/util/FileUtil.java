@@ -1,22 +1,16 @@
 package com.fh.util;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.net.MalformedURLException;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileUtil {
 
@@ -95,9 +89,11 @@ public class FileUtil {
 		}
 		// 确保所有数据均被读取
 		if (offset != buffer.length) {
+			fi.close();
 			throw new IOException("Could not completely read file "
 					+ file.getName());
 		}
+
 		fi.close();
 		return buffer;
 	}

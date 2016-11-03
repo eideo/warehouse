@@ -149,8 +149,19 @@ private static final String commonUrl="/wp-json/wc/v1/";
    //   pending, processing, on-hold, completed, cancelled, refunded , failed.
       
       public enum Status {  
-    	  pending("pending",2), processing("processing",3), onhold("onhold",4), completed("completed",1),  cancelled("cancelled",5),refunded("refunded",6) , failed("failed",7);
-    	  
+    	  //冻结库存
+    	  pending("pending",2), 
+    	  processing("processing",3), 
+    	  onhold("on-hold",4), 
+    	  //扣减库存
+    	  completed("completed",1),  
+    	  //check 上一步状态
+    	  cancelled("cancelled",5),
+    	  //不做操作
+    	  refunded("refunded",6) , 
+    	  failed("failed",7),
+    	  //不做库存操作
+    	  packaged("package",8);
     	  
     	  // 普通方法  
     	    public static String getName(int index) {  

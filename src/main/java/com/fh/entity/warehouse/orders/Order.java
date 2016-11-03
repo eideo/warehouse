@@ -23,10 +23,10 @@ public class Order {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getOrder_number() {
+	public String getOrder_number() {
 		return order_number;
 	}
-	public void setOrder_number(int order_number) {
+	public void setOrder_number(String order_number) {
 		this.order_number = order_number;
 	}
 	public String getOrder_key() {
@@ -214,7 +214,7 @@ public class Order {
 	}
 	private int id;
 
-    private int order_number;
+    private String order_number;
   
     private String order_key;
 
@@ -277,12 +277,12 @@ public class Order {
 		Dept_ID = dept_ID;
 	}
 	private int Dept_ID;
-	private int Original_ID;
+	private String Original_ID;
 
-	public int getOriginal_ID() {
+	public String getOriginal_ID() {
 		return Original_ID;
 	}
-	public void setOriginal_ID(int original_ID) {
+	public void setOriginal_ID(String original_ID) {
 		Original_ID = original_ID;
 	}
 	

@@ -173,7 +173,7 @@ public class WooApiGetOrdersService {
 			for (com.fh.entity.warehouse.orders.Order order : l) {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
 				// System.out.println(order.getId()+order.getDate_created());
-				order.setOriginal_ID(order.getId());
+				order.setOriginal_ID(order.getOrder_number());
 				order.setDept_ID(dept);
 				  Object tmp =dao.findForObject("WarehouseMapper.checkOrder", order);
 					 int m = (tmp==null)?0:(int)tmp;
@@ -182,6 +182,8 @@ public class WooApiGetOrdersService {
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
 				// order));
 					 int t=Status.getIndex( order.getStatus());
+					 System.out.println(order.getStatus());
+					 System.out.println(t);
 				if (m == 0) {
 					order.setStatusInt(t);
 			

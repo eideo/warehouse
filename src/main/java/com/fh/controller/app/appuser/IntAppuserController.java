@@ -222,7 +222,7 @@ public class IntAppuserController extends BaseController {
 				int dptint=(Integer) tmPageData.get("Dept_ID");
 				System.out.println("dpt is "+dptint);
 				if(jsonRootBean !=null){
-					System.out.println("this is be invoked id is   "+o .getId());
+					System.out.println("this is be invoked id is   "+o.getOrder_number());
 					
 					o.setDept_ID(dptint);
 					//System.out.println("this is be invoked ip is   "+o .getCustomer_ip());

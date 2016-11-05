@@ -188,6 +188,17 @@ WHERE   `Dept_ID`= #{USER_ID}
 
 
 
+	<!-- 冻结总库存 -->
+	<update id="updateFrozenStockDetail" parameterType="pd" flushCache="false">
+		update stockpile
+		set
+		Quantity=#{Quantity}-#{Freeze_Num},
+		Freeze_Num=Freeze_Num+#{Freeze_Num}
+
+		where
+		StockPile_ID = #{StockPile_ID}
+	</update>
+
 
 	<!-- 新增总库存 -->
 	<insert id="saveStockpileDetail" parameterType="pd"

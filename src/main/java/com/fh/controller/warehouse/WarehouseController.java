@@ -65,8 +65,7 @@ public class WarehouseController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-	
-		//System.out.println("dwwwwwwwwwdddwwasfdsfsdafsd  "+pd.get("DEP_ID"));
+
 
 		if(null == userService.findByUId(pd)){
 		{clientsService.saveWareHouse(pd);} //判断新增权限

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
@@ -128,6 +129,10 @@ public class ProductController extends BaseController {
 			 */
 			BaseProductsEntity bf= new BaseProductsEntity();
 			for (PageData pageData : listPd) {
+				String va1=pageData.getString("var1");
+				if(StringUtils.isEmpty(pageData.getString("var0"))|| StringUtils.isEmpty(va1)){
+					break;
+				}
 				
 				String sku=pageData.getString("var0").trim();
 				
@@ -140,8 +145,12 @@ public class ProductController extends BaseController {
 				
 			
                 System.out.println("new      "+sku);
-				bf.setName(pageData.getString("var1").trim());
-				bf.setNameCN(pageData.getString("var2").trim());
+            
+            		bf.setName(va1.trim());
+               
+               if(StringUtils.isNotEmpty(pageData.getString("var2"))){
+            		bf.setNameCN(pageData.getString("var2").trim());
+               }
 				bf.setSKU(sku);
 				
 				

@@ -15,10 +15,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.AnfiApi;
+import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Iterm;
 import com.fh.entity.warehouse.orderslist.Order;
-
+import com.fh.service.warehouse.ClientsService;
 import com.fh.util.CacheUtil;
 import com.fh.util.Const;
 import com.fh.util.Const.Status;
@@ -30,9 +31,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.body.RequestBodyEntity;
 
 import net.sf.ehcache.Element;
+
 
 @Service("autoApiService")
 public class WooApiGetOrdersService {
@@ -43,7 +44,8 @@ public class WooApiGetOrdersService {
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
 	
-	
+	@Resource(name = "clientsService")
+	private ClientsService clientsService;
 	public String getJsonString(String url ,String username,String password) throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
 		HttpResponse<JsonNode> response = Unirest.get(url).basicAuth(username, password).asJson();
@@ -84,7 +86,7 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa(int num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-7));
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-40));
         String before= DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
         String finalurl=this.url + after+"&before="+before+"&page="+num;
 	//	HttpResponse<JsonNode> response = Unirest.get(finalurl).basicAuth(this.username, this.password).asJson();
@@ -167,9 +169,15 @@ public class WooApiGetOrdersService {
 			}
 		}
 	}
-
+    /**
+     * 
+     * @param l
+     * @param dept
+     * @throws Exception
+     */
 	public void saveOrdersCommon(List<com.fh.entity.warehouse.orders.Order> l, int dept) throws Exception {
 		if (l != null && l.size() != 0) {
+			EnterStock e=null;
 			for (com.fh.entity.warehouse.orders.Order order : l) {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
 				// System.out.println(order.getId()+order.getDate_created());
@@ -182,8 +190,10 @@ public class WooApiGetOrdersService {
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
 				// order));
 					 int t=Status.getIndex( order.getStatus());
-					 System.out.println(order.getStatus());
-					 System.out.println(t);
+					 order.setStatusInt(t);
+					 clientsService.saveAutoOrderStock(order);
+					
+					// saveAutoOrderStock
 				if (m == 0) {
 					order.setStatusInt(t);
 			
@@ -208,6 +218,7 @@ public class WooApiGetOrdersService {
 
 
 					}
+					order.setLine_items(iterms); 
 					dao.save("WarehouseMapper.saveCommonOrderitems", iterms);
 
 				} else {

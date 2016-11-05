@@ -156,7 +156,8 @@ public class ClientsService {
 
 				// LastLeaveDate
 				temp.put("LastLeaveDate", null);
-				dao.update("WarehouseMapper.updateStockDetail", temp);
+				updateStockDetail(temp);
+				//dao.update("WarehouseMapper.updateStockDetail", temp);
 			}
 		} else {
 			if (pageData != null) {
@@ -165,12 +166,37 @@ public class ClientsService {
 				n = total;
 				temp.put("Quantity", total);
 				temp.put("LastLeaveDate", DateUtil.getDay());
-				dao.update("WarehouseMapper.updateStockDetail", temp);
+				updateStockDetail(temp);
+				//dao.update("WarehouseMapper.updateStockDetail", temp);
 
 			}
 
 		}
 		this.updateWooStock(sku, n, dept);
+	}
+	/**
+	 * 
+	 * @param p
+	 * @throws Exception
+	 */
+	private void updateStockDetail(PageData p) throws Exception{
+		dao.update("WarehouseMapper.updateStockDetail", p);
+
+	}
+	
+	public void saveAutoOrderStock(com.fh.entity.warehouse.orders.Order order){
+		int status=order.getStatusInt();
+		if(status==2||status==4||status==3){
+			System.out.println("冻结库存");
+			//dao.update("WarehouseMapper.updateFrozenStockDetail", p);
+			
+		}else if(status==1) {
+			System.out.println("出库");
+		}
+		System.out.println();
+		
+		
+		
 	}
 
 	/**

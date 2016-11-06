@@ -130,11 +130,12 @@ public class ProductController extends BaseController {
 			BaseProductsEntity bf= new BaseProductsEntity();
 			for (PageData pageData : listPd) {
 				String va1=pageData.getString("var1");
-				if(StringUtils.isEmpty(pageData.getString("var0"))|| StringUtils.isEmpty(va1)){
+				String sku=pageData.getString("var0");
+				if(StringUtils.isEmpty(sku)|| StringUtils.isEmpty(va1)){
 					break;
 				}
 				
-				String sku=pageData.getString("var0").trim();
+			 sku=sku.trim();
 				
 				
 				Element element = CacheUtil.getCacheObject(sku, "products");

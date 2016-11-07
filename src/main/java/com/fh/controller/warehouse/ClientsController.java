@@ -89,11 +89,7 @@ public class ClientsController extends BaseController {
 		ModelAndView mv = this.getModelAndView();
 		PageData pd = new PageData();
 		pd = this.getPageData();
-		
-	System.out.println("URLURL"+pd.getString("URL"));
-	
-	System.out.println("Remark"+pd.getString("Remark"));
-	System.out.println("USER_ID"+pd.getString("USER_ID"));
+
 	
 			clientsService.editU(pd);
 		

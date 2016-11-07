@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -27,7 +26,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.fh.controller.base.BaseController;
 import com.fh.entity.Page;
-import com.fh.entity.system.Role;
 import com.fh.service.system.menu.MenuService;
 import com.fh.service.system.role.RoleService;
 import com.fh.service.warehouse.ClientsService;
@@ -72,9 +70,7 @@ public class ClientsController extends BaseController {
 		// Clients clients= new Clients();
 		// clients.setName(pd.ge);
 
-		pd.put("Key", MD5.md5(pd.getString("USERNAME")));
-
-		System.out.println("" + MD5.md5(pd.getString("USERNAME")));
+		pd.put("Key", MD5.md5(pd.getString("Name")));
 		clientsService.saveClients(pd);
 
 		// if(Jurisdiction.buttonJurisdiction(menuUrl,

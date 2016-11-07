@@ -328,8 +328,8 @@ LIMIT 100
 
 	<!-- check if the user in database -->
 	<select id="checkOrder" parameterType="com.fh.entity.warehouse.orderslist.Order"
-		resultType="java.lang.Integer">
-		SELECT Order_ID FROM `orders` WHERE Dept_ID=#{Dept_ID} and
+		resultType="pd">
+		SELECT * FROM `orders` WHERE Dept_ID=#{Dept_ID} and
 		Original_ID=#{Original_ID}
 	</select>
 
@@ -479,7 +479,7 @@ LIMIT 100
 
 		CAST(IFNULL (#{total},0) AS DECIMAL(10,2)),
 		#{Dept_ID},
-		DATE_FORMAT(#{date_created},'%Y-%m-%d %H:%i:%S'),
+		DATE_FORMAT(#{date_completed},'%Y-%m-%d %H:%i:%S'),
 		#{remark},
 
 		#{billing.address_1},
@@ -640,15 +640,15 @@ LIMIT 100
 		ApiName
 
 		) values (
-		#{USERNAME},
-		#{URL},
+		#{Name},
+		#{Domain_Name},
 		#{Key},
 		#{Secret},
 		#{Address},
 		#{Phone},
 		#{Remark},
 		1,
-         #{ApiName},
+         #{ApiName}
 		)
 	</insert>
 

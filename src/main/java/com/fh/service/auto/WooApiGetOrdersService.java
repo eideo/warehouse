@@ -34,7 +34,6 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import net.sf.ehcache.Element;
 
-
 @Service("autoApiService")
 public class WooApiGetOrdersService {
 	private String url = Const.url;
@@ -43,33 +42,27 @@ public class WooApiGetOrdersService {
 	protected Logger logger = Logger.getLogger(this.getClass());
 	@Resource(name = "daoSupport")
 	private DaoSupport dao;
-	
+
 	@Resource(name = "clientsService")
 	private ClientsService clientsService;
-	public String getJsonString(String url ,String username,String password) throws UnirestException, JsonParseException, JsonMappingException, IOException {
+
+	public String getJsonString(String url, String username, String password)
+			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
 		HttpResponse<JsonNode> response = Unirest.get(url).basicAuth(username, password).asJson();
 
-	
+		return response.getBody().getArray().toString();
 
-	return	 response.getBody().getArray().toString();
-		
-		
 	}
-	
-	
-	public void putJsonString(String url ,String body,int num) throws UnirestException, JsonParseException, JsonMappingException, IOException {
-     //   url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
+
+	public void putJsonString(String url, String body, int num)
+			throws UnirestException, JsonParseException, JsonMappingException, IOException {
+		// url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		HttpResponse<JsonNode> response = Unirest.put(url).field(body, num).asJson();
-		//Unirest.put(url).
-		System.out.println( response.getBody().getArray().toString());
-		
+		// Unirest.put(url).
+		System.out.println(response.getBody().getArray().toString());
+
 	}
-	
-	
-	
-	
-	
 
 	/**
 	 * https://myalpha.co.nz/wp-json/wc/v1/orders?per_page=100&after=2016-09-
@@ -86,37 +79,37 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa(int num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-40));
-        String before= DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
-        String finalurl=this.url + after+"&before="+before+"&page="+num;
-	//	HttpResponse<JsonNode> response = Unirest.get(finalurl).basicAuth(this.username, this.password).asJson();
-
-	
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-39));
+		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
+		String finalurl = this.url + after + "&before=" + before + "&page=" + num;
+		// HttpResponse<JsonNode> response =
+		// Unirest.get(finalurl).basicAuth(this.username,
+		// this.password).asJson();
 
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
-//		System.out.println(jsonString);
-//		System.out.println(finalurl);
-//		System.out.println("username:" + this.username);
-//		System.out.println("password:" + this.password);
+		// System.out.println(jsonString);
+		// System.out.println(finalurl);
+		// System.out.println("username:" + this.username);
+		// System.out.println("password:" + this.password);
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
 		System.out.println(lst.size());
 		if (lst.isEmpty()) {
 
 			return null;
 		}
-//		for (Order order : lst) {
-//		//System.out.println(order.getDate_created()+order.getDate_created());
-//			List<Iterm> iterms = order.getLine_items();
-//			if (iterms != null) {
-//				for (Iterm iterm : iterms) {
-//					iterm.getSku();
-//					
-//					// System.out.println(iterm.getSku());
-//					// System.out.println(iterm.getTotal());
-//				}
-//			}
-//
-//		}
+		// for (Order order : lst) {
+		// //System.out.println(order.getDate_created()+order.getDate_created());
+		// List<Iterm> iterms = order.getLine_items();
+		// if (iterms != null) {
+		// for (Iterm iterm : iterms) {
+		// iterm.getSku();
+		//
+		// // System.out.println(iterm.getSku());
+		// // System.out.println(iterm.getTotal());
+		// }
+		// }
+		//
+		// }
 		return lst;
 	}
 
@@ -124,14 +117,15 @@ public class WooApiGetOrdersService {
 		if (l != null && l.size() != 0) {
 			for (Order order : l) {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
-				// System.out.println(order.getId()+order.getDate_created());
+				 //System.out.println(order.getId()+order.getDate_created());
 				order.setOriginal_ID(order.getId());
 				order.setDept_ID(dept);
-                  Object tmp =dao.findForObject("WarehouseMapper.checkOrder", order);
-				 int m = (tmp==null)?0:(int)tmp;
+				PageData tmp = (PageData) dao.findForObject("WarehouseMapper.checkOrder", order);
+				int m = (tmp == null) ? 0 : (int) tmp.get("Order_ID");
+
 
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
-				// order));
+				// order)); date_completed
 
 				if (m == 0) {
 					String remark = order.getBilling().getCity() + "," + order.getBilling().getCompany();
@@ -141,22 +135,19 @@ public class WooApiGetOrdersService {
 					dao.save("WarehouseMapper.saveOrder", order);
 					// System.out.println("productid======"+order.getId());
 					List<Iterm> iterms = order.getLine_items();
+					int id = order.getId();
 					for (Iterm iterm : iterms) {
-						
-						
+
+						iterm.setOrder_ID(id);
 						Element element = CacheUtil.getCacheObject(iterm.getSku(), "products");
 						if (element == null) {
-							System.out.println("not this sku "+iterm.getSku());
+							System.out.println("not this sku " + iterm.getSku());
 							continue;
 						}
-						
-						
-						
+
 						PageData tmPageData = (PageData) element.getObjectValue();
 
 						int productid = (Integer) tmPageData.get("Product_ID");
-		
-						iterm.setOrder_ID(order.getId());
 
 						iterm.setProduct_ID(productid);
 						// System.out.println("ppp===="+productid);
@@ -169,64 +160,66 @@ public class WooApiGetOrdersService {
 			}
 		}
 	}
-    /**
-     * 
-     * @param l
-     * @param dept
-     * @throws Exception
-     */
+
+	/**
+	 * 
+	 * @param l
+	 * @param dept
+	 * @throws Exception
+	 */
 	public void saveOrdersCommon(List<com.fh.entity.warehouse.orders.Order> l, int dept) throws Exception {
 		if (l != null && l.size() != 0) {
-			EnterStock e=null;
+			EnterStock e = null;
 			for (com.fh.entity.warehouse.orders.Order order : l) {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
 				// System.out.println(order.getId()+order.getDate_created());
 				order.setOriginal_ID(order.getOrder_number());
 				order.setDept_ID(dept);
-				  Object tmp =dao.findForObject("WarehouseMapper.checkOrder", order);
-					 int m = (tmp==null)?0:(int)tmp;
-				
+				PageData tmp = (PageData) dao.findForObject("WarehouseMapper.checkOrder", order);
+				int m = (tmp == null) ? 0 : (int) tmp.get("Order_ID");
 
-				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
-				// order));
-					 int t=Status.getIndex( order.getStatus());
-					 order.setStatusInt(t);
-					 clientsService.saveAutoOrderStock(order);
-					
-					// saveAutoOrderStock
+				int t = Status.getIndex(order.getStatus());
+				order.setStatusInt(t);
+
+				System.out.println("this is the order status " + order.getStatus());
+				// saveAutoOrderStock
 				if (m == 0) {
-					order.setStatusInt(t);
-			
+
 					dao.save("WarehouseMapper.saveOrderCommon", order);
 
 					List<Line_Items> iterms = order.getLine_items();
 					for (Line_Items iterm : iterms) {
-					Element element=	CacheUtil.getCacheObject( iterm.getSku(), "products");
-					int productid=0;
-					if(element==null){
-						continue;
-					}else{
-						PageData tmPageData = (PageData) element.getObjectValue();
+						Element element = CacheUtil.getCacheObject(iterm.getSku(), "products");
+						int productid = 0;
+						if (element == null) {
+							continue;
+						} else {
+							PageData tmPageData = (PageData) element.getObjectValue();
 
-						 productid = (Integer) tmPageData.get("Product_ID");
-					}
-					//	int productid = (int) dao.findForObject("WarehouseMapper.searchProduct", iterm.getSku());
-					
+							productid = (Integer) tmPageData.get("Product_ID");
+						}
+						// int productid = (int)
+						// dao.findForObject("WarehouseMapper.searchProduct",
+						// iterm.getSku());
 						iterm.setOrder_ID(order.getId());
-
 						iterm.setProduct_ID(productid);
-
-
 					}
-					order.setLine_items(iterms); 
+					order.setLine_items(iterms);
+					clientsService.saveAutoOrderStock(order, 0);
 					dao.save("WarehouseMapper.saveCommonOrderitems", iterms);
 
 				} else {
-					PageData pD = new PageData();
-					pD.put("Order_ID", m);
-					//int t=Status.getIndex( order.getStatus());
-					pD.put("Status", t);
-					dao.update("WarehouseMapper.updateOrderstatus", pD);
+					int sta = Integer.valueOf((String) tmp.get("Status"));
+					if (sta != 1) {
+						PageData pD = new PageData();
+						pD.put("Order_ID", m);
+						// int t=Status.getIndex( order.getStatus());
+						pD.put("Status", t);
+						if (t == 1) {
+							clientsService.saveAutoOrderStock(order, sta);
+						}
+						dao.update("WarehouseMapper.updateOrderstatus", pD);
+					}
 				}
 
 			}
@@ -249,21 +242,21 @@ public class WooApiGetOrdersService {
 	public void sysOrderAnfaOrder()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 		System.out.println("this method be invoked22");
-		int num=1;
-		List<Order> list =this.getOrdersFromAnfa(num);
-	
-		while (list!=null&&list.size()!=0) {
-			this.saveOrders(list,2);
+		int num = 1;
+		List<Order> list = this.getOrdersFromAnfa(num);
+
+		while (list != null && list.size() != 0) {
+			this.saveOrders(list, 2);
 			num++;
-			list =this.getOrdersFromAnfa(num);
+			list = this.getOrdersFromAnfa(num);
 		}
-		//this.saveOrders(this.getOrdersFromAnfa(), 2);
+		// this.saveOrders(this.getOrdersFromAnfa(), 2);
 	}
 
 	public static void main(String[] args) {
 		try {
 			WooApiGetOrdersService wooApiGetOrders = new WooApiGetOrdersService();
-		//	wooApiGetOrders.getOrdersFromAnfa();
+			// wooApiGetOrders.getOrdersFromAnfa();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

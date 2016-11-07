@@ -15,6 +15,7 @@ import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.EnterStockDetail;
+import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Product;
 
 import com.fh.service.auto.WooApiGetOrdersService;
@@ -184,17 +185,38 @@ public class ClientsService {
 
 	}
 	
-	public void saveAutoOrderStock(com.fh.entity.warehouse.orders.Order order){
+	private void updateFrozeStock(PageData p) throws Exception{
+		dao.update("WarehouseMapper.updateFrozenStockDetail", p);
+		System.out.println("冻结库存");
+	}
+	/**
+	 * 
+	 * @param order
+	 * @param stat
+	 * @throws Exception
+	 */
+	public void saveAutoOrderStock(com.fh.entity.warehouse.orders.Order order,int stat) throws Exception{
 		int status=order.getStatusInt();
 		if(status==2||status==4||status==3){
-			System.out.println("冻结库存");
+		
+			List<Line_Items> list =order.getLine_items();
+			PageData p =new PageData();
+			 p.put("dept_id", order.getDept_ID());
+			 for (Line_Items line_Items : list) {
+				 p.put("productid",  line_Items.getProduct_ID());		
+				p.put("num", line_Items.getQuantity());
+			
+				this.updateFrozeStock(p);
+			}
+			
+			
+			
 			//dao.update("WarehouseMapper.updateFrozenStockDetail", p);
 			
 		}else if(status==1) {
 			System.out.println("出库");
 		}
-		System.out.println();
-		
+
 		
 		
 	}

@@ -85,7 +85,13 @@ public void setStatus(String status) {
 	this.status = status;
 }
 
-
+private String date_completed;
+public String getDate_completed() {
+	return date_completed;
+}
+public void setDate_completed(String date_completed) {
+	this.date_completed = date_completed;
+}
 
 //"country": "CN",
 //"city": "1",

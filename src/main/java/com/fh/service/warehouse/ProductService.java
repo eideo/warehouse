@@ -8,11 +8,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.fh.dao.DaoSupport;
-import com.fh.entity.Page;
 import com.fh.entity.system.BaseProductsEntity;
 import com.fh.util.CacheUtil;
 import com.fh.util.PageData;
-import com.fh.entity.warehouse.orders.Order;
 @Service("productService")
 public class ProductService {
 
@@ -37,6 +35,7 @@ public class ProductService {
 		System.out.println("cach be invoked");
 		List<PageData> list = (List<PageData>) dao.findForList("WarehouseMapper.listAlLProducts", pd);
 		for (PageData pageData : list) {
+			System.out.println(pageData.get("SKU"));
 			CacheUtil.cacheSave(pageData.get("SKU"), pageData, "products");
 		}
 		//System.out.println(CacheUtil.getCacheObject("9400569011003", "products"));

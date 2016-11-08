@@ -189,20 +189,26 @@ public class WooApiGetOrdersService {
 
 					List<Line_Items> iterms = order.getLine_items();
 					for (Line_Items iterm : iterms) {
-						Element element = CacheUtil.getCacheObject(iterm.getSku(), "products");
-						int productid = 0;
+						iterm.setOrder_ID(order.getId());
+				
+						Element element = CacheUtil.getCacheObject(iterm.getSku().trim(), "products");
+					//	int productid = 0;
 						if (element == null) {
+							System.out.println("element is null");
 							continue;
 						} else {
 							PageData tmPageData = (PageData) element.getObjectValue();
-
-							productid = (Integer) tmPageData.get("Product_ID");
+						
+						int	productid = (Integer) tmPageData.get("Product_ID");
+						System.out.println("sku from cache is "+tmPageData.get("Product_ID"));
+							System.out.println("product id  is "+productid);
+							iterm.setProduct_ID(productid);
 						}
 						// int productid = (int)
 						// dao.findForObject("WarehouseMapper.searchProduct",
 						// iterm.getSku());
-						iterm.setOrder_ID(order.getId());
-						iterm.setProduct_ID(productid);
+						
+						
 					}
 					order.setLine_items(iterms);
 					clientsService.saveAutoOrderStock(order, 0);

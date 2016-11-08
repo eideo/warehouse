@@ -20,7 +20,7 @@ public class Logger {
 	 *            Class对象
 	 * @return Logger对象
 	 */
-	public static Logger getLogger(Class classObject) {
+	public static Logger getLogger(Class<?> classObject) {
 		return new Logger(org.apache.log4j.Logger.getLogger(classObject));
 	}
 

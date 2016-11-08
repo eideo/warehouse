@@ -44,6 +44,7 @@
 					<th>SKU</th>
 					<th>NAME</th>
 					<th>数量</th>
+						<th>冻结库存</th>
 					<th>平均成本价</th>
 					<th>仓库</th>
 					
@@ -67,6 +68,7 @@
 					<td>${user.SKU }</td>
 					<td><a>${user.Name_CN }</a></td>
 					<td>${user.Quantity }</td>
+					<td>${user.Freeze_Num }</td>
 					<td>${user.Price }</td>
 					
 					<td>${user.Address }</td>
@@ -124,7 +126,7 @@
 			var oTable1 = $('#table_report').dataTable( {
 			"aoColumns": [
 		      { "bSortable": false },
-		      null, null,null, null, null,null,
+		      null, null,null, null, null,null,null,
 			  { "bSortable": false }
 			] } );
 			

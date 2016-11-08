@@ -198,13 +198,15 @@ public class ClientsService {
 	public void saveAutoOrderStock(com.fh.entity.warehouse.orders.Order order,int stat) throws Exception{
 		int status=order.getStatusInt();
 		if(status==2||status==4||status==3){
-		
+	
 			List<Line_Items> list =order.getLine_items();
 			PageData p =new PageData();
-			 p.put("dept_id", order.getDept_ID());
+			 p.put("Dept_ID", order.getDept_ID());
 			 for (Line_Items line_Items : list) {
-				 p.put("productid",  line_Items.getProduct_ID());		
-				p.put("num", line_Items.getQuantity());
+//				 System.out.println("product id "+line_Items.getProduct_ID());
+//				 System.out.println("Freeze_Num id "+line_Items.getQuantity());
+				 p.put("Product_ID",  line_Items.getProduct_ID());		
+				p.put("Freeze_Num", line_Items.getQuantity());
 			
 				this.updateFrozeStock(p);
 			}

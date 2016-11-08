@@ -192,11 +192,12 @@ WHERE   `Dept_ID`= #{USER_ID}
 	<update id="updateFrozenStockDetail" parameterType="pd" flushCache="false">
 		update stockpile
 		set
-		Quantity=#{Quantity}-#{Freeze_Num},
+		Quantity=Quantity-#{Freeze_Num},
 		Freeze_Num=Freeze_Num+#{Freeze_Num}
 
 		where
-		StockPile_ID = #{StockPile_ID}
+		Product_ID = #{Product_ID}
+		and Dept_ID= #{Dept_ID}  
 	</update>
 
 

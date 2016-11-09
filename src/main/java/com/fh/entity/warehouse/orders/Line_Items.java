@@ -123,5 +123,12 @@ public class Line_Items {
 		this.status = status;
 	}
 	private int status;
+	public int getLeaveStock_ID() {
+		return LeaveStock_ID;
+	}
+	public void setLeaveStock_ID(int leaveStock_ID) {
+		LeaveStock_ID = leaveStock_ID;
+	}
+	private int LeaveStock_ID;
 
 }

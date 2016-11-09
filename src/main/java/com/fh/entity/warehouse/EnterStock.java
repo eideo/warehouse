@@ -65,6 +65,13 @@ public class EnterStock {
 	private int StoreHouse_ID;
 	private int Employee_ID;
 	private String EnterDate;
+	public String getOrder_ID() {
+		return Order_ID;
+	}
+	public void setOrder_ID(String order_ID) {
+		Order_ID = order_ID;
+	}
+	private String Order_ID;
 
 	
 

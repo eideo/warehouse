@@ -11,13 +11,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fh.dao.DaoSupport;
-import com.fh.entity.Page;
 import com.fh.entity.system.User;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.EnterStockDetail;
 import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Product;
-
 import com.fh.service.auto.WooApiGetOrdersService;
 import com.fh.util.CacheUtil;
 import com.fh.util.Const;
@@ -216,10 +214,32 @@ public class ClientsService {
 			//dao.update("WarehouseMapper.updateFrozenStockDetail", p);
 			
 		}else if(status==1) {
+			
 			System.out.println("出库");
 		}
 
 		
+		
+	}
+	
+	/**
+	 * 订单出库
+	 * @param order
+	 * @throws Exception 
+	 */
+	private void upadateStockBaseOnOrder(com.fh.entity.warehouse.orders.Order order) throws Exception{
+		EnterStock enterStock = new EnterStock();
+	enterStock.setOrder_ID(String.valueOf(order.getId()));
+	enterStock.setDept_ID(order.getDept_ID());
+		
+		
+		dao.save("WarehouseMapper.saveOutStock", enterStock);
+	List<Line_Items> lis=	order.getLine_items();
+	for (Line_Items line_Items: lis) {
+		line_Items.setLeaveStock_ID(enterStock.getLeaveStock_ID());
+		
+	}
+		//enterStock.getLeaveStock_ID();
 		
 	}
 
@@ -279,19 +299,6 @@ public class ClientsService {
 		return (PageData) dao.findForObject("WarehouseMapper.findByUiId", pd);
 	}
 
-	/*
-	 * 通过loginname获取数据
-	 */
-	public PageData findByUId(PageData pd) throws Exception {
-		return (PageData) dao.findForObject("UserXMapper.findByUId", pd);
-	}
-
-	/*
-	 * 通过邮箱获取数据
-	 */
-	public PageData findByUE(PageData pd) throws Exception {
-		return (PageData) dao.findForObject("UserXMapper.findByUE", pd);
-	}
 
 	/*
 	 * 通过编号获取数据
@@ -350,40 +357,7 @@ public class ClientsService {
 		dao.delete("UserXMapper.deleteAllU", USER_IDS);
 	}
 
-	/*
-	 * 用户列表(用户组)
-	 */
-	public List<PageData> listPdPageUser(Page page) throws Exception {
-		return (List<PageData>) dao.findForList("UserXMapper.userlistPage", page);
-	}
 
-	/*
-	 * 用户列表(全部)
-	 */
-	public List<PageData> listAllUser(PageData pd) throws Exception {
-		return (List<PageData>) dao.findForList("UserXMapper.listAllUser", pd);
-	}
-
-	/*
-	 * 用户列表(供应商用户)
-	 */
-	public List<PageData> listGPdPageUser(Page page) throws Exception {
-		return (List<PageData>) dao.findForList("UserXMapper.userGlistPage", page);
-	}
-
-	/*
-	 * 保存用户IP
-	 */
-	public void saveIP(PageData pd) throws Exception {
-		dao.update("UserXMapper.saveIP", pd);
-	}
-
-	/*
-	 * 登录判断
-	 */
-	public PageData getUserByNameAndPwd(PageData pd) throws Exception {
-		return (PageData) dao.findForObject("UserXMapper.getUserInfo", pd);
-	}
 
 	/*
 	 * 跟新登录时间
@@ -398,5 +372,4 @@ public class ClientsService {
 	public User getUserAndRoleById(String USER_ID) throws Exception {
 		return (User) dao.findForObject("UserMapper.getUserAndRoleById", USER_ID);
 	}
-
 }

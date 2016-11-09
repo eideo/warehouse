@@ -359,19 +359,21 @@ LIMIT 100
 	</insert>
 
 
-	<!-- 新增入库单 -->
+	<!-- 新增出库单 -->
 	<insert id="saveOutStock" parameterType="com.fh.entity.warehouse.EnterStock"
 		useGeneratedKeys="true" keyProperty="LeaveStock_ID">
 		insert into
 		LeaveStock (
 		Dept_ID,
 		EnterDate,
-		StoreHouse_ID
+		StoreHouse_ID,
+	    Order_ID
 		) values (
 
 		#{Dept_ID},
 		now(),
-		#{StoreHouse_ID}
+		#{StoreHouse_ID},
+			#{Order_ID}
 
 		)
 	</insert>

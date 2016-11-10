@@ -6,6 +6,10 @@ public class Tag extends BaseEntity{
 //      value2: string,
 //      desc: string.
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int tag;
 	public int getTag() {
 		return tag;

@@ -8,7 +8,6 @@ import com.fh.util.JsonUtil;
 public class ProductEntity {
 private ProductInfo product_info;
 
-private String productInfoByJson;
 
 public String getProductInfoByJson() {
 	String json=null;
@@ -25,7 +24,6 @@ public String getTagsByJson() {
 	}
 return json;
 }
-private String tagsByJson;
 
 //public String getProductInfoByJson(){
 //	String json=null;

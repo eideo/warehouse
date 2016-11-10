@@ -2,6 +2,14 @@ package com.fh.entity;
 
 
 public class TestEntity extends BaseEntity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8482101173679454854L;
+	/**
+	 * 
+	 */
+
 	public String getRole() {
 		return role;
 	}

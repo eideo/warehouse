@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fh.dao.DaoSupport;
-import com.fh.entity.system.User;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.EnterStockDetail;
 import com.fh.entity.warehouse.orders.Line_Items;
@@ -156,7 +155,7 @@ public class ClientsService {
 				// LastLeaveDate
 				temp.put("LastLeaveDate", null);
 				updateStockDetail(temp);
-				//dao.update("WarehouseMapper.updateStockDetail", temp);
+				// dao.update("WarehouseMapper.updateStockDetail", temp);
 			}
 		} else {
 			if (pageData != null) {
@@ -166,81 +165,85 @@ public class ClientsService {
 				temp.put("Quantity", total);
 				temp.put("LastLeaveDate", DateUtil.getDay());
 				updateStockDetail(temp);
-				//dao.update("WarehouseMapper.updateStockDetail", temp);
+				// dao.update("WarehouseMapper.updateStockDetail", temp);
 
 			}
 
 		}
 		this.updateWooStock(sku, n, dept);
 	}
+
 	/**
 	 * 
 	 * @param p
 	 * @throws Exception
 	 */
-	private void updateStockDetail(PageData p) throws Exception{
+	private void updateStockDetail(PageData p) throws Exception {
 		dao.update("WarehouseMapper.updateStockDetail", p);
 
 	}
-	
-	private void updateFrozeStock(PageData p) throws Exception{
+
+	private void updateFrozeStock(PageData p) throws Exception {
 		dao.update("WarehouseMapper.updateFrozenStockDetail", p);
 		System.out.println("冻结库存");
 	}
+
 	/**
 	 * 
 	 * @param order
 	 * @param stat
 	 * @throws Exception
 	 */
-	public void saveAutoOrderStock(com.fh.entity.warehouse.orders.Order order,int stat) throws Exception{
-		int status=order.getStatusInt();
-		if(status==2||status==4||status==3){
-	
-			List<Line_Items> list =order.getLine_items();
-			PageData p =new PageData();
-			 p.put("Dept_ID", order.getDept_ID());
-			 for (Line_Items line_Items : list) {
-//				 System.out.println("product id "+line_Items.getProduct_ID());
-//				 System.out.println("Freeze_Num id "+line_Items.getQuantity());
-				 p.put("Product_ID",  line_Items.getProduct_ID());		
+	public void saveAutoOrderStock(com.fh.entity.warehouse.orders.Order order, int stat) throws Exception {
+		int status = order.getStatusInt();
+		if (status == 2 || status == 4 || status == 3) {
+
+			List<Line_Items> list = order.getLine_items();
+			PageData p = new PageData();
+			p.put("Dept_ID", order.getDept_ID());
+			for (Line_Items line_Items : list) {
+				// System.out.println("product id "+line_Items.getProduct_ID());
+				// System.out.println("Freeze_Num id
+				// "+line_Items.getQuantity());
+				p.put("Product_ID", line_Items.getProduct_ID());
 				p.put("Freeze_Num", line_Items.getQuantity());
-			
+
 				this.updateFrozeStock(p);
 			}
-			
-			
-			
-			//dao.update("WarehouseMapper.updateFrozenStockDetail", p);
-			
-		}else if(status==1) {
-			
+
+			// dao.update("WarehouseMapper.updateFrozenStockDetail", p);
+
+		} else if (status == 1) {
+
 			System.out.println("出库");
 		}
 
-		
-		
 	}
-	
+
 	/**
 	 * 订单出库
+	 * 
 	 * @param order
-	 * @throws Exception 
+	 * @throws Exception
 	 */
-	private void upadateStockBaseOnOrder(com.fh.entity.warehouse.orders.Order order) throws Exception{
+	private void upadateStockBaseOnOrder(com.fh.entity.warehouse.orders.Order order) throws Exception {
 		EnterStock enterStock = new EnterStock();
-	enterStock.setOrder_ID(String.valueOf(order.getId()));
-	enterStock.setDept_ID(order.getDept_ID());
-		
-		
+		enterStock.setOrder_ID(String.valueOf(order.getId()));
+		enterStock.setDept_ID(order.getDept_ID());
+
 		dao.save("WarehouseMapper.saveOutStock", enterStock);
-	List<Line_Items> lis=	order.getLine_items();
-	for (Line_Items line_Items: lis) {
-		line_Items.setLeaveStock_ID(enterStock.getLeaveStock_ID());
+		List<Line_Items> lis = order.getLine_items();
+		for (Line_Items line_Items : lis) {
+			line_Items.setLeaveStock_ID(enterStock.getLeaveStock_ID());
+			System.out.println("this is the leaveStockId is "+enterStock.getLeaveStock_ID());
+
+		}
+
+	//	List<EnterStockDetail> lis
 		
-	}
-		//enterStock.getLeaveStock_ID();
-		
+		dao.save("WarehouseMapper.saveStockOutDetail", lis);
+		// enterStock.getLeaveStock_ID();
+
 	}
 
 	/**
@@ -270,7 +273,7 @@ public class ClientsService {
 		if (lst != null && lst.size() > 0) {
 
 			for (Product product : lst) {
-				//System.out.println("id is " + product.getId());
+				// System.out.println("id is " + product.getId());
 				id = product.getId();
 			}
 			// String
@@ -297,14 +300,6 @@ public class ClientsService {
 	 */
 	public PageData findByUiId(PageData pd) throws Exception {
 		return (PageData) dao.findForObject("WarehouseMapper.findByUiId", pd);
-	}
-
-
-	/*
-	 * 通过编号获取数据
-	 */
-	public PageData findByUN(PageData pd) throws Exception {
-		return (PageData) dao.findForObject("UserXMapper.findByUN", pd);
 	}
 
 	/*
@@ -357,19 +352,4 @@ public class ClientsService {
 		dao.delete("UserXMapper.deleteAllU", USER_IDS);
 	}
 
-
-
-	/*
-	 * 跟新登录时间
-	 */
-	public void updateLastLogin(PageData pd) throws Exception {
-		dao.update("UserXMapper.updateLastLogin", pd);
-	}
-
-	/*
-	 * 通过id获取数据
-	 */
-	public User getUserAndRoleById(String USER_ID) throws Exception {
-		return (User) dao.findForObject("UserMapper.getUserAndRoleById", USER_ID);
-	}
 }

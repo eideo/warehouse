@@ -15,10 +15,7 @@ public class InstantiationTracingBeanPostProcessor implements ApplicationListene
 	private ClientsService clientsService;
 @Override
 public void onApplicationEvent(ContextRefreshedEvent event) {
-	try {
-		
-		System.out.println("this is invoked  ");
-		
+	try {	
 		this.productService.listAllProducts();
 		this.clientsService.listAlLClients();
 	} catch (Exception e) {

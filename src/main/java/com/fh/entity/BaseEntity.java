@@ -5,6 +5,10 @@ import java.io.Serializable;
 public class BaseEntity implements Serializable  {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
      * 	“api_version”: integer,
     “action_version”: integer
     “action”: object

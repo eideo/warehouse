@@ -36,7 +36,7 @@ import net.sf.ehcache.Element;
 
 @Service("autoApiService")
 public class WooApiGetOrdersService {
-	private String url = Const.url;
+	private String urlAnfa = Const.url;
 	private String username = Const.username;
 	private String password = Const.password;
 	protected Logger logger = Logger.getLogger(this.getClass());
@@ -54,13 +54,22 @@ public class WooApiGetOrdersService {
 		return response.getBody().getArray().toString();
 
 	}
-
-	public void putJsonString(String url, String body, int num)
+    /**
+     * 
+     * @param url
+     * @param body
+     * @param num
+     * @throws UnirestException
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws IOException
+     */
+	public  void putJsonString(String url, String body, int num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 		// url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		HttpResponse<JsonNode> response = Unirest.put(url).field(body, num).asJson();
 		// Unirest.put(url).
-		System.out.println(response.getBody().getArray().toString());
+	
 
 	}
 
@@ -76,22 +85,18 @@ public class WooApiGetOrdersService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	private List<Order> getOrdersFromAnfa(int num)
+	private List<Order> getOrdersFromAnfa(int num,String status)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
 		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-39));
 		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
-		String finalurl = this.url + after + "&before=" + before + "&page=" + num;
-		// HttpResponse<JsonNode> response =
-		// Unirest.get(finalurl).basicAuth(this.username,
-		// this.password).asJson();
-
+		String finalurl = this.urlAnfa +status+"&after="+ after + "&before=" + before + "&page=" + num;
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
-		// System.out.println(jsonString);
-		// System.out.println(finalurl);
-		// System.out.println("username:" + this.username);
-		// System.out.println("password:" + this.password);
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
+		for (Order order : lst) {
+			System.out.println(order.getStatus());
+		}
+	
 		System.out.println(lst.size());
 		if (lst.isEmpty()) {
 
@@ -112,7 +117,12 @@ public class WooApiGetOrdersService {
 		// }
 		return lst;
 	}
-
+    /**
+     * 
+     * @param l
+     * @param dept
+     * @throws Exception
+     */
 	public void saveOrders(List<Order> l, int dept) throws Exception {
 		if (l != null && l.size() != 0) {
 			for (Order order : l) {
@@ -120,6 +130,7 @@ public class WooApiGetOrdersService {
 				 //System.out.println(order.getId()+order.getDate_created());
 				order.setOriginal_ID(order.getId());
 				order.setDept_ID(dept);
+			
 				PageData tmp = (PageData) dao.findForObject("WarehouseMapper.checkOrder", order);
 				int m = (tmp == null) ? 0 : (int) tmp.get("Order_ID");
 
@@ -179,6 +190,7 @@ public class WooApiGetOrdersService {
 				int m = (tmp == null) ? 0 : (int) tmp.get("Order_ID");
 
 				int t = Status.getIndex(order.getStatus());
+			
 				order.setStatusInt(t);
 
 				System.out.println("this is the order status " + order.getStatus());
@@ -200,8 +212,7 @@ public class WooApiGetOrdersService {
 							PageData tmPageData = (PageData) element.getObjectValue();
 						
 						int	productid = (Integer) tmPageData.get("Product_ID");
-						System.out.println("sku from cache is "+tmPageData.get("Product_ID"));
-							System.out.println("product id  is "+productid);
+					
 							iterm.setProduct_ID(productid);
 						}
 						// int productid = (int)
@@ -247,30 +258,37 @@ public class WooApiGetOrdersService {
 
 	public void sysOrderAnfaOrder()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
-		System.out.println("this method be invoked22");
+		
 		int num = 1;
-		List<Order> list = this.getOrdersFromAnfa(num);
+		List<Order> list = this.getOrdersFromAnfa(num,"completed");
 
 		while (list != null && list.size() != 0) {
 			this.saveOrders(list, 2);
 			num++;
-			list = this.getOrdersFromAnfa(num);
+			list = this.getOrdersFromAnfa(num,"completed");
 		}
 		// this.saveOrders(this.getOrdersFromAnfa(), 2);
 	}
+	
+	
+	public void checkOrderAnfa()
+		throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
+			
+			int num = 1;
+			List<Order> list = this.getOrdersFromAnfa(num,"pending");
 
-	public static void main(String[] args) {
-		try {
-			WooApiGetOrdersService wooApiGetOrders = new WooApiGetOrdersService();
-			// wooApiGetOrders.getOrdersFromAnfa();
-		} catch (Exception e) {
-			// TODO: handle exception
-			e.printStackTrace();
-		}
-
+			while (list != null && list.size() != 0) {
+				num++;
+				list = this.getOrdersFromAnfa(num,"pending");
+			}
+			// this.saveOrders(this.getOrdersFromAnfa(), 2);
+	}
+	
+	
+	private void autoUpdateAnfaOrder(){
+		
+		
 	}
 
-	// Unirest.get("http://httpbin.org/headers").basicAuth("username",
-	// "password").asJson();
 
 }

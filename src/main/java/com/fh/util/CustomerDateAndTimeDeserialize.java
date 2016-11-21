@@ -20,7 +20,7 @@ private	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");//y
       //  sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
         try {
             String str = paramJsonParser.getText().trim();
-        	System.out.println("this is be invoked time   "+str);
+        
             return sdf.parse(str);
         } catch (Exception e) {
         	System.out.println("error is ");

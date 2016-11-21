@@ -79,8 +79,8 @@ public class MapDistance {
 	}
     
     public static void main(String[] args) {
-    	//济南国际会展中心经纬度：117.11811  36.68484
-    	//趵突泉：117.00999000000002  36.66123
+    	//经纬度：117.11811  36.68484
+    	//：117.00999000000002  36.66123
     	System.out.println(getDistance("116.97265","36.694514","116.597805","36.738024"));
     	
     	System.out.println(getAround("117.11811", "36.68484", "13000"));

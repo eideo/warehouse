@@ -13,34 +13,44 @@
         <property name="targetMethod" value="sysOrderAnfaOrder" />
     </bean>
  
+ 
+   <bean id="simpleJobForLatiPay" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="autoApiService" />
+        <property name="targetMethod" value="checkOrderAnfa" />
+    </bean>
+ 
   
     <!-- Run the job every 5 seconds only on Weekends -->
     <bean id="cronTrigger"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="simpleJobDetail" />
-        
+        <property name="jobDetail" ref="simpleJobDetail" />   
           <property name="cronExpression" value="0 0 23 * * ?" />
+    <!--   
+        <property name="cronExpression" value="0 */1 * * * ?" />
+           --> 
 
-       
-            
-             <!--   
-        <property name="cronExpression" value="0 */5 * * * ?" />
-  --> 
- 
     </bean>
+    
+        <!-- Run the job every 5 seconds only on Weekends -->
+    <bean id="cronTriggerForLatiPay"  class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="simpleJobForLatiPay" />   
+      
+  
+        <property name="cronExpression" value="0 */1 * * * ?" />
+           
+
+    </bean>
+ 
+    
+    
+    
  
   
     <!-- Scheduler factory bean to glue together jobDetails and triggers to Configure Quartz Scheduler -->
     <bean  class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="jobDetails">
-            <list>
-                <ref bean="simpleJobDetail" />
-              
-            </list>
-        </property>
- 
         <property name="triggers">
             <list>
                 <ref bean="cronTrigger" />
+                <ref bean="cronTriggerForLatiPay" />
             </list>
         </property>
     </bean>

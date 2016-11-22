@@ -202,8 +202,15 @@ public class IntAppuserController extends BaseController {
 		return o;
 		}
 	
-
+    
 		// http://127.0.0.1:8080/Warehouse/appapi/orderApi
+	    /**
+	     * 
+	     * @param jsonRootBean
+	     * @param key
+	     * @param req
+	     * @return
+	     */
 		@RequestMapping(value = { "/orderApi/{key}" }, method = RequestMethod.POST, produces = {
 				"application/json;charset=UTF-8" })
 		@ResponseBody

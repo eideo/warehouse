@@ -247,7 +247,7 @@ public class ClientsService {
 	}
 
 	/**
-	 * 
+	 * 更新woocoomoth 库存
 	 * @param sku
 	 * @param total
 	 * @param Dept
@@ -286,7 +286,12 @@ public class ClientsService {
 			autoApiService.putJsonString(urlPut, "stock_quantity", total);
 		}
 	}
-
+  /**
+   * 
+   * @param pd
+   * @return
+   * @throws Exception
+   */
 	public List<PageData> listStock(PageData pd) throws Exception {
 
 		return (List<PageData>) dao.findForList("WarehouseMapper.listStock", pd);

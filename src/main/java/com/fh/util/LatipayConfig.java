@@ -14,7 +14,7 @@ public class LatipayConfig {
 	/**
      * MyRapidPay提供给商户的网关地址
      */
-    public final static String latipay_gateway = "https://merchant.latipay.co.nz/api/demoSearch.action";//"https://merchant.latipay.co.nz/api/show.action"; 
+    public final static String latipay_gateway ="https://merchant.latipay.co.nz/api/search.action"; 
 	
     /**
      * 设置密钥：为确保商户交易信息的真实性和完整性，

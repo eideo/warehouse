@@ -54,12 +54,16 @@ public class Const {
 	public static final String VERSION = "0.5";
 	public static final int secEx = 90;
 	// Response
-	private static final String commonUrl = "/wp-json/wc/v1/";
+	private static final String commonUrl = "/wp-json/wc/v1/";///wp-json/wc/v1/orders/<id>
 	/// anfa
-
-	public static final String url = "https://myalpha.co.nz/wp-json/wc/v1/orders?per_page=100&status=";
+	public static final String baseurl = "https://myalpha.co.nz/wp-json/wc/v1/";
+	public static final String url = baseurl+"orders?per_page=100&status=";
 	public static final String username = "ck_9c69de5c44e4aa66588d610f17f6d0c09d25cc78";// "ck_3db1c674a6c6bbd9ccd50671ebdfda99b8f46067";
 	public static final String password = "cs_cf89e7f43aef93aeb44f0063994166909820d73f";// "cs_9c597830c0f6ed61bb157c10106577fb097b402f";
+	
+	//test anfa
+	public static final String basetesturl = "https://test.myalpha.co.nz/wp-json/wc/v1/";
+	public static final String testurl = basetesturl+"orders?per_page=100&status=";
 
 	/// gopost
 

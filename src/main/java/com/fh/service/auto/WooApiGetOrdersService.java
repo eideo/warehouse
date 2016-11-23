@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fh.dao.DaoSupport;
 import com.fh.entity.AnfiApi;
+import com.fh.entity.LatiPay;
 import com.fh.entity.warehouse.EnterStock;
 import com.fh.entity.warehouse.orders.Line_Items;
 import com.fh.entity.warehouse.orderslist.Iterm;
@@ -25,6 +26,8 @@ import com.fh.util.Const;
 import com.fh.util.Const.Status;
 import com.fh.util.DateUtil;
 import com.fh.util.JsonUtil;
+import com.fh.util.LatipayConfig;
+import com.fh.util.LatipayUtils;
 import com.fh.util.Logger;
 import com.fh.util.PageData;
 import com.mashape.unirest.http.HttpResponse;
@@ -64,10 +67,13 @@ public class WooApiGetOrdersService {
      * @throws JsonMappingException
      * @throws IOException
      */
-	public  void putJsonString(String url, String body, int num)
+	public  void putJsonString(String url, String body, Object num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 		// url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		HttpResponse<JsonNode> response = Unirest.put(url).field(body, num).asJson();
+		System.out.println("url  "+url);
+		System.out.println("body  "+body);
+		System.out.println("num  "+num);
 		// Unirest.put(url).
 	
 
@@ -85,12 +91,17 @@ public class WooApiGetOrdersService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	private List<Order> getOrdersFromAnfa(int num,String status)
+	private List<Order> getOrdersFromAnfa(String url,int num,String status)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-39));
-		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-1));
-		String finalurl = this.urlAnfa +status+"&after="+ after + "&before=" + before + "&page=" + num;
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-69));
+		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(0));
+		String finalurl=null;
+		if(url!=null){
+		 finalurl = url +status+"&after="+ after + "&before=" + before + "&page=" + num;
+		}else{
+			 finalurl = this.urlAnfa +status+"&after="+ after + "&before=" + before + "&page=" + num;
+		}
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
 		for (Order order : lst) {
@@ -251,7 +262,7 @@ public class WooApiGetOrdersService {
 	 */
 	public List<Order> getAnfaOrder(AnfiApi time) throws Exception {
 		List<Order> list = (List<Order>) dao.findForList("WarehouseMapper.getOrdersQuery", time);
-		System.out.println("list size is              " + list.size());
+	//	System.out.println("list size is              " + list.size());
 		return list;
 
 	}
@@ -260,14 +271,14 @@ public class WooApiGetOrdersService {
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 		
 		int num = 1;
-		List<Order> list = this.getOrdersFromAnfa(num,"completed");
+		List<Order> list = this.getOrdersFromAnfa(null,num,"completed");
 
 		while (list != null && list.size() != 0) {
 			this.saveOrders(list, 2);
 			num++;
-			list = this.getOrdersFromAnfa(num,"completed");
+			list = this.getOrdersFromAnfa(null,num,"completed");
 		}
-		// this.saveOrders(this.getOrdersFromAnfa(), 2);
+	
 	}
 	
 	
@@ -275,20 +286,81 @@ public class WooApiGetOrdersService {
 		throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 			
 			int num = 1;
-			List<Order> list = this.getOrdersFromAnfa(num,"pending");
+			LatiPay latiPay=null;
+			List<Order> list = this.getOrdersFromAnfa(Const.testurl,num,"pending");
 
 			while (list != null && list.size() != 0) {
 				num++;
-				list = this.getOrdersFromAnfa(num,"pending");
+				System.out.println("be invoked2");
+				if(list != null&&list.size() != 0){
+				for (Order order : list) {
+					System.out.println("it get order id"+order.getId());
+					latiPay=	this.invokeLatipayOrder(String.valueOf(order.getId()));
+					if(latiPay!=null&&latiPay.getStatus().equalsIgnoreCase("paid")){
+						autoUpdateAnfaOrder(order.getId());
+					}
+				}
+				list = this.getOrdersFromAnfa(Const.testurl,num,"pending");
+				
+				}
 			}
-			// this.saveOrders(this.getOrdersFromAnfa(), 2);
+	
 	}
 	
-	
-	private void autoUpdateAnfaOrder(){
+	/**
+	 * 
+	 * @param orderId
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws UnirestException
+	 * @throws IOException
+	 */
+	private void autoUpdateAnfaOrder(int orderId) throws JsonParseException, JsonMappingException, UnirestException, IOException{
 		
+		//'status' => 'completed'
+		
+		String urlPut =Const.basetesturl  +"orders/"+ orderId + "?consumer_key=" + Const.username+ "&consumer_secret="
+				+ Const.password;
+		//consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
+		System.out.println(urlPut);
+
+		this.putJsonString(urlPut,"status", "completed");
+	}
+	
+	/**
+	 * 
+	 * @param orderId
+	 * @throws UnirestException 
+	 * @throws IOException 
+	 * @throws JsonMappingException 
+	 * @throws JsonParseException 
+	 */
+	private LatiPay invokeLatipayOrder(String orderId) throws UnirestException, JsonParseException, JsonMappingException, IOException{
+		
+		//orderId+merchantCode+key
+		LatiPay rs=null;
+		orderId="20161122-"+LatipayConfig.Merchant_Code+"-"+orderId;
+		System.out.println(orderId);
+	
+		String text=orderId+LatipayConfig.Merchant_Code+LatipayConfig.key;
+		
+	
+		String url ="https://merchant.latipay.co.nz/api/search.action?orderId="+orderId+"&merchantCode="+LatipayConfig.Merchant_Code+"&md5info="+LatipayUtils.md5(text);
+
+	String json=	this.getJsonString(url, null, null);
+	List<LatiPay> lst = JsonUtil.getListFromJson(json, List.class, LatiPay.class);
+	for (LatiPay latiPay : lst) {
+		System.out.println("this staus is "+latiPay.getStatus());
+		rs=latiPay;
 		
 	}
+	
+	return rs;
+		
+	}
+	
+
+
 
 
 }

@@ -29,7 +29,7 @@ public class LatipayConfig {
 	
 	public static String getUrlBaseOnOrderID(String orderId ){
 		
-		String date = DateUtil.getDays();
+		String date = DateUtil.getCurrentDateOfUtc();
 		orderId = date + "-" + LatipayConfig.Merchant_Code + "-" + orderId;
 		String text = orderId + LatipayConfig.Merchant_Code + LatipayConfig.key;
 		String url =latipay_gateway + orderId + "&merchantCode="

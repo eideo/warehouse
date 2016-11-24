@@ -3,7 +3,11 @@ package com.fh.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -16,6 +20,8 @@ public class DateUtil {
 	
 	private final static SimpleDateFormat sdfDays = new SimpleDateFormat(
 	"yyyyMMdd");
+	private final static  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+	
 
 	private final static SimpleDateFormat sdfTime = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
@@ -252,7 +258,13 @@ public class DateUtil {
 //        return jodaParser.parseDateTime( iso8601date ).toDate();
 //    }
     
-  
+  public static String getCurrentDateOfUtc(){
+	     ZoneId australia = ZoneId.of("Pacific/Auckland");
+	     LocalDateTime localtDateAndTime =LocalDateTime.now();
+	     ZonedDateTime dateAndTimeInSydney = ZonedDateTime.of(localtDateAndTime, australia );
+	     ZonedDateTime utcDate = dateAndTimeInSydney.withZoneSameInstant(ZoneOffset.UTC);
+	     return utcDate.format(dtf);
+  }
     
     public static void main(String[] args) {
     	//System.out.println(getDays());
@@ -271,7 +283,18 @@ public class DateUtil {
      System.out.println( DateUtil.getDays());
 //      
     
-    	
+     // Date and time with timezone in Java 8
+     ZoneId australia = ZoneId.of("Australia/Sydney");
+     String str = "2015-01-05 17:00";
+     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+     LocalDateTime localtDateAndTime =LocalDateTime.now();// LocalDateTime.parse(str, formatter);
+     ZonedDateTime dateAndTimeInSydney = ZonedDateTime.of(localtDateAndTime, australia );
+
+     System.out.println("Current date and time in a particular timezone : " + dateAndTimeInSydney);
+
+     ZonedDateTime utcDate = dateAndTimeInSydney.withZoneSameInstant(ZoneOffset.UTC);
+
+     System.out.println("Current date and time in UTC : " + utcDate);
     	
     	
     }

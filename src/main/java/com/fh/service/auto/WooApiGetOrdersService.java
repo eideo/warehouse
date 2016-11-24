@@ -51,31 +51,33 @@ public class WooApiGetOrdersService {
 
 	public String getJsonString(String url, String username, String password)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
-
+        System.out.println(""+url);
+        System.out.println(username);
+        System.out.println(password);
 		HttpResponse<JsonNode> response = Unirest.get(url).basicAuth(username, password).asJson();
 
 		return response.getBody().getArray().toString();
 
 	}
-    /**
-     * 
-     * @param url
-     * @param body
-     * @param num
-     * @throws UnirestException
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws IOException
-     */
-	public  void putJsonString(String url, String body, Object num)
+
+	/**
+	 * 
+	 * @param url
+	 * @param body
+	 * @param num
+	 * @throws UnirestException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public void putJsonString(String url, String body, Object num)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 		// url="https://gopost.nz/wp-json/wc/v1/products/4339?consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		HttpResponse<JsonNode> response = Unirest.put(url).field(body, num).asJson();
-		System.out.println("url  "+url);
-		System.out.println("body  "+body);
-		System.out.println("num  "+num);
+		System.out.println("url  " + url);
+		System.out.println("body  " + body);
+		System.out.println("num  " + num);
 		// Unirest.put(url).
-	
 
 	}
 
@@ -91,23 +93,23 @@ public class WooApiGetOrdersService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	private List<Order> getOrdersFromAnfa(String url,int num,String status)
+	private List<Order> getOrdersFromAnfa(String url, int num, String status)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
 		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-69));
 		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(0));
-		String finalurl=null;
-		if(url!=null){
-		 finalurl = url +status+"&after="+ after + "&before=" + before + "&page=" + num;
-		}else{
-			 finalurl = this.urlAnfa +status+"&after="+ after + "&before=" + before + "&page=" + num;
+		String finalurl = null;
+		if (url != null) {
+			finalurl = url + status + "&after=" + after + "&before=" + before + "&page=" + num;
+		} else {
+			finalurl = this.urlAnfa + status + "&after=" + after + "&before=" + before + "&page=" + num;
 		}
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
 		for (Order order : lst) {
 			System.out.println(order.getStatus());
 		}
-	
+
 		System.out.println(lst.size());
 		if (lst.isEmpty()) {
 
@@ -128,23 +130,23 @@ public class WooApiGetOrdersService {
 		// }
 		return lst;
 	}
-    /**
-     * 
-     * @param l
-     * @param dept
-     * @throws Exception
-     */
+
+	/**
+	 * 
+	 * @param l
+	 * @param dept
+	 * @throws Exception
+	 */
 	public void saveOrders(List<Order> l, int dept) throws Exception {
 		if (l != null && l.size() != 0) {
 			for (Order order : l) {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
-				 //System.out.println(order.getId()+order.getDate_created());
+				// System.out.println(order.getId()+order.getDate_created());
 				order.setOriginal_ID(order.getId());
 				order.setDept_ID(dept);
-			
+
 				PageData tmp = (PageData) dao.findForObject("WarehouseMapper.checkOrder", order);
 				int m = (tmp == null) ? 0 : (int) tmp.get("Order_ID");
-
 
 				// System.out.println(dao.findForObject("WarehouseMapper.checkOrder",
 				// order)); date_completed
@@ -201,7 +203,7 @@ public class WooApiGetOrdersService {
 				int m = (tmp == null) ? 0 : (int) tmp.get("Order_ID");
 
 				int t = Status.getIndex(order.getStatus());
-			
+
 				order.setStatusInt(t);
 
 				System.out.println("this is the order status " + order.getStatus());
@@ -213,24 +215,23 @@ public class WooApiGetOrdersService {
 					List<Line_Items> iterms = order.getLine_items();
 					for (Line_Items iterm : iterms) {
 						iterm.setOrder_ID(order.getId());
-				
+
 						Element element = CacheUtil.getCacheObject(iterm.getSku().trim(), "products");
-					//	int productid = 0;
+						// int productid = 0;
 						if (element == null) {
 							System.out.println("element is null");
 							continue;
 						} else {
 							PageData tmPageData = (PageData) element.getObjectValue();
-						
-						int	productid = (Integer) tmPageData.get("Product_ID");
-					
+
+							int productid = (Integer) tmPageData.get("Product_ID");
+
 							iterm.setProduct_ID(productid);
 						}
 						// int productid = (int)
 						// dao.findForObject("WarehouseMapper.searchProduct",
 						// iterm.getSku());
-						
-						
+
 					}
 					order.setLine_items(iterms);
 					clientsService.saveAutoOrderStock(order, 0);
@@ -262,51 +263,50 @@ public class WooApiGetOrdersService {
 	 */
 	public List<Order> getAnfaOrder(AnfiApi time) throws Exception {
 		List<Order> list = (List<Order>) dao.findForList("WarehouseMapper.getOrdersQuery", time);
-	//	System.out.println("list size is              " + list.size());
+		// System.out.println("list size is " + list.size());
 		return list;
 
 	}
 
 	public void sysOrderAnfaOrder()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
-		
+
 		int num = 1;
-		List<Order> list = this.getOrdersFromAnfa(null,num,"completed");
+		List<Order> list = this.getOrdersFromAnfa(null, num, "completed");
 
 		while (list != null && list.size() != 0) {
 			this.saveOrders(list, 2);
 			num++;
-			list = this.getOrdersFromAnfa(null,num,"completed");
+			list = this.getOrdersFromAnfa(null, num, "completed");
 		}
-	
-	}
-	
-	
-	public void checkOrderAnfa()
-		throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
-			
-			int num = 1;
-			LatiPay latiPay=null;
-			List<Order> list = this.getOrdersFromAnfa(Const.testurl,num,"pending");
 
-			while (list != null && list.size() != 0) {
-				num++;
-				System.out.println("be invoked2");
-				if(list != null&&list.size() != 0){
+	}
+
+	public void checkOrderAnfa()
+			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
+
+		int num = 1;
+		LatiPay latiPay = null;
+		List<Order> list = this.getOrdersFromAnfa(Const.testurl, num, "pending");
+
+		while (list != null && list.size() != 0) {
+			num++;
+			System.out.println("be invoked2");
+			if (list != null && list.size() != 0) {
 				for (Order order : list) {
-					System.out.println("it get order id"+order.getId());
-					latiPay=	this.invokeLatipayOrder(String.valueOf(order.getId()));
-					if(latiPay!=null&&latiPay.getStatus().equalsIgnoreCase("paid")){
+					System.out.println("it get order id" + order.getId());
+					latiPay = this.invokeLatipayOrder(String.valueOf(order.getId()));
+					if (latiPay != null && latiPay.getStatus().equalsIgnoreCase("paid")) {
 						autoUpdateAnfaOrder(order.getId());
 					}
 				}
-				list = this.getOrdersFromAnfa(Const.testurl,num,"pending");
-				
-				}
+				list = this.getOrdersFromAnfa(Const.testurl, num, "pending");
+
 			}
-	
+		}
+
 	}
-	
+
 	/**
 	 * 
 	 * @param orderId
@@ -315,52 +315,53 @@ public class WooApiGetOrdersService {
 	 * @throws UnirestException
 	 * @throws IOException
 	 */
-	private void autoUpdateAnfaOrder(int orderId) throws JsonParseException, JsonMappingException, UnirestException, IOException{
-		
-		//'status' => 'completed'
-		
-		String urlPut =Const.basetesturl  +"orders/"+ orderId + "?consumer_key=" + Const.username+ "&consumer_secret="
-				+ Const.password;
-		//consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
+	private void autoUpdateAnfaOrder(int orderId)
+			throws JsonParseException, JsonMappingException, UnirestException, IOException {
+
+		// 'status' => 'completed'
+
+		String urlPut = Const.basetesturl + "orders/" + orderId + "?consumer_key=" + Const.username
+				+ "&consumer_secret=" + Const.password;
+		// consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		System.out.println(urlPut);
 
-		this.putJsonString(urlPut,"status", "completed");
+		this.putJsonString(urlPut, "status", "completed");
 	}
-	
+
 	/**
 	 * 
 	 * @param orderId
-	 * @throws UnirestException 
-	 * @throws IOException 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
+	 * @throws UnirestException
+	 * @throws IOException
+	 * @throws JsonMappingException
+	 * @throws JsonParseException
 	 */
-	private LatiPay invokeLatipayOrder(String orderId) throws UnirestException, JsonParseException, JsonMappingException, IOException{
-		
-		//orderId+merchantCode+key
-		LatiPay rs=null;
-		orderId="20161122-"+LatipayConfig.Merchant_Code+"-"+orderId;
-		System.out.println(orderId);
-	
-		String text=orderId+LatipayConfig.Merchant_Code+LatipayConfig.key;
-		
-	
-		String url ="https://merchant.latipay.co.nz/api/search.action?orderId="+orderId+"&merchantCode="+LatipayConfig.Merchant_Code+"&md5info="+LatipayUtils.md5(text);
+	private LatiPay invokeLatipayOrder(String orderId)
+			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-	String json=	this.getJsonString(url, null, null);
-	List<LatiPay> lst = JsonUtil.getListFromJson(json, List.class, LatiPay.class);
-	for (LatiPay latiPay : lst) {
-		System.out.println("this staus is "+latiPay.getStatus());
-		rs=latiPay;
+		// orderId+merchantCode+key
+		LatiPay rs = null;
 		
+		String url = 	LatipayConfig.getUrlBaseOnOrderID(orderId);
+//		String date = DateUtil.getDays();
+//		orderId = date + "-" + LatipayConfig.Merchant_Code + "-" + orderId;
+//		System.out.println(orderId);
+//
+//		String text = orderId + LatipayConfig.Merchant_Code + LatipayConfig.key;
+//
+//		String url = "https://merchant.latipay.co.nz/api/search.action?orderId=" + orderId + "&merchantCode="
+//				+ LatipayConfig.Merchant_Code + "&md5info=" + LatipayUtils.md5(text);
+       System.out.println("latipay url:"+url);
+		String json = this.getJsonString(url, null, null);
+		List<LatiPay> lst = JsonUtil.getListFromJson(json, List.class, LatiPay.class);
+		for (LatiPay latiPay : lst) {
+			System.out.println("this staus is " + latiPay.getStatus());
+			rs = latiPay;
+
+		}
+
+		return rs;
+
 	}
-	
-	return rs;
-		
-	}
-	
-
-
-
 
 }

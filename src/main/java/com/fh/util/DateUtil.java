@@ -3,11 +3,10 @@ package com.fh.util;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
+
 import java.util.Calendar;
 import java.util.Date;
+
 
 public class DateUtil {
 	private final static SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
@@ -265,12 +264,13 @@ public class DateUtil {
 //    	String nowAsISO = df.format(new Date());
 //    	System.out.println(nowAsISO);
     	  //2016-10-13T02:32:58Z
-       DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
-       TemporalAccessor accessor = timeFormatter.parse("2015-10-27T16:22:27.605-07:00");
-
-       Date date = Date.from(Instant.from(accessor));
-      System.out.println(date);
-      
+//       DateTimeFormatter timeFormatter = DateTimeFormatter.ISO_DATE_TIME;
+//       TemporalAccessor accessor = timeFormatter.parse("2015-10-27T16:22:27.605-07:00");
+//
+//       Date date = Date.from(Instant.from(accessor));
+     System.out.println( DateUtil.getDays());
+//      
+    
     	
     	
     	

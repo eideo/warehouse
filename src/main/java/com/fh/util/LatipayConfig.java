@@ -14,7 +14,7 @@ public class LatipayConfig {
 	/**
      * MyRapidPay提供给商户的网关地址
      */
-    public final static String latipay_gateway ="https://merchant.latipay.co.nz/api/search.action"; 
+    public final static String latipay_gateway ="https://merchant.latipay.co.nz/api/search.action?orderId="; 
 	
     /**
      * 设置密钥：为确保商户交易信息的真实性和完整性，
@@ -25,4 +25,15 @@ public class LatipayConfig {
 	public final static String key = "2772299";
 	
 	public final static String   Merchant_Code="M00000863";
+	
+	
+	public static String getUrlBaseOnOrderID(String orderId ){
+		
+		String date = DateUtil.getDays();
+		orderId = date + "-" + LatipayConfig.Merchant_Code + "-" + orderId;
+		String text = orderId + LatipayConfig.Merchant_Code + LatipayConfig.key;
+		String url =latipay_gateway + orderId + "&merchantCode="
+				+ LatipayConfig.Merchant_Code + "&md5info=" + LatipayUtils.md5(text);
+		return url;
+	}
 }

@@ -110,6 +110,7 @@ public class WooApiGetOrdersService {
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
 		System.out.println("the final url is  "+finalurl);
+		System.out.println("the size is "+lst.size());
 		if (lst==null||lst.isEmpty()) {
 
 			return null;
@@ -277,6 +278,7 @@ public class WooApiGetOrdersService {
 
 		int num = 1;
 		LatiPay latiPay = null;
+		
 		List<Order> list = this.getOrdersFromAnfa(Const.testurl, num, "pending");
 
 		while (list != null && list.size() != 0) {

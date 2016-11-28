@@ -276,10 +276,25 @@ public class WooApiGetOrdersService {
 	public void checkOrderAnfa()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 
+		this.updateAndChcekAnfa("pending");
+		this.updateAndChcekAnfa("cancelled");
+
+	}
+	/**
+	 * 
+	 * @param status
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws UnirestException
+	 * @throws IOException
+	 */
+	private void updateAndChcekAnfa(String status) throws JsonParseException, JsonMappingException, UnirestException, IOException{
+		
+
 		int num = 1;
 		LatiPay latiPay = null;
 		
-		List<Order> list = this.getOrdersFromAnfa(Const.testurl, num, "pending");
+		List<Order> list = this.getOrdersFromAnfa(Const.url, num, status);
 
 		while (list != null && list.size() != 0) {
 			System.out.println("size is "+list.size());
@@ -293,11 +308,11 @@ public class WooApiGetOrdersService {
 						autoUpdateAnfaOrder(order.getId());
 					}
 				}
-				list = this.getOrdersFromAnfa(Const.testurl, num, "pending");
+				list = this.getOrdersFromAnfa(Const.url, num,status);
 
 			}
 		}
-
+		
 	}
 
 	/**
@@ -313,7 +328,7 @@ public class WooApiGetOrdersService {
 
 		// 'status' => 'completed'
 
-		String urlPut = Const.basetesturl + "orders/" + orderId + "?consumer_key=" + Const.username
+		String urlPut = Const.baseurl + "orders/" + orderId + "?consumer_key=" + Const.username
 				+ "&consumer_secret=" + Const.password;
 		// consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		System.out.println(urlPut);

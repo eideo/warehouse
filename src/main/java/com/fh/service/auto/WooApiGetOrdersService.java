@@ -27,7 +27,6 @@ import com.fh.util.Const.Status;
 import com.fh.util.DateUtil;
 import com.fh.util.JsonUtil;
 import com.fh.util.LatipayConfig;
-import com.fh.util.LatipayUtils;
 import com.fh.util.Logger;
 import com.fh.util.PageData;
 import com.mashape.unirest.http.HttpResponse;
@@ -99,7 +98,7 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa(String url, int num, String status)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-10));
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-3));
 		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(0));
 		String finalurl = null;
 		if (url != null) {
@@ -272,7 +271,14 @@ public class WooApiGetOrdersService {
 		}
 
 	}
-
+    /**
+     * 
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     * @throws UnirestException
+     * @throws IOException
+     * @throws Exception
+     */
 	public void checkOrderAnfa()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 
@@ -297,6 +303,7 @@ public class WooApiGetOrdersService {
 		List<Order> list = this.getOrdersFromAnfa(Const.url, num, status);
 
 		while (list != null && list.size() != 0) {
+			System.out.println(status);
 			System.out.println("size is "+list.size());
 			num++;
 		
@@ -333,7 +340,7 @@ public class WooApiGetOrdersService {
 		// consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		System.out.println(urlPut);
 
-		this.putJsonString(urlPut, "status", "completed");
+		this.putJsonString(urlPut, "status", "processing");
 	}
 
 	/**

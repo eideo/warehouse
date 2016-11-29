@@ -1,5 +1,7 @@
 package com.fh.util;
 
+import java.util.Date;
+
 /* *
  *类名：LatipayConfig
  *功能：基础配置类
@@ -27,9 +29,9 @@ public class LatipayConfig {
 	public final static String   Merchant_Code="M00000863";
 	
 	
-	public static String getUrlBaseOnOrderID(String orderId ){
+	public static String getUrlBaseOnOrderID(String orderId,String Date_created ){
 		
-		String date = DateUtil.getCurrentDateOfUtc();
+		String date =DateUtil.getDays(Date_created);
 		orderId = date + "-" + LatipayConfig.Merchant_Code + "-" + orderId;
 		String text = orderId + LatipayConfig.Merchant_Code + LatipayConfig.key;
 		String url =latipay_gateway + orderId + "&merchantCode="

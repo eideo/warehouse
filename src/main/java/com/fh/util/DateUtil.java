@@ -80,8 +80,13 @@ public class DateUtil {
 	 * 
 	 * @return
 	 */
-	public static String getDays(){
-		return sdfDays.format(new Date());
+	public static String getDays(String date){
+		if(date==null){
+			return sdfDays.format(new Date());
+		}else{
+			return sdfDays.format(date);
+		}
+		
 	}
 
 	/**
@@ -280,7 +285,7 @@ public class DateUtil {
 //       TemporalAccessor accessor = timeFormatter.parse("2015-10-27T16:22:27.605-07:00");
 //
 //       Date date = Date.from(Instant.from(accessor));
-     System.out.println( DateUtil.getDays());
+     System.out.println( DateUtil.getDays(null));
 //      
     
      // Date and time with timezone in Java 8

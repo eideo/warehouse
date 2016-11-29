@@ -63,7 +63,7 @@ public class PicturesController extends BaseController {
 			) throws Exception{
 		logBefore(logger, "新增Pictures");
 		Map<String,String> map = new HashMap<String,String>();
-		String  ffile = DateUtil.getDays(), fileName = "";
+		String  ffile = DateUtil.getDays(null), fileName = "";
 		PageData pd = new PageData();
 		if(Jurisdiction.buttonJurisdiction(menuUrl, "add")){
 			if (null != file && !file.isEmpty()) {
@@ -133,7 +133,7 @@ public class PicturesController extends BaseController {
 			pd.put("BZ", BZ);						//备注
 			
 			if(null == tpz){tpz = "";}
-			String  ffile = DateUtil.getDays(), fileName = "";
+			String  ffile = DateUtil.getDays(null), fileName = "";
 			if (null != file && !file.isEmpty()) {
 				String filePath = PathUtil.getClasspath() + Const.FILEPATHIMG + ffile;		//文件上传路径
 				fileName = FileUpload.fileUp(file, filePath, this.get32UUID());				//执行上传

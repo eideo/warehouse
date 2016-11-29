@@ -53,7 +53,7 @@ public class WooApiGetOrdersService {
      
 
         url=  Const.getUrlBaseOnKey(url,username,password);
-        System.out.println(""+url);
+       // System.out.println(""+url);
 		HttpResponse<JsonNode> response = Unirest.get(url).basicAuth(username, password).asJson();
 		if(response.getStatus()!=200){
 			return null;
@@ -310,7 +310,8 @@ public class WooApiGetOrdersService {
 			if (list != null && list.size() != 0) {
 				for (Order order : list) {
 					System.out.println("it get order id   " + order.getId());
-					latiPay = this.invokeLatipayOrder(String.valueOf(order.getId()));
+					System.out.println("it get order status"+order.getStatus());
+					latiPay = this.invokeLatipayOrder(order);
 					if (latiPay != null&&latiPay.getStatus()!=null && latiPay.getStatus().equalsIgnoreCase("paid")) {
 						autoUpdateAnfaOrder(order.getId());
 					}
@@ -351,21 +352,13 @@ public class WooApiGetOrdersService {
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
 	 */
-	private LatiPay invokeLatipayOrder(String orderId)
+	private LatiPay invokeLatipayOrder(Order order)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
 		// orderId+merchantCode+key
 		LatiPay rs = null;
 		
-		String url = 	LatipayConfig.getUrlBaseOnOrderID(orderId);
-//		String date = DateUtil.getDays();
-//		orderId = date + "-" + LatipayConfig.Merchant_Code + "-" + orderId;
-//		System.out.println(orderId);
-//
-//		String text = orderId + LatipayConfig.Merchant_Code + LatipayConfig.key;
-//
-//		String url = "https://merchant.latipay.co.nz/api/search.action?orderId=" + orderId + "&merchantCode="
-//				+ LatipayConfig.Merchant_Code + "&md5info=" + LatipayUtils.md5(text);
+		String url = 	LatipayConfig.getUrlBaseOnOrderID(String.valueOf(order.getId()),order.getDate_created());
        System.out.println("latipay url:"+url);
 		String json = this.getJsonString(url, null, null);
 		System.out.println(json);

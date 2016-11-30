@@ -11,6 +11,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.hp.hpl.sparta.xpath.ThisNodeTest;
+
 
 public class DateUtil {
 	private final static SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
@@ -18,7 +20,7 @@ public class DateUtil {
 	private final static SimpleDateFormat sdfDay = new SimpleDateFormat(
 			"yyyy-MM-dd");
 	
-	private final static SimpleDateFormat sdfDays = new SimpleDateFormat(
+	private final static DateFormat sdfDays = new SimpleDateFormat(
 	"yyyyMMdd");
 	private final static  DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
 	
@@ -26,7 +28,7 @@ public class DateUtil {
 	private final static SimpleDateFormat sdfTime = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm:ss");
 	
-	private final static SimpleDateFormat ISO_8601 =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	private final static DateFormat ISO_8601 =new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	static {
 		  
         /* Create Date Formats */
@@ -84,7 +86,7 @@ public class DateUtil {
 		if(date==null){
 			return sdfDays.format(new Date());
 		}else{
-			return sdfDays.format(date);
+			return sdfDays.format(DateUtil.fomatDate(date, DateUtil.ISO_8601));
 		}
 		
 	}
@@ -140,6 +142,20 @@ public class DateUtil {
 			return null;
 		}
 	}
+	
+	
+	
+	
+	public static Date fomatDate(String date,DateFormat fmt) {
+	//	DateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			return fmt.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 
 	/**
 	 * 校验日期是否合法

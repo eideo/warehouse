@@ -50,12 +50,11 @@ public class WooApiGetOrdersService {
 
 	public String getJsonString(String url, String username, String password)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
-     
 
-        url=  Const.getUrlBaseOnKey(url,username,password);
-       // System.out.println(""+url);
+		url = Const.getUrlBaseOnKey(url, username, password);
+		// System.out.println(""+url);
 		HttpResponse<JsonNode> response = Unirest.get(url).basicAuth(username, password).asJson();
-		if(response.getStatus()!=200){
+		if (response.getStatus() != 200) {
 			return null;
 		}
 		return response.getBody().getArray().toString();
@@ -108,13 +107,13 @@ public class WooApiGetOrdersService {
 		}
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
-		System.out.println("the final url is  "+finalurl);
-		System.out.println("the size is "+lst.size());
-		if (lst==null||lst.isEmpty()) {
+		System.out.println("the final url is  " + finalurl);
+		System.out.println("the size is " + lst.size());
+		if (lst == null || lst.isEmpty()) {
 
 			return null;
 		}
-	
+
 		return lst;
 	}
 
@@ -129,7 +128,7 @@ public class WooApiGetOrdersService {
 			for (Order order : l) {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
 				// System.out.println(order.getId()+order.getDate_created());
-				if(order.getId()==0){
+				if (order.getId() == 0) {
 					continue;
 				}
 				order.setOriginal_ID(order.getId());
@@ -271,14 +270,15 @@ public class WooApiGetOrdersService {
 		}
 
 	}
-    /**
-     * 
-     * @throws JsonParseException
-     * @throws JsonMappingException
-     * @throws UnirestException
-     * @throws IOException
-     * @throws Exception
-     */
+
+	/**
+	 * 
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws UnirestException
+	 * @throws IOException
+	 * @throws Exception
+	 */
 	public void checkOrderAnfa()
 			throws JsonParseException, JsonMappingException, UnirestException, IOException, Exception {
 
@@ -286,6 +286,7 @@ public class WooApiGetOrdersService {
 		this.updateAndChcekAnfa("cancelled");
 
 	}
+
 	/**
 	 * 
 	 * @param status
@@ -294,33 +295,34 @@ public class WooApiGetOrdersService {
 	 * @throws UnirestException
 	 * @throws IOException
 	 */
-	private void updateAndChcekAnfa(String status) throws JsonParseException, JsonMappingException, UnirestException, IOException{
-		
+	private void updateAndChcekAnfa(String status)
+			throws JsonParseException, JsonMappingException, UnirestException, IOException {
 
 		int num = 1;
 		LatiPay latiPay = null;
-		
+
 		List<Order> list = this.getOrdersFromAnfa(Const.url, num, status);
 
 		while (list != null && list.size() != 0) {
 			System.out.println(status);
-			System.out.println("size is "+list.size());
+			System.out.println("size is " + list.size());
 			num++;
-		
+
 			if (list != null && list.size() != 0) {
 				for (Order order : list) {
 					System.out.println("it get order id   " + order.getId());
-					System.out.println("it get order status"+order.getStatus());
+					System.out.println("it get order status" + order.getStatus());
 					latiPay = this.invokeLatipayOrder(order);
-					if (latiPay != null&&latiPay.getStatus()!=null && latiPay.getStatus().equalsIgnoreCase("paid")) {
+					if (latiPay != null && latiPay.getStatus() != null
+							&& latiPay.getStatus().equalsIgnoreCase("paid")) {
 						autoUpdateAnfaOrder(order.getId());
 					}
 				}
-				list = this.getOrdersFromAnfa(Const.url, num,status);
+				list = this.getOrdersFromAnfa(Const.url, num, status);
 
 			}
 		}
-		
+
 	}
 
 	/**
@@ -336,8 +338,8 @@ public class WooApiGetOrdersService {
 
 		// 'status' => 'completed'
 
-		String urlPut = Const.baseurl + "orders/" + orderId + "?consumer_key=" + Const.username
-				+ "&consumer_secret=" + Const.password;
+		String urlPut = Const.baseurl + "orders/" + orderId + "?consumer_key=" + Const.username + "&consumer_secret="
+				+ Const.password;
 		// consumer_key=ck_e73ecebc956ef311f69691c3123d5c06aa4fb7c0&consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";
 		System.out.println(urlPut);
 
@@ -357,9 +359,10 @@ public class WooApiGetOrdersService {
 
 		// orderId+merchantCode+key
 		LatiPay rs = null;
-		
-		String url = 	LatipayConfig.getUrlBaseOnOrderID(String.valueOf(order.getId()),order.getDate_created());
-       System.out.println("latipay url:"+url);
+
+		String url = LatipayConfig.getUrlBaseOnOrderID(String.valueOf(order.getId()), order.getDate_created());
+		System.out.println(order.getDate_created());
+		System.out.println("latipay url:" + url);
 		String json = this.getJsonString(url, null, null);
 		System.out.println(json);
 		List<LatiPay> lst = JsonUtil.getListFromJson(json, List.class, LatiPay.class);

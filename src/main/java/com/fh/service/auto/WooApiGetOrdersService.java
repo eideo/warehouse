@@ -132,6 +132,7 @@ public class WooApiGetOrdersService {
 					continue;
 				}
 				order.setOriginal_ID(order.getId());
+				System.out.println("this order id is "+order.getId());
 				order.setDept_ID(dept);
 
 				PageData tmp = (PageData) dao.findForObject("WarehouseMapper.checkOrder", order);
@@ -337,6 +338,9 @@ public class WooApiGetOrdersService {
 			throws JsonParseException, JsonMappingException, UnirestException, IOException {
 
 		// 'status' => 'completed'
+		
+		
+		//3872   3883
 
 		String urlPut = Const.baseurl + "orders/" + orderId + "?consumer_key=" + Const.username + "&consumer_secret="
 				+ Const.password;

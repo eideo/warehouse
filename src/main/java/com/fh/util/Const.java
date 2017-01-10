@@ -72,7 +72,7 @@ public class Const {
 	public static final String gopost_password = "consumer_secret=cs_1cd279f29a6cab6359efd324d83b3ba44f035914";// "cs_9c597830c0f6ed61bb157c10106577fb097b402f";
 
 	// https://gopost.nz/wp-json/wc/v1/products?sku=9400501003738&consumer_key=ck_cfe48598765854a8c828c46832a7725db4039637&consumer_secret=cs_ecee78830d883dc0b0c54cc9ce71d92884c41e24//
-	
+	// https://test.myalpha.co.nz/wp-json/wc/v1/products?consumer_key=ck_9c69de5c44e4aa66588d610f17f6d0c09d25cc78&consumer_secret=cs_cf89e7f43aef93aeb44f0063994166909820d73f
 	public static String getUrlBaseOnKey(String url,String consumer_key ,String consumer_secret){
 		return url+"&consumer_key="+consumer_key+"&consumer_secret="+consumer_secret;
 	}

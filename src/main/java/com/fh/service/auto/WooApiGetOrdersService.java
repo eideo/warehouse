@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -93,12 +94,14 @@ public class WooApiGetOrdersService {
 	 * @throws IOException
 	 * @throws JsonMappingException
 	 * @throws JsonParseException
-	 */
+	 *///payment_method	string	Payment method ID.
+	//  "payment_method": "bacs",
+	//  "payment_method_title": "bacs",twc-latipay
 	private List<Order> getOrdersFromAnfa(String url, int num, String status)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
 		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-3));
-		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(0));
+		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(1));
 		String finalurl = null;
 		if (url != null) {
 			finalurl = url + status + "&after=" + after + "&before=" + before + "&page=" + num;
@@ -106,7 +109,11 @@ public class WooApiGetOrdersService {
 			finalurl = this.urlAnfa + status + "&after=" + after + "&before=" + before + "&page=" + num;
 		}
 		String jsonString = this.getJsonString(finalurl, this.username, this.password);// response.getBody().getArray().toString();
+		System.out.println(""+jsonString);
 		List<Order> lst = JsonUtil.getListFromJson(jsonString, List.class, Order.class);
+	    for (Order order : lst) {
+			System.out.println(order.getPayment_method());
+		}
 		System.out.println("the final url is  " + finalurl);
 		System.out.println("the size is " + lst.size());
 		if (lst == null || lst.isEmpty()) {
@@ -129,6 +136,12 @@ public class WooApiGetOrdersService {
 				// dao.findForObject("WarehouseMapper.checkOrder", order);
 				// System.out.println(order.getId()+order.getDate_created());
 				if (order.getId() == 0) {
+					continue;
+				}
+				
+				String paymethod=order.getPayment_method();
+				if(!StringUtils.isNotEmpty(paymethod)|| !paymethod.equalsIgnoreCase("twc-latipay")){
+					
 					continue;
 				}
 				order.setOriginal_ID(order.getId());

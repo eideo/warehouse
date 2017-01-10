@@ -93,6 +93,7 @@ public void setDate_completed(String date_completed) {
 	this.date_completed = date_completed;
 }
 
+private String payment_method;
 //"country": "CN",
 //"city": "1",
 //"phone": "13517756425",
@@ -104,6 +105,12 @@ public void setDate_completed(String date_completed) {
 //"state": "CN21",
 //"first_name": "何威源",
 //"email": "309902259@qq.com"
+public String getPayment_method() {
+	return payment_method;
+}
+public void setPayment_method(String payment_method) {
+	this.payment_method = payment_method;
+}
 
 
 

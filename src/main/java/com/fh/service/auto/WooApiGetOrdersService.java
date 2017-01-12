@@ -100,7 +100,7 @@ public class WooApiGetOrdersService {
 	private List<Order> getOrdersFromAnfa(String url, int num, String status)
 			throws UnirestException, JsonParseException, JsonMappingException, IOException {
 
-		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-3));
+		String after = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(-15));
 		String before = DateUtil.getTimeISO_8601(DateUtil.getAfterDayDate(1));
 		String finalurl = null;
 		if (url != null) {
@@ -145,7 +145,7 @@ public class WooApiGetOrdersService {
 					continue;
 				}
 				order.setOriginal_ID(order.getId());
-				System.out.println("this order id is "+order.getId());
+				//System.out.println("this order id is "+order.getId());
 				order.setDept_ID(dept);
 
 				PageData tmp = (PageData) dao.findForObject("WarehouseMapper.checkOrder", order);
@@ -168,7 +168,7 @@ public class WooApiGetOrdersService {
 						iterm.setOrder_ID(id);
 						Element element = CacheUtil.getCacheObject(iterm.getSku(), "products");
 						if (element == null) {
-							System.out.println("not this sku " + iterm.getSku());
+						//	System.out.println("not this sku " + iterm.getSku());
 							continue;
 						}
 
@@ -209,7 +209,7 @@ public class WooApiGetOrdersService {
 
 				order.setStatusInt(t);
 
-				System.out.println("this is the order status " + order.getStatus());
+			//	System.out.println("this is the order status " + order.getStatus());
 				// saveAutoOrderStock
 				if (m == 0) {
 
@@ -222,7 +222,7 @@ public class WooApiGetOrdersService {
 						Element element = CacheUtil.getCacheObject(iterm.getSku().trim(), "products");
 						// int productid = 0;
 						if (element == null) {
-							System.out.println("element is null");
+							//System.out.println("element is null");
 							continue;
 						} else {
 							PageData tmPageData = (PageData) element.getObjectValue();

@@ -1,7 +1,5 @@
 package com.fh.util;
 
-import java.util.Date;
-
 /* *
  *类名：LatipayConfig
  *功能：基础配置类

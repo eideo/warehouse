@@ -45,7 +45,7 @@ public class LoginController extends BaseController {
 	private MenuService menuService;
 	@Resource(name="roleService")
 	private RoleService roleService;
-	
+	//bvnbvn
 	/**
 	 * 获取登录用户的IP
 	 * @throws Exception 

@@ -42,3 +42,4 @@ public class LatipayConfig {
 		return url;
 	}
 }
+// https://merchant.latipay.co.nz/api/search.action?merchantCode=M00000863
